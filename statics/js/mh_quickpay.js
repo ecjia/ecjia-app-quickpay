@@ -79,12 +79,20 @@
                 forceParse: 0,
                 minuteStep: 1
             });
-            
+            app.quickpay_info.activity_type_change();
             app.quickpay_info.submit_form();
             
         },
-    
-    
+        
+        activity_type_change: function () {
+    	   $("#activity_type").change(function () {
+               $(this).children().each(function (i) {
+                   $("#activity_type_" + $(this).val()).hide();
+               })
+               $("#activity_type_" + $(this).val()).show();
+           });
+        },
+        
 	    submit_form: function (formobj) {
 	        var $form = $("form[name='theForm']");
 	        var option = {
@@ -92,11 +100,17 @@
 	            	title: {
 	                    required: true
 	                },
+	                activity_value: {
+	                    required: true
+	                }
 	            },
 	            messages: {
 	                title: {
 	                	required: "请输入闪惠名称"
 	                },
+	                activity_value: {
+	                    required: "请输入折扣价格"
+	                }
 	            },
 	            submitHandler: function () {
 	                $form.ajaxSubmit({

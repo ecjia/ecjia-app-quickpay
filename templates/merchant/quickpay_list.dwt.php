@@ -56,8 +56,8 @@
 					<table class="table table-striped table-hover table-hide-edit">
 						<thead>
 							<tr>
-								<th class="w150">闪惠标题</th>
-								<th class="w100">闪惠类型</th>
+								<th class="w200">闪惠标题</th>
+								<th class="w200">闪惠类型</th>
 								<th class="w150">开始时间</th>
 								<th class="w150">结束时间</th>
 								<th class="w50">状态</th>
@@ -73,7 +73,7 @@
 		                               <a class="ajaxremove ecjiafc-red" data-toggle="ajaxremove" data-msg="你确定要删除该闪惠规则吗？" href='{url path="quickpay/merchant/remove" args="id={$list.id}"}' title="删除">删除</a>
 		                           </div>
 		                        </td>
-								<td>{if $list.act_type eq 'normal'}无优惠{elseif $list.act_type eq 'discount'}价格折扣{elseif $list.act_type eq 'everyreduced'}每满多少减多少，最高减多少{else $list.act_type eq 'reduced'}满多少减多少{/if}</td>
+								<td>{if $list.activity_type eq 'normal'}无优惠{elseif $list.activity_type eq 'discount'}价格折扣{elseif $list.activity_type eq 'everyreduced'}每满多少减多少，最高减多少{else $list.activity_type eq 'reduced'}满多少减多少{/if}</td>
 								<td>{$list.start_time}</td>
 								<td>{$list.end_time}</td>
 								<td>{if $now lt $list.start_time}未开始{elseif $now gt $list.end_time}已结束{else}进行中{/if}</td>
