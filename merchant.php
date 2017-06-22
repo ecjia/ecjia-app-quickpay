@@ -170,8 +170,15 @@ class merchant extends ecjia_merchant {
 		if ($start_time >= $end_time) {
 			return $this->showmessage('开始时间不能大于或等于结束时间', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
 		}
-
-		
+		$activity_value = $_POST['activity_value'];
+		if (is_array($activity_value)) {
+			foreach($activity_value as $row){
+				if(empty($row)){
+					return $this->showmessage('活动参数不能为空', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
+				}
+			}
+			$activity_value = implode(",", $activity_value);
+		} 
 		$data = array(
 			'store_id'		=> $store_id,
 			'title'      	=> $title,

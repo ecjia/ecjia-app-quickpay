@@ -66,7 +66,7 @@ table{border-collapse: separate; border-spacing: 0 3px;}
 									<div class="form-group">
 	                                    <label class="control-label col-lg-2">折扣价：</label>
 	                                    <div class="controls col-lg-6">
-	                                        <input class="form-control" type="text" name="discount_value" value="" />
+	                                        <input class="form-control" type="text" name="activity_value" value="" disabled="disabled"/>
 	                                    </div>
 	                                    <span class="input-must">{lang key='system::system.require_field'}</span>
 	                                </div>
@@ -78,13 +78,13 @@ table{border-collapse: separate; border-spacing: 0 3px;}
 	                                    <div class="controls col-lg-6">
 	                                        <div class="controls-split">
 	                                            <div class="ecjiaf-fl wright_wleft">
-	                                                <input name="reduced_value[]" class="form-control  w200" type="text" placeholder="消费达到的金额" value=""/>
+	                                                <input name="activity_value[]" class="form-control  w200" type="text" placeholder="消费达到的金额" value="" disabled="disabled" />
 	                                            </div>
 	                                            
 	                                            <div class="wmiddens ecjiaf-fl p_t5">减</div>
 	                                            
 	                                            <div class="ecjiaf-fl wright_wleft">
-	                                                <input name="reduced_value[]" class="form-control  w200" type="text" placeholder="优惠金额" value=""/>
+	                                                <input name="activity_value[]" class="form-control  w200" type="text" placeholder="优惠金额" value="" disabled="disabled" />
 	                                            </div>
                                         	</div>
                                         	 &nbsp;<span class="input-must">{lang key='system::system.require_field'}</span>
@@ -98,19 +98,19 @@ table{border-collapse: separate; border-spacing: 0 3px;}
 	                                    <div class="controls col-lg-6">
 	                                        <div class="controls-split">
 	                                            <div class="ecjiaf-fl wright_wleft">
-	                                                <input name="everyreduced_value[]" class="form-control  w200" type="text" placeholder="消费达到的金额" value=""/>
+	                                                <input name="activity_value[]" class="form-control  w200" type="text" placeholder="消费达到的金额" value="" disabled="disabled"/>
 	                                            </div>
 	                                            
 	                                            <div class="wmiddens ecjiaf-fl p_t5">减</div>
 	                                            
 	                                            <div class="ecjiaf-fl wright_wleft">
-	                                                <input name="everyreduced_value[]" class="form-control  w200" type="text" placeholder="优惠金额" value=""/>
+	                                                <input name="activity_value[]" class="form-control  w200" type="text" placeholder="优惠金额" value="" disabled="disabled"/>
 	                                            </div> &nbsp;<span class="input-must">{lang key='system::system.require_field'}</span><br><br>
 	                                            
 	                                            <div class="ecjiaf-fl p_t5">最高减：</div>
 	                                            
 	                                            <div class="ecjiaf-fl wright_wleft">
-	                                                <input name="everyreduced_value[]" class="form-control  w400" type="text" placeholder="优惠金额" value=""/>
+	                                                <input name="activity_value[]" class="form-control  w400" type="text" placeholder="优惠金额" value="" disabled="disabled"/>
 	                                            </div> &nbsp;<span class="input-must">{lang key='system::system.require_field'}</span>
                                         	</div>
 	                                    </div>

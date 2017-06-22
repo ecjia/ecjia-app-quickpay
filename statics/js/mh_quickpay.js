@@ -91,8 +91,14 @@
                    $("#activity_type_" + $(this).val() +" :input").each(function () {
                        $(this).val("");
                    });
+                   $("#activity_type_" + $(this).val() +" :input").each(function () {
+                       $(this).attr("disabled",true);
+                   });
                })
                $("#activity_type_" + $(this).val()).show();
+               $("#activity_type_" + $(this).val() +" :input").each(function () {
+                   $(this).attr("disabled",false);
+               });
            });
         },
         
