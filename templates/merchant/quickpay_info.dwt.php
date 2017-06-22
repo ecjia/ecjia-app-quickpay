@@ -62,29 +62,29 @@ table{border-collapse: separate; border-spacing: 0 3px;}
                                     </div>
                                 </div>
                                 
-                                <div id="activity_type_discount" style="display:none">
+                                <div id="activity_type_discount" {if $data.activity_type neq 'discount'}style="display:none"{/if}>
 									<div class="form-group">
 	                                    <label class="control-label col-lg-2">折扣价：</label>
 	                                    <div class="controls col-lg-6">
-	                                        <input class="form-control" type="text" name="activity_value" value="{$data.activity_value}" disabled="disabled"/>
+	                                        <input class="form-control" type="text" name="activity_value" value="{$data.activity_value}" {if !$data.activity_value}disabled="disabled"{/if}/>
 	                                    </div>
 	                                    <span class="input-must">{lang key='system::system.require_field'}</span>
 	                                </div>
 								</div>
 								
-								<div id="activity_type_reduced" style="display:none">
+								<div id="activity_type_reduced" {if $data.activity_type neq 'reduced'}style="display:none"{/if}>
 									<div class="form-group">
 	                                    <label class="control-label col-lg-2">满多少：</label>
 	                                    <div class="controls col-lg-6">
 	                                        <div class="controls-split">
 	                                            <div class="ecjiaf-fl wright_wleft">
-	                                                <input name="activity_value[]" class="form-control  w200" type="text" placeholder="消费达到的金额" value="{$data.activity_value.0}" disabled="disabled" />
+	                                                <input name="activity_value[]" class="form-control  w200" type="text" placeholder="消费达到的金额" value="{$data.activity_value.0}" {if !$data.activity_value.0}disabled="disabled"{/if} />
 	                                            </div>
 	                                            
 	                                            <div class="wmiddens ecjiaf-fl p_t5">减</div>
 	                                            
 	                                            <div class="ecjiaf-fl wright_wleft">
-	                                                <input name="activity_value[]" class="form-control  w200" type="text" placeholder="优惠金额" value="{$data.activity_value.1}" disabled="disabled" />
+	                                                <input name="activity_value[]" class="form-control  w200" type="text" placeholder="优惠金额" value="{$data.activity_value.1}" {if !$data.activity_value.1}disabled="disabled"{/if}  />
 	                                            </div>
                                         	</div>
                                         	 &nbsp;<span class="input-must">{lang key='system::system.require_field'}</span>
@@ -92,25 +92,25 @@ table{border-collapse: separate; border-spacing: 0 3px;}
 	                                </div>
 								</div>
 								
-								<div id="activity_type_everyreduced" style="display:none">
+								<div id="activity_type_everyreduced" {if $data.activity_type neq 'everyreduced'}style="display:none"{/if}>
 									<div class="form-group">
 	                                    <label class="control-label col-lg-2">每满多少：</label>
 	                                    <div class="controls col-lg-6">
 	                                        <div class="controls-split">
 	                                            <div class="ecjiaf-fl wright_wleft">
-	                                                <input name="activity_value[]" class="form-control  w200" type="text" placeholder="消费达到的金额" value="{$data.activity_value.0}" disabled="disabled"/>
+	                                                <input name="activity_value[]" class="form-control  w200" type="text" placeholder="消费达到的金额" value="{$data.activity_value.0}" {if !$data.activity_value.0}disabled="disabled"{/if} />
 	                                            </div>
 	                                            
 	                                            <div class="wmiddens ecjiaf-fl p_t5">减</div>
 	                                            
 	                                            <div class="ecjiaf-fl wright_wleft">
-	                                                <input name="activity_value[]" class="form-control  w200" type="text" placeholder="优惠金额" value="{$data.activity_value.1}" disabled="disabled"/>
+	                                                <input name="activity_value[]" class="form-control  w200" type="text" placeholder="优惠金额" value="{$data.activity_value.1}" {if !$data.activity_value.1}disabled="disabled"{/if} />
 	                                            </div> &nbsp;<span class="input-must">{lang key='system::system.require_field'}</span><br><br>
 	                                            
 	                                            <div class="ecjiaf-fl p_t5">最高减：</div>
 	                                            
 	                                            <div class="ecjiaf-fl wright_wleft">
-	                                                <input name="activity_value[]" class="form-control  w400" type="text" placeholder="优惠金额" value="{$data.activity_value.2}" disabled="disabled"/>
+	                                                <input name="activity_value[]" class="form-control  w400" type="text" placeholder="优惠金额" value="{$data.activity_value.2}" {if !$data.activity_value.2}disabled="disabled"{/if} />
 	                                            </div> &nbsp;<span class="input-must">{lang key='system::system.require_field'}</span>
                                         	</div>
 	                                    </div>

@@ -187,14 +187,18 @@ class merchant extends ecjia_merchant {
 			'description'	=> $description,
 			'activity_type' => $_POST['activity_type'],
 			'activity_value'	=> $activity_value,	
+				
 			'limit_time_type'	=> '',
 			'limit_time_weekly'	=> '',
 			'limit_time_daily'	=> '',	
 			'limit_time_exclude'=> '',	
+				
 			'start_time'	=> $start_time,
-			'end_time'		=> $end_time,		
+			'end_time'		=> $end_time,	
+					
 			'use_integral'	=> '',
 			'use_bonus'		=> '',	
+				
 			'enabled' 		=> intval($_POST['enabled']),
 		);
 		
