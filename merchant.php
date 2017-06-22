@@ -84,10 +84,11 @@ class merchant extends ecjia_merchant {
 	    $quickpay_enabled = RC_DB::table('merchants_config')->where('store_id', $_SESSION['store_id'])->where('code', 'quickpay_enabled')->pluck('value');
 	    $this->assign('quickpay_enabled', $quickpay_enabled);
 	    
-	    $quickpay_list = $this->quickpay_list($_SESSION['store_id']);
-	    $this->assign('quickpay_list', $quickpay_list);
 	    $type_list = $this->get_quickpay_type();
 	    $this->assign('type_list', $type_list);
+	    
+	    $quickpay_list = $this->quickpay_list($_SESSION['store_id']);
+	    $this->assign('quickpay_list', $quickpay_list);
 	    $this->assign('now', RC_Time::local_date(ecjia::config('time_format'), RC_Time::gmtime()));
 	    $this->assign('search_action', RC_Uri::url('quickpay/merchant/init'));
 	    
@@ -327,6 +328,7 @@ class merchant extends ecjia_merchant {
 				$res[] = $row;
 			}
 		}
+
 		return array('list' => $res, 'filter' => $filter, 'page' => $page->show(2), 'desc' => $page->page_desc());
 	}
 	

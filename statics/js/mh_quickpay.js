@@ -48,7 +48,6 @@
                 if (keywords != '') {
                     url += '&keywords=' + keywords;
                 }
-                alert(url);
                 ecjia.pjax(url);
             });
         }
