@@ -29,10 +29,10 @@
 	<div class="col-lg-12">
 		<div class="panel">
 			<div class="panel-body panel-body-small">
-				<form class="form-inline pull-left" name="siftForm" action="{$search_action}" method="post">
+				<form class="form-inline pull-left" name="selectFrom" action="{$search_action}" method="post">
 					<div class="screen f_l">
 						<div class="form-group">
-							<select class="w200" name='act_type'>
+							<select class="w200" name='activity_type'>
 								<option value="0">{t}闪惠类型{/t}</option>
 								<!-- {foreach from=$type_list item=list key=key} -->
 								<option value="{$key}" {if $key eq $smarty.get.user_id}selected="selected"{/if}>{$list}</option>

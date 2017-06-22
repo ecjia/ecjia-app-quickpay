@@ -29,16 +29,14 @@
 
 	    	 
         	//筛选功能
-			$('form[name="searchForm"]').on('submit', function(e){
+			$("form[name='selectFrom'] .screen-btn").on('click', function (e) {
 				e.preventDefault();
-				var ip = $("select[name='ip']").val();
-				var userid = $("select[name='userid']").val();
-				var keyword = $("input[name='keyword']").val();
+				var activity_type = $("select[name='activity_type']").val();
 				var url = $("form[name='searchForm']").attr('action');
-
-				if(ip == 'undefind')ip='';
-				if(userid == 'undefind')userid='';
-				ecjia.pjax(url + '&ip=' + ip + '&user_id=' + userid + '&keyword=' + keyword);
+				if (activity_type != '') {
+	                   url += '&activity_type=' + activity_type;
+	            }
+                ecjia.pjax(url);
 			});
         	 
 	    	 
@@ -50,6 +48,7 @@
                 if (keywords != '') {
                     url += '&keywords=' + keywords;
                 }
+                alert(url);
                 ecjia.pjax(url);
             });
         }

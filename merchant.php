@@ -299,13 +299,17 @@ class merchant extends ecjia_merchant {
 	 */
 	private function quickpay_list($store_id) {
 		$db_quickpay_activity = RC_DB::table('quickpay_activity');
-		
+
 		$filter['keywords'] = empty($_GET['keywords']) ? '' : trim($_GET['keywords']);
 		if ($filter['keywords']) {
 			$db_quickpay_activity->where('title', 'like', '%'.mysql_like_quote($filter['keywords']).'%');
 		}
+		$filter['activity_type'] = empty($_GET['activity_type']) ? '' : trim($_GET['activity_type']);
+		if ($filter['activity_type']) {
+			$db_quickpay_activity->where('activity_type', $filter['activity_type']);
+		}
 		
-		$db_quickpay_activity->where(RC_DB::raw('store_id'), $store_id);
+		$db_quickpay_activity->where('store_id', $store_id);
 		
 		$count = $db_quickpay_activity->count();
 		$page = new ecjia_merchant_page($count,10, 5);
