@@ -66,7 +66,7 @@ table{border-collapse: separate; border-spacing: 0 3px;}
 									<div class="form-group">
 	                                    <label class="control-label col-lg-2">折扣价：</label>
 	                                    <div class="controls col-lg-6">
-	                                        <input class="form-control" type="text" name="activity_value" value="" disabled="disabled"/>
+	                                        <input class="form-control" type="text" name="activity_value" value="{$data.activity_value}" disabled="disabled"/>
 	                                    </div>
 	                                    <span class="input-must">{lang key='system::system.require_field'}</span>
 	                                </div>
@@ -78,13 +78,13 @@ table{border-collapse: separate; border-spacing: 0 3px;}
 	                                    <div class="controls col-lg-6">
 	                                        <div class="controls-split">
 	                                            <div class="ecjiaf-fl wright_wleft">
-	                                                <input name="activity_value[]" class="form-control  w200" type="text" placeholder="消费达到的金额" value="" disabled="disabled" />
+	                                                <input name="activity_value[]" class="form-control  w200" type="text" placeholder="消费达到的金额" value="{$data.activity_value.0}" disabled="disabled" />
 	                                            </div>
 	                                            
 	                                            <div class="wmiddens ecjiaf-fl p_t5">减</div>
 	                                            
 	                                            <div class="ecjiaf-fl wright_wleft">
-	                                                <input name="activity_value[]" class="form-control  w200" type="text" placeholder="优惠金额" value="" disabled="disabled" />
+	                                                <input name="activity_value[]" class="form-control  w200" type="text" placeholder="优惠金额" value="{$data.activity_value.1}" disabled="disabled" />
 	                                            </div>
                                         	</div>
                                         	 &nbsp;<span class="input-must">{lang key='system::system.require_field'}</span>
@@ -98,26 +98,35 @@ table{border-collapse: separate; border-spacing: 0 3px;}
 	                                    <div class="controls col-lg-6">
 	                                        <div class="controls-split">
 	                                            <div class="ecjiaf-fl wright_wleft">
-	                                                <input name="activity_value[]" class="form-control  w200" type="text" placeholder="消费达到的金额" value="" disabled="disabled"/>
+	                                                <input name="activity_value[]" class="form-control  w200" type="text" placeholder="消费达到的金额" value="{$data.activity_value.0}" disabled="disabled"/>
 	                                            </div>
 	                                            
 	                                            <div class="wmiddens ecjiaf-fl p_t5">减</div>
 	                                            
 	                                            <div class="ecjiaf-fl wright_wleft">
-	                                                <input name="activity_value[]" class="form-control  w200" type="text" placeholder="优惠金额" value="" disabled="disabled"/>
+	                                                <input name="activity_value[]" class="form-control  w200" type="text" placeholder="优惠金额" value="{$data.activity_value.1}" disabled="disabled"/>
 	                                            </div> &nbsp;<span class="input-must">{lang key='system::system.require_field'}</span><br><br>
 	                                            
 	                                            <div class="ecjiaf-fl p_t5">最高减：</div>
 	                                            
 	                                            <div class="ecjiaf-fl wright_wleft">
-	                                                <input name="activity_value[]" class="form-control  w400" type="text" placeholder="优惠金额" value="" disabled="disabled"/>
+	                                                <input name="activity_value[]" class="form-control  w400" type="text" placeholder="优惠金额" value="{$data.activity_value.2}" disabled="disabled"/>
 	                                            </div> &nbsp;<span class="input-must">{lang key='system::system.require_field'}</span>
                                         	</div>
 	                                    </div>
 	                                  </div>
 								</div>
 								
-								
+                                <div class="form-group">
+                                    <label class="control-label col-lg-2">时间规则：</label>
+                                    <div class="controls col-lg-6">
+                                        <select name="limit_time_type" id="limit_time_type" class="form-control" >
+											<option value='nolimit'>不限制时间</option>
+											<option value='customize'>自定义时间</option>
+										</select>
+                                    </div>
+                                </div>
+                                
                                 <div class="form-group">
                                     <label class=" control-label col-lg-2">有效时间：</label>
                                     <div class="col-lg-6">
@@ -131,16 +140,6 @@ table{border-collapse: separate; border-spacing: 0 3px;}
                                             </div>
                                             &nbsp;<span class="input-must">{lang key='system::system.require_field'}</span>
                                         </div>
-                                    </div>
-                                </div>
-                                
-                                <div class="form-group">
-                                    <label class="control-label col-lg-2">具体时间：</label>
-                                    <div class="controls col-lg-6">
-                                        <select name="limit_time_type" id="limit_time_type" class="form-control" >
-											<option value='nolimit'>不限制时间</option>
-											<option value='customize'>自定义时间</option>
-										</select>
                                     </div>
                                 </div>
 
@@ -166,7 +165,7 @@ table{border-collapse: separate; border-spacing: 0 3px;}
                                 <div class="form-group">
                                     <div class="col-lg-offset-2 col-lg-6">
                                         <button class="btn btn-info" type="submit">确定</button>
-                                        <input type="hidden" name="id" value="" />
+                                        <input type="hidden" name="id" value="{$data.id}" />
                                     </div>
                                 </div>         
                             </fieldset>  

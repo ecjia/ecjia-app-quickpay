@@ -166,10 +166,10 @@ class merchant extends ecjia_merchant {
 		$start_time = RC_Time::local_strtotime($_POST['start_time']);
 		$end_time   = RC_Time::local_strtotime($_POST['end_time']);
 		
-		
 		if ($start_time >= $end_time) {
 			return $this->showmessage('开始时间不能大于或等于结束时间', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
 		}
+		
 		$activity_value = $_POST['activity_value'];
 		if (is_array($activity_value)) {
 			foreach($activity_value as $row){
@@ -179,6 +179,7 @@ class merchant extends ecjia_merchant {
 			}
 			$activity_value = implode(",", $activity_value);
 		} 
+		
 		$data = array(
 			'store_id'		=> $store_id,
 			'title'      	=> $title,
@@ -195,6 +196,7 @@ class merchant extends ecjia_merchant {
 			'use_bonus'		=> '',	
 			'enabled' 		=> intval($_POST['enabled']),
 		);
+		
 		$id = RC_DB::table('quickpay_activity')->insertGetId($data);
 		return $this->showmessage('添加闪惠规则成功', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('pjaxurl' => RC_Uri::url('quickpay/merchant/edit', array('id' => $id))));
 	}
@@ -214,11 +216,15 @@ class merchant extends ecjia_merchant {
 		$offer_list = $this->get_other_offer();
 		$this->assign('offer_list', $offer_list);
 		
-		$id         = intval($_GET['id']);
+		$id = intval($_GET['id']);
 		$data = RC_DB::table('quickpay_activity')->where('id', $id)->first();
+		
 		$data['start_time']   = RC_Time::local_date(ecjia::config('time_format'), $data ['start_time']);
 		$data['end_time']     = RC_Time::local_date(ecjia::config('time_format'), $data ['end_time']);
-		$data['other_offer']  = explode(",",$data['other_offer']); 
+		if(strpos($data['activity_value'],',') !== false){
+			$data['activity_value']  = explode(",",$data['activity_value']);
+		}
+		
 		$this->assign('data', $data);
 
 		$this->assign('form_action', RC_Uri::url('quickpay/merchant/update'));
@@ -231,103 +237,62 @@ class merchant extends ecjia_merchant {
 	 */
 	public function update() {
 		$this->admin_priv('quickpay_update');
+		$id = intval($_POST['id']);
+		$title    = trim($_POST['title']);
+		$description = trim($_POST['description']);
 
-		$act_name 	= !empty($_POST['act_name']) 	? trim($_POST['act_name']) 		: '';
-		$act_id 	= !empty($_POST['act_id']) 		? intval($_POST['act_id']) 		: 0;
-		$store_id 	= !empty($_SESSION['store_id']) ? intval($_SESSION['store_id']) : 0;
-		
-		if (RC_DB::table('quickpay_activity')->where('act_name', $act_name)->where('act_id', '!=', $act_id)->where('store_id', $store_id)->count() > 0) {
-			return $this->showmessage(RC_Lang::get('quickpay::quickpay.act_name_exists'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
+		if (RC_DB::table('quickpay_activity')->where('title', $title)->where('store_id', $store_id)->count() > 0) {
+			return $this->showmessage('当前店铺下已存在该闪惠标题', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
 		}
-		$start_time = !empty($_POST['start_time'])	? RC_Time::local_strtotime($_POST['start_time']) 	: '';
-		$end_time 	= !empty($_POST['end_time']) 	? RC_Time::local_strtotime($_POST['end_time']) 		: '';
-		/* 检查优惠活动时间 */
+
+		$start_time = RC_Time::local_strtotime($_POST['start_time']);
+		$end_time   = RC_Time::local_strtotime($_POST['end_time']);
+		
 		if ($start_time >= $end_time) {
-			return $this->showmessage(RC_Lang::get('quickpay::quickpay.start_lt_end'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
-		}
-
-		/* 检查享受优惠的会员等级 */
-		if (!isset($_POST['user_rank']) || empty($_POST['user_rank'])) {
-			return $this->showmessage(RC_Lang::get('quickpay::quickpay.pls_set_user_rank'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
-		}
-
-		/* 检查优惠范围扩展信息 */
-		if ($_POST['act_range'] > 0 && !isset($_POST['act_range_ext'])) {
-			return $this->showmessage(RC_Lang::get('quickpay::quickpay.pls_set_act_range'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
+			return $this->showmessage('开始时间不能大于或等于结束时间', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
 		}
 		
-		/* 判断是否在优惠范围内 */
-		if ($_POST['act_range'] != 0 && $_POST['act_range'] != 3) {
-		    return $this->showmessage(RC_Lang::get('quickpay::quickpay.pls_set_act_range'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
-		}
+		$activity_value = $_POST['activity_value'];
+		if (is_array($activity_value)) {
+			foreach($activity_value as $row){
+				if(empty($row)){
+					return $this->showmessage('活动参数不能为空', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
+				}
+			}
+			$activity_value = implode(",", $activity_value);
+		} 
 		
-		/* 检查金额上下限 */
-		$min_amount = floatval($_POST['min_amount']) >= 0 ? floatval($_POST['min_amount']) : 0;
-		$max_amount = floatval($_POST['max_amount']) >= 0 ? floatval($_POST['max_amount']) : 0;
-		if ($max_amount > 0 && $min_amount > $max_amount) {
-			return $this->showmessage(RC_Lang::get('quickpay::quickpay.amount_error'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
-		}
-		if ($_POST['act_type'] == 1 && $_POST['min_amount'] < $_POST['act_type_ext']) {
-		    return $this->showmessage('现金减免不能超过金额下限', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
-		}
-		
-		/* 提交值 */
-		$quickpay = array(
-			'act_id'		=> $act_id,
-			'act_name'      => $act_name,
-			'start_time'    => $start_time,
-			'end_time'      => $end_time,
-			'user_rank'     => isset($_POST['user_rank']) ? join(',', $_POST['user_rank']) : '0',
-			'act_range'     => intval($_POST['act_range']),
-			'act_range_ext' => intval($_POST['act_range']) == 0 ? '' : join(',', $_POST['act_range_ext']),
-			'min_amount'    => $min_amount,
-			'max_amount'    => $max_amount,
-			'act_type'      => intval($_POST['act_type']),
-			'act_type_ext'  => floatval($_POST['act_type_ext']),
+		$data = array(
+			'title'      	=> $title,
+			'description'	=> $description,
+			'activity_type' => $_POST['activity_type'],
+			'activity_value'	=> $activity_value,	
+			'limit_time_type'	=> '',
+			'limit_time_weekly'	=> '',
+			'limit_time_daily'	=> '',	
+			'limit_time_exclude'=> '',	
+			'start_time'	=> $start_time,
+			'end_time'		=> $end_time,		
+			'use_integral'	=> '',
+			'use_bonus'		=> '',	
+			'enabled' 		=> intval($_POST['enabled']),
 		);
-        if ($quickpay['act_type'] == 1) {
-			$act_type = RC_Lang::get('quickpay::quickpay.fat_price');
-        } elseif ($quickpay['act_type'] == 2) {
-			$act_type = RC_Lang::get('quickpay::quickpay.fat_discount');
-		}
-		$this->db_quickpay_activity->quickpay_manage($quickpay);
 		
-		/* 释放优惠活动缓存*/
-		$quickpay_activity_db = RC_Model::model('quickpay/orm_quickpay_activity_model');
-		$cache_quickpay_key   = 'quickpay_list_store_'.$store_id;
-		$cache_id               = sprintf('%X', crc32($cache_quickpay_key));
-		$quickpay_activity_db->delete_cache_item($cache_id);
-
-		ecjia_merchant::admin_log($quickpay['act_name'].'，'.RC_Lang::get('quickpay::quickpay.quickpay_way_is').$act_type, 'edit', 'quickpay');
-		return $this->showmessage(RC_Lang::get('quickpay::quickpay.edit_quickpay_ok'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('pjaxurl' => RC_Uri::url('quickpay/merchant/edit', array('act_id' => $act_id))));
+		RC_DB::table('quickpay_activity')->where('id', $id)->update($data);
+		return $this->showmessage('添加闪惠规则成功', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('pjaxurl' => RC_Uri::url('quickpay/merchant/edit', array('id' => $id))));
 	}
 	
 	/**
 	 * 删除员工
 	 */
 	public function remove() {
-		$this->admin_priv('staff_remove', ecjia::MSGTYPE_JSON);
-		
-		$user_id = intval($_GET['user_id']);
-		$db_staff_user = RC_DB::table('staff_user');
-		
-		$db_staff_user->where(RC_DB::raw('user_id'), $user_id);
-		$db_staff_user->where(RC_DB::raw('store_id'), $_SESSION['store_id']);
-		
-		/* 不允许删除主员工*/
-		if ($user_id == $_SESSION['staff_id']) {
-			return $this->showmessage(RC_Lang::get('staff::staff.no_remove_admin'),ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
-		}
-		$name = $db_staff_user->pluck('name');
-		
-		if ($db_staff_user->delete()) {
-			RC_Session::session()->delete_spec_admin_session($user_id); // 删除session中该管理员的记录
-			ecjia_merchant::admin_log($name, 'remove', 'staff');
-			return $this->showmessage(RC_Lang::get('staff::staff.delete_success'),ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS,array('pjaxurl' => RC_Uri::url('staff/merchant/init')));
-		} else {
-			return $this->showmessage(RC_Lang::get('staff::staff.delete_fail'),ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
-		}
-	}
+    	$this->admin_priv('quickpay_delete');
+    	 
+    	$id = intval($_GET['id']);
+    	RC_DB::table('quickpay_activity')->where('id', $id)->delete();
+    	 
+    	return $this->showmessage('成功删除该闪惠规则', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS);
+    }
 	
 	/**
 	 * 获取闪惠规则列表
