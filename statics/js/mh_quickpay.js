@@ -88,6 +88,9 @@
     	   $("#activity_type").change(function () {
                $(this).children().each(function (i) {
                    $("#activity_type_" + $(this).val()).hide();
+                   $("#activity_type_" + $(this).val() +" :input").each(function () {
+                       $(this).val("");
+                   });
                })
                $("#activity_type_" + $(this).val()).show();
            });

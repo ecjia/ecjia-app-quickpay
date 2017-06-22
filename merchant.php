@@ -136,7 +136,6 @@ class merchant extends ecjia_merchant {
 		$offer_list = $this->get_other_offer();
 		$this->assign('offer_list', $offer_list);
 		
-		$data['enabled'] = 1;
 		$data = array (
 			'enabled'       => 1,
 			'start_time'    => RC_Time::local_date('Y-m-d H:i', RC_Time::gmtime()),
@@ -153,26 +152,40 @@ class merchant extends ecjia_merchant {
 	 * 处理添加员工
 	 */
 	public function insert() {
+		
 		$this->admin_priv('quickpay_update');
 		
 		$store_id = $_SESSION['store_id'];
 		$title    = trim($_POST['title']);
 		$description = trim($_POST['description']);
-		
+
 		if (RC_DB::table('quickpay_activity')->where('title', $title)->where('store_id', $store_id)->count() > 0) {
 			return $this->showmessage('当前店铺下已存在该闪惠标题', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
 		}
 
 		$start_time = RC_Time::local_strtotime($_POST['start_time']);
 		$end_time   = RC_Time::local_strtotime($_POST['end_time']);
-
+		
+		
 		if ($start_time >= $end_time) {
 			return $this->showmessage('开始时间不能大于或等于结束时间', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
 		}
+
+		
 		$data = array(
-			'title'      	=> $title,
 			'store_id'		=> $store_id,
+			'title'      	=> $title,
 			'description'	=> $description,
+			'activity_type' => $_POST['activity_type'],
+			'activity_value'	=> $activity_value,	
+			'limit_time_type'	=> '',
+			'limit_time_weekly'	=> '',
+			'limit_time_daily'	=> '',	
+			'limit_time_exclude'=> '',	
+			'start_time'	=> $start_time,
+			'end_time'		=> $end_time,		
+			'use_integral'	=> '',
+			'use_bonus'		=> '',	
 			'enabled' 		=> intval($_POST['enabled']),
 		);
 		$id = RC_DB::table('quickpay_activity')->insertGetId($data);
@@ -325,7 +338,7 @@ class merchant extends ecjia_merchant {
 		$count = $db_quickpay_activity->count();
 		$page = new ecjia_merchant_page($count,10, 5);
 		$data = $db_quickpay_activity
-		->selectRaw('id,title,start_time,end_time')
+		->selectRaw('id,title,activity_type,start_time,end_time')
 		->orderby('id', 'asc')
 		->take(10)
 		->skip($page->start_id-1)
