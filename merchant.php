@@ -74,7 +74,7 @@ class merchant extends ecjia_merchant {
 	 * 闪惠规则列表页面
 	 */
 	public function init() {
-	    $this->admin_priv('quickpay_manage');
+	    $this->admin_priv('mh_quickpay_manage');
 	    
 	    ecjia_merchant_screen::get_current_screen()->add_nav_here(new admin_nav_here('闪惠规则'));
 	    $this->assign('ur_here', '闪惠规则列表');
@@ -100,7 +100,7 @@ class merchant extends ecjia_merchant {
 	 * 开启闪惠
 	 */
 	public function open() {
-		$this->admin_priv('quickpay_update');
+		$this->admin_priv('mh_quickpay_update');
 		
 		$count= RC_DB::table('merchants_config')->where('store_id', $_SESSION['store_id'])->where('code', 'quickpay_enabled')->count();
 		if ($count > 0) {
@@ -116,7 +116,7 @@ class merchant extends ecjia_merchant {
 	 * 关闭闪惠
 	 */
 	public function close() {
-		$this->admin_priv('quickpay_update');
+		$this->admin_priv('mh_quickpay_update');
 		
 		RC_DB::table('merchants_config')->where('store_id', $_SESSION['store_id'])->where('code', 'quickpay_enabled')->update(array('value' => 0));
 		return $this->showmessage('关闭闪惠成功', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS,array('pjaxurl' => RC_Uri::url('quickpay/merchant/init')));
@@ -126,7 +126,7 @@ class merchant extends ecjia_merchant {
 	 * 添加员工页面
 	 */
 	public function add() {
-		$this->admin_priv('quickpay_update');
+		$this->admin_priv('mh_quickpay_update');
 		
 		ecjia_merchant_screen::get_current_screen()->add_nav_here(new admin_nav_here('闪惠规则'));
 		$this->assign('ur_here', '添加闪惠规则');
@@ -134,8 +134,6 @@ class merchant extends ecjia_merchant {
 		
 		$type_list = $this->get_quickpay_type();
 		$this->assign('type_list', $type_list);
-		$offer_list = $this->get_other_offer();
-		$this->assign('offer_list', $offer_list);
 		
 		$data = array (
 			'enabled'       => 1,
@@ -154,7 +152,7 @@ class merchant extends ecjia_merchant {
 	 */
 	public function insert() {
 		
-		$this->admin_priv('quickpay_update');
+		$this->admin_priv('mh_quickpay_update');
 		
 		$store_id = $_SESSION['store_id'];
 		$title    = trim($_POST['title']);
@@ -218,8 +216,6 @@ class merchant extends ecjia_merchant {
 		
 		$type_list = $this->get_quickpay_type();
 		$this->assign('type_list', $type_list);
-		$offer_list = $this->get_other_offer();
-		$this->assign('offer_list', $offer_list);
 		
 		$id = intval($_GET['id']);
 		$data = RC_DB::table('quickpay_activity')->where('id', $id)->first();
@@ -241,7 +237,7 @@ class merchant extends ecjia_merchant {
 	 * 编辑员工信息处理
 	 */
 	public function update() {
-		$this->admin_priv('quickpay_update');
+		$this->admin_priv('mh_quickpay_update');
 		$id = intval($_POST['id']);
 		$title    = trim($_POST['title']);
 		$description = trim($_POST['description']);
@@ -291,7 +287,7 @@ class merchant extends ecjia_merchant {
 	 * 删除员工
 	 */
 	public function remove() {
-    	$this->admin_priv('quickpay_delete');
+    	$this->admin_priv('mh_quickpay_delete');
     	 
     	$id = intval($_GET['id']);
     	RC_DB::table('quickpay_activity')->where('id', $id)->delete();
@@ -349,17 +345,7 @@ class merchant extends ecjia_merchant {
 		);
 		return $type_list;
 	}
-		
-	/**
-	 * 获取其他优惠
-	 */
-	private function get_other_offer(){
-		$offer_list = array(
-			'0' 	=> '允许同时使用红包抵现',
-			'1'	=> '允许同时使用积分抵现',
-		);
-		return $offer_list;
-	}
+	
 }
 
 //end

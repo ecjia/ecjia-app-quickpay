@@ -78,6 +78,7 @@
                 minuteStep: 1
             });
             app.quickpay_info.activity_type_change();
+            app.quickpay_info.other_offer_change();
             app.quickpay_info.submit_form();
             
         },
@@ -98,6 +99,11 @@
                    $(this).attr("disabled",false);
                });
            });
+        },
+        
+        other_offer_change: function () {
+        	
+        	
         },
         
 	    submit_form: function (formobj) {

@@ -47,18 +47,22 @@
 defined('IN_ECJIA') or exit('No permission resources.');
 
 /**
- * 后台权限API
- * @author songqian
+ * 闪惠
+ * @author royalwang
  */
-class quickpay_merchant_purview_api extends Component_Event_Api {
-    
-    public function call(&$options) {
-        $purviews = array(
-        	array('action_name' => __('闪惠规则管理'), 'action_code' => 'mh_quickpay_manage', 'relevance'   => ''),
-        	array('action_name' => __('闪惠规则更新'), 'action_code' => 'mh_quickpay_update', 'relevance'   => ''),
-        	array('action_name' => __('闪惠规则删除'), 'action_code' => 'mh_quickpay_delete', 'relevance'   => ''),
+class quickpay_admin_menu_api extends Component_Event_Api
+{
+
+    public function call(&$options)
+    {
+        $menus = ecjia_admin::make_admin_menu('15_content', '闪惠管理', '', 3);
+        
+        $submenus = array(
+        	ecjia_admin::make_admin_menu('01_quickpay', '闪惠规则', RC_Uri::url('quickpay/admin/init'), 1)->add_purview('quickpay_manage'),
         );
-        return $purviews;
+        
+        $menus->add_submenu($submenus);
+        return $menus;
     }
 }
 
