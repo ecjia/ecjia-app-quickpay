@@ -17,12 +17,12 @@
 <!-- 批量操作和搜索 -->
 <div class="row-fluid batch" >
 	<ul class="nav nav-pills">
-		<li class="{if $smarty.get.type eq ''}active{/if}"><a class="data-pjax" href='{$data.quickuri.init}'>全部 <span class="badge badge-info">{if $data.count.count}{$data.count.count}{else}0{/if}</span> </a></li>
-		<li class="{if $smarty.get.type eq 'on_going'}active{/if}"><a class="data-pjax" href='{$data.quickuri.on_going}'>正在进行中 <span class="badge badge-info">{if $data.count.on_going}{$data.count.on_going}{else}0{/if}</span> </a></li>
-		<li class="{if $smarty.get.type eq 'self'}active{/if}"><a class="data-pjax" href='{$data.quickuri.self}'>自营<span class="badge badge-info">{if $data.count.self}{$data.count.self}{else}0{/if}</span> </a></li>
+		<li class="{if $type eq ''}active{/if}"><a class="data-pjax" href='{url path="quickpay/admin/init" args="{if $filter.merchant_name}&merchant_name={$filter.merchant_name}{/if}{if $filter.keyword}&keyword={$filter.keyword}{/if}"}'>全部 <span class="badge badge-info">{if $type_count.count}{$type_count.count}{else}0{/if}</span> </a></li>
+		<li class="{if $type eq 'on_going'}active{/if}"><a class="data-pjax" href='{url path="quickpay/admin/init" args="type=on_going{if $filter.merchant_name}&merchant_name={$filter.merchant_name}{/if}{if $filter.keyword}&keyword={$filter.keyword}{/if}"}'>正在进行中 <span class="badge badge-info">{if $type_count.on_sale}{$type_count.on_sale}{else}0{/if}</span> </a></li>
+		<li class="{if $type eq 'self'}active{/if}"><a class="data-pjax" href='{url path="quickpay/admin/init" args="type=self{if $filter.merchant_name}&merchant_name={$filter.merchant_name}{/if}{if $filter.keyword}&keyword={$filter.keyword}{/if}"}'>自营 <span class="badge badge-info">{if $type_count.self}{$type_count.self}{else}0{/if}</span> </a></li>
 	</ul>
 	
-	<form method="post" action="{$search_action}" name="searchForm">
+	<form method="post" action="{$search_action}{if $type}&type={$type}{/if}" name="searchForm">
 		<div class="btn-group f_l m_r5">
 			<a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
 				<i class="fontello-icon-cog"></i>批量操作
@@ -46,7 +46,7 @@
 			<thead>
 				<tr>
 				    <th class="table_checkbox"><input type="checkbox" name="select_rows" data-toggle="selectall" data-children=".checkbox"/></th>
-				    <th class="w200">闪惠名称</th>
+				    <th class="w150">闪惠名称</th>
 				    <th class="w150">商家名称</th>
 				    <th class="w100">闪惠类型</th>
 				    <th class="w100">开始时间</th>
@@ -76,7 +76,7 @@
 				        {/if}	
 		    	  	</div>
 		      	</td>
-		      	<td>{$quickpay.merchants_name}</td>
+		      	<td {if $quickpay.manage_mode eq 'self'}style="color:#0e92d0;"{else}style="color:red;"{/if}>{$quickpay.merchants_name}</td>
 		      	<td>{if $quickpay.activity_type eq 'normal'}无优惠{elseif $quickpay.activity_type eq 'discount'}价格折扣{elseif $quickpay.activity_type eq 'everyreduced'}每满多少减多少，最高减多少{else $quickpay.activity_type eq 'reduced'}满多少减多少{/if}</td>
 		      
 		      	<td>{$quickpay.start_time}</td>

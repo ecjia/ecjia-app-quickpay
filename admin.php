@@ -85,11 +85,14 @@ class admin extends ecjia_admin {
 		
 		ecjia_screen::get_current_screen()->remove_last_nav_here();
 		ecjia_screen::get_current_screen()->add_nav_here(new admin_nav_here('闪惠规则'));
-		
 		$this->assign('ur_here', '闪惠规则列表');
 		
-		$data = $this->get_quickpay_list();
+		$type = trim($_GET['type']);
+		$this->assign('type', $type);
+		
+		$data = $this->get_quickpay_list($type);
 		$this->assign('data', $data);
+		$this->assign('type_count', $data['count']);
 		
 		$this->assign('search_action', RC_Uri::url('quickpay/admin/init'));
 
@@ -110,26 +113,38 @@ class admin extends ecjia_admin {
 	}
 
 	
-	private function get_quickpay_list() {
-		$dbwiew_quickpay_activity = RC_DB::table('quickpay_activity as qa');
-		$dbwiew_quickpay_activity->leftJoin('store_franchisee as s', RC_DB::raw('qa.store_id'), '=', RC_DB::raw('s.store_id'))->selectRaw('qa.*, s.merchants_name, s.manage_mode');
-		
+	private function get_quickpay_list($type = '') {
 		$filter['keyword']		 = trim($_GET['keyword']);
 		$filter['merchant_name'] = trim($_GET['merchant_name']);
-		$filter['type'] 	 	 = trim($_GET['type']);
+		
+		$db_quickpay_activity = RC_DB::table('quickpay_activity as qa')
+		->leftJoin('store_franchisee as s', RC_DB::raw('s.store_id'), '=', RC_DB::raw('qa.store_id'));
 		
 		if ($filter['keyword']) {
-			$dbwiew_quickpay_activity->where('title', 'like', '%'.mysql_like_quote($filter['keyword']).'%');
+			$db_quickpay_activity->where('title', 'like', '%'.mysql_like_quote($filter['keyword']).'%');
 		}
 		if ($filter['merchant_name']) {
-			$dbwiew_quickpay_activity->where('merchants_name', 'like', '%'.mysql_like_quote($filter['merchant_name']).'%');
+			$db_quickpay_activity->where('merchants_name', 'like', '%'.mysql_like_quote($filter['merchant_name']).'%');
 		}
-		 
-		$count = $dbwiew_quickpay_activity->count();
+		
+		$time = RC_Time::gmtime();
+		$quickpay_count = $db_quickpay_activity->select(RC_DB::raw('count(*) as count'),
+				RC_DB::raw('SUM(IF(start_time <='.$time.' and end_time >= '.$time.', 1, 0)) as on_sale'),
+				RC_DB::raw('SUM(IF(s.manage_mode = "self", 1, 0)) as self'))->first();
+		
+		if ($type == 'on_going') {
+			$db_quickpay_activity->where('start_time', '<=', $time)->where('end_time', '>=', $time);
+		} 
+		
+		if ($type == 'self') {
+			$db_quickpay_activity->where(RC_DB::raw('s.manage_mode'), 'self');
+		}
+
+		$count = $db_quickpay_activity->count();
 		$page = new ecjia_page($count, 10, 5);
 		
-		$data = $dbwiew_quickpay_activity
-		->orderby('id', 'asc')
+		$data = $db_quickpay_activity
+		->select('id', 'title', 'activity_type', 'start_time', 'end_time', RC_DB::raw('s.merchants_name'))
 		->take(10)
 		->skip($page->start_id-1)
 		->get();
@@ -142,7 +157,7 @@ class admin extends ecjia_admin {
 				$list[]             = $row;
 			}
 		}
-		return array('list' => $list, 'page' => $page->show(5), 'desc' => $page->page_desc(), 'count' => $quickpay_count, 'quickuri' => $quickuri);
+		return array('list' => $list, 'filter' => $filter, 'page' => $page->show(5), 'desc' => $page->page_desc(), 'count' => $quickpay_count);
 	}
 }
 
