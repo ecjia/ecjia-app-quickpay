@@ -46,9 +46,9 @@
 			<thead>
 				<tr>
 				    <th class="table_checkbox"><input type="checkbox" name="select_rows" data-toggle="selectall" data-children=".checkbox"/></th>
-				    <th class="w150">闪惠名称</th>
+				    <th class="w150">闪惠标题</th>
 				    <th class="w150">商家名称</th>
-				    <th class="w100">闪惠类型</th>
+				    <th class="w150">闪惠类型</th>
 				    <th class="w100">开始时间</th>
 				    <th class="w100">结束时间</th>
 			  	</tr>
