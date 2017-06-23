@@ -93,6 +93,7 @@ class admin extends ecjia_admin {
 		$data = $this->get_quickpay_list($type);
 		$this->assign('data', $data);
 		$this->assign('type_count', $data['count']);
+		$this->assign('filter', $data['filter']);
 		
 		$this->assign('search_action', RC_Uri::url('quickpay/admin/init'));
 
