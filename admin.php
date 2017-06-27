@@ -145,7 +145,7 @@ class admin extends ecjia_admin {
 		$page = new ecjia_page($count, 10, 5);
 		
 		$data = $db_quickpay_activity
-		->select('id', 'title', 'activity_type', 'start_time', 'end_time', RC_DB::raw('s.merchants_name'))
+		->select('id', 'title', 'activity_type', 'start_time', 'end_time', RC_DB::raw('s.merchants_name'),RC_DB::raw('s.manage_mode'))
 		->take(10)
 		->skip($page->start_id-1)
 		->get();
