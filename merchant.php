@@ -139,6 +139,7 @@ class merchant extends ecjia_merchant {
 			'enabled'       => 1,
 			'start_time'    => RC_Time::local_date('Y-m-d H:i', RC_Time::gmtime()),
 			'end_time'      => RC_Time::local_date('Y-m-d H:i',RC_Time::local_strtotime("+1 month")),
+			'use_bonus'     => 'close',	
 		);
 		$this->assign('data', $data);
 		
@@ -169,6 +170,7 @@ class merchant extends ecjia_merchant {
 			return $this->showmessage('开始时间不能大于或等于结束时间', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
 		}
 		
+		//相对应的闪惠类型活动参数处理
 		$activity_value = $_POST['activity_value'];
 		if (is_array($activity_value)) {
 			foreach($activity_value as $row){
@@ -178,6 +180,24 @@ class merchant extends ecjia_merchant {
 			}
 			$activity_value = implode(",", $activity_value);
 		} 
+		
+		
+		//是否可参与红包优惠
+		$use_bonus_enabled = trim($_POST['use_bonus_enabled']);
+		if ($use_bonus_enabled == 'close') {
+			$use_bonus = $use_bonus_enabled;
+		} else{
+			$use_bonus_select = trim($_POST['use_bonus_select']);
+			if ($use_bonus_select == 'nolimit') {
+				$use_bonus = $use_bonus_select;
+			} else{
+				if (!empty($_POST['act_range_ext'])) {
+					$use_bonus = implode(",", $_POST['act_range_ext']);
+				}else{
+					return $this->showmessage('请选择您要指定的红包项', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
+				}
+			}
+		}
 		
 		$data = array(
 			'store_id'		=> $store_id,
@@ -192,11 +212,11 @@ class merchant extends ecjia_merchant {
 			'limit_time_exclude'=> '',	
 				
 			'start_time'	=> $start_time,
-			'end_time'		=> $end_time,	
+			'end_time'		=> $end_time,
 					
+			'use_bonus'		=> $use_bonus,
 			'use_integral'	=> '',
-			'use_bonus'		=> '',	
-				
+			
 			'enabled' 		=> intval($_POST['enabled']),
 		);
 		
@@ -226,6 +246,13 @@ class merchant extends ecjia_merchant {
 			$data['activity_value']  = explode(",",$data['activity_value']);
 		}
 		
+		$data['use_bonus'] = explode(',', $data['use_bonus']);
+		$use_bonus = RC_DB::table('bonus_type')
+		->whereIn('type_id', $data['use_bonus'])
+		->select(RC_DB::raw('type_id'), RC_DB::raw('type_name'))
+		->get();
+		$this->assign('act_range_ext', $use_bonus);
+		
 		$this->assign('data', $data);
 
 		$this->assign('form_action', RC_Uri::url('quickpay/merchant/update'));
@@ -238,6 +265,7 @@ class merchant extends ecjia_merchant {
 	 */
 	public function update() {
 		$this->admin_priv('mh_quickpay_update');
+		
 		$id = intval($_POST['id']);
 		$title    = trim($_POST['title']);
 		$description = trim($_POST['description']);
@@ -253,6 +281,8 @@ class merchant extends ecjia_merchant {
 			return $this->showmessage('开始时间不能大于或等于结束时间', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
 		}
 		
+		
+		//相对应的闪惠类型活动参数处理
 		$activity_value = $_POST['activity_value'];
 		if (is_array($activity_value)) {
 			foreach($activity_value as $row){
@@ -262,6 +292,23 @@ class merchant extends ecjia_merchant {
 			}
 			$activity_value = implode(",", $activity_value);
 		} 
+		
+		//是否可参与红包优惠
+		$use_bonus_enabled = trim($_POST['use_bonus_enabled']);
+		if ($use_bonus_enabled == 'close') {
+			$use_bonus = $use_bonus_enabled;
+		} else{
+			$use_bonus_select = trim($_POST['use_bonus_select']);
+			if ($use_bonus_select == 'nolimit') {
+				$use_bonus = $use_bonus_select;
+			} else{
+				if (!empty($_POST['act_range_ext'])) {
+					$use_bonus = implode(",", $_POST['act_range_ext']);
+				}else{
+					return $this->showmessage('请选择您要指定的红包项', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
+				}
+			}
+		}
 		
 		$data = array(
 			'title'      	=> $title,
@@ -275,7 +322,7 @@ class merchant extends ecjia_merchant {
 			'start_time'	=> $start_time,
 			'end_time'		=> $end_time,		
 			'use_integral'	=> '',
-			'use_bonus'		=> '',	
+			'use_bonus'		=> $use_bonus,	
 			'enabled' 		=> intval($_POST['enabled']),
 		);
 		
@@ -293,6 +340,21 @@ class merchant extends ecjia_merchant {
     	RC_DB::table('quickpay_activity')->where('id', $id)->delete();
     	 
     	return $this->showmessage('成功删除该闪惠规则', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS);
+    }
+    
+    /**
+     * 搜索红包
+     */
+    public function search() {
+    	$this->admin_priv('mh_quickpay_manage');
+    
+    	$keyword = trim($_POST['keyword']);
+    	$db_bonus = RC_DB::table('bonus_type')->where('store_id', $_SESSION['store_id'])->select(RC_DB::raw('type_id'), RC_DB::raw('type_name'));
+    	if (!empty($keyword)) {
+    		$db_bonus->where('type_name', 'like', '%'.mysql_like_quote($keyword).'%');
+    	}
+    	$arr = $db_bonus->get();
+    	return $this->showmessage('', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('content' => $arr));
     }
 	
 	/**

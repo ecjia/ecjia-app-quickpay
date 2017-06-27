@@ -78,11 +78,15 @@
                 minuteStep: 1
             });
             app.quickpay_info.activity_type_change();
-            app.quickpay_info.other_offer_change();
+            app.quickpay_info.use_bonus_enabled_change();
+            app.quickpay_info.select_bonus_change();
+            app.quickpay_info.bonus_plus();
+            app.quickpay_info.bonus_remove();
             app.quickpay_info.submit_form();
             
         },
         
+        //闪惠类型处理
         activity_type_change: function () {
     	   $("#activity_type").change(function () {
                $(this).children().each(function (i) {
@@ -101,10 +105,118 @@
            });
         },
         
-        other_offer_change: function () {
-        	
+        //开启和关闭是否使用红包活动
+        use_bonus_enabled_change: function () {
+        	 $("input[name='use_bonus_enabled']").click(function () {
+        		 var use_bonus_enabled = $("input[name='use_bonus_enabled']:checked").val();
+            	 if(use_bonus_enabled == 'open'){
+            		 $("#use_bonus_select").attr("disabled",false); 
+            		 $("#use_bonus_select").trigger("liszt:updated");
+            		 $("#keyword").attr("disabled",false);
+            		 $("#search").attr("disabled",false);
+            	 }else{
+            		 $("#use_bonus_select").attr("disabled","disabled");
+            		 $("#use_bonus_select").trigger("liszt:updated");
+            		 $("#keyword").attr("disabled","disabled");
+            		 $("#search").attr("disabled","disabled");
+            	 }
+        	 })
+        },
+        
+        //获取商家所有红包列表
+        select_bonus_change: function () {
+            $("#search").on('click', function () {
+                var keyword = document.forms['theForm'].elements['keyword'].value;
+                var searchurl = $(this).attr('data-url');
+                $.ajax({
+                    url: searchurl,
+                    dataType: "JSON",
+                    type: "POST",
+                    data: {
+                        keyword: keyword,
+                    },
+                    success: function (data) {
+                        app.quickpay_info.searchResponse(data);
+                    }
+                });
+            });
         	
         },
+        
+        //进行返回的红包列表处理，放入页面中
+        searchResponse: function (data) {
+            if (data.state == 'success' && data.content) {
+                var $selectbig = $('#selectbig');
+                $selectbig.show();
+                var bonus = data.content;
+                var tmpobj = '';
+                var $select = $('form[name="theForm"] select[name="result"]');
+                for (i = 0; i < bonus.length; i++) {
+                    if (bonus[i].level) {
+                        tmpobj += '<option value=' + bonus[i].type_id + ' style=padding-left:' + bonus[i].level * 20 + 'px>' + bonus[i].type_name + '</option>';
+                    } else {
+                        tmpobj += '<option value=' + bonus[i].type_id + ' >' + bonus[i].type_name + '</option>';
+                    }
+                }
+                $select.html(tmpobj);
+                $select.trigger("liszt:updated");
+            }
+        },
+        
+        //选择可以同时参加闪惠的红包（可多选）
+        bonus_plus: function () {
+            $("#result").on('click', function () {
+                var selRange = document.forms['theForm'].elements['use_bonus_select'];
+                if (selRange.value == 0) {
+                    var data = {
+                        message: "优惠范围是全部红包，不需要此操作",
+                        state: "error",
+                    }
+                    ecjia.merchant.showmessage(data);
+                    return;
+                }
+                var selResult = document.getElementById('result');
+                if (selResult.value == 0) {
+                    var data = {
+                        message: "请先搜索相应的数据",
+                        state: "error",
+                    }
+                    ecjia.merchant.showmessage(data);
+                    return;
+                }
+                var id = selResult.options[selResult.selectedIndex].value;
+                var name = selResult.options[selResult.selectedIndex].text;
+                var exists = false;
+                var eles = document.forms['theForm'].elements;
+                for (var i = 0; i < eles.length; i++) {
+                    if (eles[i].type == "hidden" && eles[i].name.substr(0, 13) == 'act_range_ext') {
+                        if (eles[i].value == id) {
+                            exists = true;
+                            var data = {
+                                message: "该选项已存在",
+                                state: "error",
+                            }
+                            ecjia.merchant.showmessage(data);
+                            break;
+                        }
+                    }
+                }
+                if (!exists) {
+                    var html = '<li>' + name + '<input name="act_range_ext[]" type="hidden" value="' + id + '"/>' +
+                        '&nbsp;<a href="javascript:;" class="delact"><i class="fa fa-minus-circle ecjiafc-red"></i></a></li>';
+                    $("#range-div").show().append(html);
+                    app.quickpay_info.bonus_remove();
+                }
+            });
+        },
+        
+        //移除所选择的红包
+        bonus_remove: function () {
+            $(".delact").on('click', function () {
+                $(this).parents("li").remove();
+            });
+        },	
+        
         
 	    submit_form: function (formobj) {
 	        var $form = $("form[name='theForm']");

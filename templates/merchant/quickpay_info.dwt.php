@@ -35,6 +35,7 @@ table{border-collapse: separate; border-spacing: 0 3px;}
                 <div class="panel-body">
                     <div class="form">
                         <form id="form-privilege" class="form-horizontal" name="theForm" action="{$form_action}" method="post" >
+                        	<!-- 左边 -->
 	                        <div class="col-lg-7" style="padding-left:0px;">
 	                            <fieldset>
 	                                <div class="form-group">
@@ -75,7 +76,7 @@ table{border-collapse: separate; border-spacing: 0 3px;}
 									
 									<div id="activity_type_reduced" {if $data.activity_type neq 'reduced'}style="display:none"{/if}>
 										<div class="form-group">
-		                                    <label class="control-label col-lg-2">满多少：</label>
+		                                    <label class="control-label col-lg-2">满金额：</label>
 		                                    <div class="controls col-lg-9">
 		                                        <div class="controls-split">
 		                                            <div class="ecjiaf-fl wright_wleft">
@@ -95,7 +96,7 @@ table{border-collapse: separate; border-spacing: 0 3px;}
 									
 									<div id="activity_type_everyreduced" {if $data.activity_type neq 'everyreduced'}style="display:none"{/if}>
 										<div class="form-group">
-		                                    <label class="control-label col-lg-2">每满多少：</label>
+		                                    <label class="control-label col-lg-2">每满金额：</label>
 		                                    <div class="controls col-lg-9">
 		                                        <div class="controls-split">
 		                                            <div class="ecjiaf-fl wright_wleft">
@@ -162,35 +163,66 @@ table{border-collapse: separate; border-spacing: 0 3px;}
 	                                </div>         
 	                            </fieldset>  
 	                        </div>
-                            
-                            <div class="col-lg-5">
+	                        
+	                        
+	                        
+	                        
+	                        
+                            <!-- 右边 -->
+							<div class="col-lg-5">
                                 <fieldset>
                                     <div class="panel panel-primary">
                                         <div class="panel-heading">
                                             <a data-toggle="collapse" data-parent="#accordion" href="#telescopic1" class="accordion-toggle">
                                             	<span class="glyphicon"></span>
-                                                <h4 class="panel-title">同享优惠</h4>
+                                                <h4 class="panel-title">红包优惠</h4>
                                             </a>
                                         </div>
+                                        
                                         <div id="telescopic1" class="panel-collapse collapse in">
-                                            <div class="panel-body">
+	                                         <div class="panel-body">
+	                                            <div class="form-group">
+	                                            	<label class="control-label" style="float: left; padding-left: 15px;">是否允许同时使用红包抵现：</label>
+							                       	<div>
+						                                <input id="open_bonuns" name="use_bonus_enabled" value="open" type="radio" {if $data.use_bonus neq 'close'} checked="true" {/if}>
+						                                <label for="open_bonuns">开启</label>
+						                                <input id="close_bonus" name="use_bonus_enabled" value="close" type="radio" {if $data.use_bonus eq 'close'} checked="true" {/if}>
+						                                <label for="close_bonus">关闭</label>
+						                            </div>
+						                      	</div>
+			                      	
                                                 <div class="form-group">
                                                     <div class="col-lg-8">
-                                                        <select class="form-control"  name="act_range" id="act_range_id">
-                                                            <option value="0" selected="selected" {if $favourable.act_range eq 0}selected="selected"{/if}>{lang key='favourable::favourable.far_all'}</option>
-<!--                                                             <option value="1" {if $favourable.act_range eq 1}selected{/if}>{lang key='favourable::favourable.far_category'}</option> -->
-                                                            <option value="3" {if $favourable.act_range eq 3}selected{/if}>{lang key='favourable::favourable.far_goods'}</option>
+                                                        <select class="form-control" id="use_bonus_select" name="use_bonus_select" {if $data.use_bonus eq 'close'}disabled="disabled"{/if}>
+                                                            <option value="nolimit" {if $data.use_bonus eq 'nolimit'}selected{/if}>全部红包</option>
+                                                            <option value="bonus_id" {if $act_range_ext}selected{/if}>指定红包</option>
                                                         </select>
                                                     </div>
                                                 </div>
 
                                                 <div class="form-group" id="range_search" >
                                                     <div class="col-lg-8">
-                                                        <input name="keyword" class="form-control" type="text" id="keyword" placeholder="{lang key='favourable::favourable.keywords'}">
+                                                        <input name="keyword" class="form-control" type="text" id="keyword" placeholder="请输入关键词进行搜索" {if $data.use_bonus eq 'close'}disabled="disabled"{/if} />
                                                     </div>
-                                                    <button class="btn btn-primary" type="button" id="search" data-url='{url path="favourable/merchant/search"}'><i class='fa fa-search'></i> {lang key='system::system.button_search'}</button>
+                                                    <button class="btn btn-primary" type="button" id="search" data-url='{url path="quickpay/merchant/search"}' {if $data.use_bonus eq 'close'}disabled="disabled"{/if}><i class='fa fa-search'></i> {lang key='system::system.button_search'}</button>
                                                 </div>
 
+                                                <ul id="range-div" {if $act_range_ext}style="display:block;"{/if}>
+                                                    <!-- {foreach from=$act_range_ext item=item} -->
+                                                    <li>
+                                                        <input name="act_range_ext[]" type="hidden" value="{$item.type_id}" />
+                                                        {$item.type_name}
+                                                        <a href="javascript:;" class="delact"><i class="fa fa-minus-circle ecjiafc-red"></i></a>
+                                                    </li>
+                                                    <!-- {/foreach} -->
+                                                </ul>
+
+                                                <div class="form-group" id="selectbig" style="display:none">
+                                                    <div class="col-lg-10">
+                                                        <select name="result" id="result" class="noselect form-control" size="10">
+                                                        </select>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
