@@ -248,13 +248,15 @@ class merchant extends ecjia_merchant {
 			$data['activity_value']  = explode(",",$data['activity_value']);
 		}
 		//红包处理
-		$data['use_bonus'] = explode(',', $data['use_bonus']);
-		$use_bonus = RC_DB::table('bonus_type')
-		->whereIn('type_id', $data['use_bonus'])
-		->select(RC_DB::raw('type_id'), RC_DB::raw('type_name'))
-		->get();
-		$this->assign('act_range_ext', $use_bonus);
-		
+		if($data['use_bonus'] != 'close' && $data['use_bonus'] != 'nolimit') {
+			$data['use_bonus'] = explode(',', $data['use_bonus']);
+			$use_bonus = RC_DB::table('bonus_type')
+			->whereIn('type_id', $data['use_bonus'])
+			->select(RC_DB::raw('type_id'), RC_DB::raw('type_name'))
+			->get();
+			$this->assign('act_range_ext', $use_bonus);
+		}
+
 		$this->assign('data', $data);
 
 		$this->assign('form_action', RC_Uri::url('quickpay/merchant/update'));
