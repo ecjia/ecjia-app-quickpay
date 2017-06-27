@@ -123,7 +123,7 @@ class merchant extends ecjia_merchant {
 	}
 	
 	/**
-	 * 添加员工页面
+	 * 添加闪惠页面
 	 */
 	public function add() {
 		$this->admin_priv('mh_quickpay_update');
@@ -149,7 +149,7 @@ class merchant extends ecjia_merchant {
 	}
 
 	/**
-	 * 处理添加员工
+	 * 处理添加闪惠
 	 */
 	public function insert() {
 		
@@ -225,7 +225,7 @@ class merchant extends ecjia_merchant {
 	}
 	
 	/**
-	 * 编辑员工页面
+	 * 编辑闪惠活动页面
 	 */
 	public function edit() {
 		$this->admin_priv('quickpay_update');
@@ -242,10 +242,12 @@ class merchant extends ecjia_merchant {
 		
 		$data['start_time']   = RC_Time::local_date(ecjia::config('time_format'), $data ['start_time']);
 		$data['end_time']     = RC_Time::local_date(ecjia::config('time_format'), $data ['end_time']);
+		
+		//闪惠活动参数处理
 		if(strpos($data['activity_value'],',') !== false){
 			$data['activity_value']  = explode(",",$data['activity_value']);
 		}
-		
+		//红包处理
 		$data['use_bonus'] = explode(',', $data['use_bonus']);
 		$use_bonus = RC_DB::table('bonus_type')
 		->whereIn('type_id', $data['use_bonus'])
@@ -266,11 +268,12 @@ class merchant extends ecjia_merchant {
 	public function update() {
 		$this->admin_priv('mh_quickpay_update');
 		
+		$store_id = $_SESSION['store_id'];
 		$id = intval($_POST['id']);
 		$title    = trim($_POST['title']);
 		$description = trim($_POST['description']);
 
-		if (RC_DB::table('quickpay_activity')->where('title', $title)->where('store_id', $store_id)->count() > 0) {
+		if (RC_DB::table('quickpay_activity')->where('title', $title)->where('store_id', $store_id)->where('id', '!=', $id)->count() > 0) {
 			return $this->showmessage('当前店铺下已存在该闪惠标题', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
 		}
 
@@ -281,7 +284,6 @@ class merchant extends ecjia_merchant {
 			return $this->showmessage('开始时间不能大于或等于结束时间', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
 		}
 		
-		
 		//相对应的闪惠类型活动参数处理
 		$activity_value = $_POST['activity_value'];
 		if (is_array($activity_value)) {
@@ -291,7 +293,7 @@ class merchant extends ecjia_merchant {
 				}
 			}
 			$activity_value = implode(",", $activity_value);
-		} 
+		}
 		
 		//是否可参与红包优惠
 		$use_bonus_enabled = trim($_POST['use_bonus_enabled']);
@@ -315,14 +317,18 @@ class merchant extends ecjia_merchant {
 			'description'	=> $description,
 			'activity_type' => $_POST['activity_type'],
 			'activity_value'	=> $activity_value,	
+				
 			'limit_time_type'	=> '',
 			'limit_time_weekly'	=> '',
 			'limit_time_daily'	=> '',	
 			'limit_time_exclude'=> '',	
+				
 			'start_time'	=> $start_time,
 			'end_time'		=> $end_time,		
+				
 			'use_integral'	=> '',
 			'use_bonus'		=> $use_bonus,	
+				
 			'enabled' 		=> intval($_POST['enabled']),
 		);
 		

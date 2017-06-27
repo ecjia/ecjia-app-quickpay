@@ -68,7 +68,7 @@ table{border-collapse: separate; border-spacing: 0 3px;}
 										<div class="form-group">
 		                                    <label class="control-label col-lg-2">折扣价：</label>
 		                                    <div class="controls col-lg-9">
-		                                        <input class="form-control" type="text" name="activity_value" value="{$data.activity_value}" {if !$data.activity_value}disabled="disabled"{/if}/>
+		                                        <input class="form-control" type="text" name="activity_value" value="{$data.activity_value}" {if $data.activity_type neq 'discount'}disabled="disabled"{/if}/>
 		                                    </div>
 		                                    <span class="input-must">{lang key='system::system.require_field'}</span>
 		                                </div>
@@ -80,13 +80,13 @@ table{border-collapse: separate; border-spacing: 0 3px;}
 		                                    <div class="controls col-lg-9">
 		                                        <div class="controls-split">
 		                                            <div class="ecjiaf-fl wright_wleft">
-		                                                <input name="activity_value[]" class="form-control  w200" type="text" placeholder="消费达到的金额" value="{$data.activity_value.0}" {if !$data.activity_value.0}disabled="disabled"{/if} />
+		                                                <input name="activity_value[]" class="form-control  w200" type="text" placeholder="消费达到的金额" value="{$data.activity_value.0}" {if $data.activity_type neq 'reduced'}disabled="disabled"{/if} />
 		                                            </div>
 		                                            
 		                                            <div class="wmiddens ecjiaf-fl p_t5">减</div>
 		                                            
 		                                            <div class="ecjiaf-fl wright_wleft">
-		                                                <input name="activity_value[]" class="form-control  w200" type="text" placeholder="优惠金额" value="{$data.activity_value.1}" {if !$data.activity_value.1}disabled="disabled"{/if}  />
+		                                                <input name="activity_value[]" class="form-control  w200" type="text" placeholder="优惠金额" value="{$data.activity_value.1}" {if $data.activity_type neq 'reduced'}disabled="disabled"{/if}  />
 		                                            </div>
 	                                        	</div>
 	                                        	 &nbsp;<span class="input-must">{lang key='system::system.require_field'}</span>
@@ -100,13 +100,13 @@ table{border-collapse: separate; border-spacing: 0 3px;}
 		                                    <div class="controls col-lg-9">
 		                                        <div class="controls-split">
 		                                            <div class="ecjiaf-fl wright_wleft">
-		                                                <input name="activity_value[]" class="form-control  w200" type="text" placeholder="消费达到的金额" value="{$data.activity_value.0}" {if !$data.activity_value.0}disabled="disabled"{/if} />
+		                                                <input name="activity_value[]" class="form-control  w200" type="text" placeholder="消费达到的金额" value="{$data.activity_value.0}" {if $data.activity_type neq 'everyreduced'}disabled="disabled"{/if} />
 		                                            </div>
 		                                            
 		                                            <div class="wmiddens ecjiaf-fl p_t5">减</div>
 		                                            
 		                                            <div class="ecjiaf-fl wright_wleft">
-		                                                <input name="activity_value[]" class="form-control  w200" type="text" placeholder="优惠金额" value="{$data.activity_value.1}" {if !$data.activity_value.1}disabled="disabled"{/if} />
+		                                                <input name="activity_value[]" class="form-control  w200" type="text" placeholder="优惠金额" value="{$data.activity_value.1}" {if $data.activity_type neq 'everyreduced'}disabled="disabled"{/if} />
 		                                            </div> &nbsp;<span class="input-must">{lang key='system::system.require_field'}</span><br><br>
 		                                            
 		                                            <div class="ecjiaf-fl p_t5">最高减：</div>
@@ -206,7 +206,12 @@ table{border-collapse: separate; border-spacing: 0 3px;}
                                                     </div>
                                                     <button class="btn btn-primary" type="button" id="search" data-url='{url path="quickpay/merchant/search"}' {if $data.use_bonus eq 'close'}disabled="disabled"{/if}><i class='fa fa-search'></i> {lang key='system::system.button_search'}</button>
                                                 </div>
-
+                                                
+                                                <span class="help-block">
+                                                	当红包优惠设为“指定红包”时，需要输入关键词搜索并且设置指定红包，
+													如果优惠设为“不指定红包”则不需要设置。
+                                                </span>
+                                                
                                                 <ul id="range-div" {if $act_range_ext}style="display:block;"{/if}>
                                                     <!-- {foreach from=$act_range_ext item=item} -->
                                                     <li>
