@@ -82,6 +82,7 @@
             app.quickpay_info.select_bonus_change();
             app.quickpay_info.bonus_plus();
             app.quickpay_info.bonus_remove();
+            app.quickpay_info.use_integral_enabled_change();
             app.quickpay_info.submit_form();
             
         },
@@ -105,7 +106,7 @@
            });
         },
         
-        //开启和关闭是否使用红包活动
+        //开启和关闭是否使用红包抵现
         use_bonus_enabled_change: function () {
         	 $("input[name='use_bonus_enabled']").click(function () {
         		 var use_bonus_enabled = $("input[name='use_bonus_enabled']:checked").val();
@@ -217,6 +218,22 @@
             });
         },	
         
+        
+        //开启和关闭是否使用积分抵现
+        use_integral_enabled_change: function () {
+        	 $("input[name='use_integral_enabled']").click(function () {
+        		 var use_integral_enabled = $("input[name='use_integral_enabled']:checked").val();
+            	 if(use_integral_enabled == 'open'){
+            		 $("#use_integral_select").attr("disabled",false); 
+            		 $("#use_integral_select").trigger("liszt:updated");
+            		 $("#integral_keyword").attr("disabled",false);
+            	 }else{
+            		 $("#use_integral_select").attr("disabled","disabled");
+            		 $("#use_integral_select").trigger("liszt:updated");
+            		 $("#integral_keyword").attr("disabled","disabled");
+            	 }
+        	 })
+        },
         
 	    submit_form: function (formobj) {
 	        var $form = $("form[name='theForm']");

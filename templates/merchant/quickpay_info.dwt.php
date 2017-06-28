@@ -165,74 +165,115 @@ table{border-collapse: separate; border-spacing: 0 3px;}
 	                        </div>
 	                        
 	                        
-	                        
-	                        
-	                        
                             <!-- 右边 -->
-							<div class="col-lg-5">
-                                <fieldset>
-                                    <div class="panel panel-primary">
-                                        <div class="panel-heading">
-                                            <a data-toggle="collapse" data-parent="#accordion" href="#telescopic1" class="accordion-toggle">
-                                            	<span class="glyphicon"></span>
-                                                <h4 class="panel-title">红包优惠</h4>
-                                            </a>
-                                        </div>
-                                        
-                                        <div id="telescopic1" class="panel-collapse collapse in">
-	                                         <div class="panel-body">
-	                                            <div class="form-group">
-	                                            	<label class="control-label" style="float: left; padding-left: 15px;">是否允许同时使用红包抵现：</label>
-							                       	<div>
-						                                <input id="open_bonuns" name="use_bonus_enabled" value="open" type="radio" {if $data.use_bonus neq 'close'} checked="true" {/if}>
-						                                <label for="open_bonuns">开启</label>
-						                                <input id="close_bonus" name="use_bonus_enabled" value="close" type="radio" {if $data.use_bonus eq 'close'} checked="true" {/if}>
-						                                <label for="close_bonus">关闭</label>
-						                            </div>
-						                      	</div>
-			                      	
-                                                <div class="form-group">
-                                                    <div class="col-lg-8">
-                                                        <select class="form-control" id="use_bonus_select" name="use_bonus_select" {if $data.use_bonus eq 'close'}disabled="disabled"{/if}>
-                                                            <option value="nolimit" {if $data.use_bonus eq 'nolimit'}selected{/if}>全部红包</option>
-                                                            <option value="bonus_id" {if $act_range_ext}selected{/if}>指定红包</option>
-                                                        </select>
-                                                    </div>
-                                                </div>
+                            <div class="col-lg-5 pull-right">
+								<div class="panel-group">
+					            	<div class="panel panel-info">
+										<div class="panel-heading">
+										   <a data-toggle="collapse" data-parent="#accordion" href="#telescopic1" class="accordion-toggle">
+										       <span class="glyphicon"></span>
+										       <h4 class="panel-title">红包优惠</h4>
+										    </a>
+										</div>     
 
-                                                <div class="form-group" id="range_search" >
-                                                    <div class="col-lg-8">
-                                                        <input name="keyword" class="form-control" type="text" id="keyword" placeholder="请输入关键词进行搜索" {if $data.use_bonus eq 'close'}disabled="disabled"{/if} />
-                                                    </div>
-                                                    <button class="btn btn-primary" type="button" id="search" data-url='{url path="quickpay/merchant/search"}' {if $data.use_bonus eq 'close'}disabled="disabled"{/if}><i class='fa fa-search'></i> {lang key='system::system.button_search'}</button>
-                                                </div>
-                                                
-                                                <span class="help-block">
-                                                	当红包优惠设为“指定红包”时，需要输入关键词搜索并且设置指定红包，
+										<div id="telescopic1" class="panel-collapse collapse in">
+											 <div class="panel-body">
+											    <div class="form-group">
+											    	<label class="control-label" style="float: left; padding-left: 15px;">是否允许同时使用红包抵现：</label>
+											       	<div>
+											            <input id="open_bonuns" name="use_bonus_enabled" value="open" type="radio" {if $data.use_bonus neq 'close'} checked="true" {/if}>
+											            <label for="open_bonuns">开启</label>
+											            <input id="close_bonus" name="use_bonus_enabled" value="close" type="radio" {if $data.use_bonus eq 'close'} checked="true" {/if}>
+											            <label for="close_bonus">关闭</label>
+											        </div>
+											  	</div>
+
+											    <div class="form-group p_l15 p_r15">
+											        <div class="controls">
+											            <select class="form-control" id="use_bonus_select" name="use_bonus_select" {if $data.use_bonus eq 'close'}disabled="disabled"{/if}>
+											                <option value="nolimit" {if $data.use_bonus eq 'nolimit'}selected{/if}>全部红包</option>
+											                <option value="bonus_id" {if $act_range_ext}selected{/if}>指定红包</option>
+											            </select>
+											        </div>
+											    </div>
+
+											    <div class="form-group" id="range_search" >
+											        <div class="col-lg-8">
+											            <input name="keyword" class="form-control" type="text" id="keyword" placeholder="请输入关键词进行搜索" {if $data.use_bonus eq 'close'}disabled="disabled"{/if} />
+											        </div>
+											        <button class="btn btn-primary" type="button" id="search" data-url='{url path="quickpay/merchant/search"}' {if $data.use_bonus eq 'close'}disabled="disabled"{/if}><i class='fa fa-search'></i> {lang key='system::system.button_search'}</button>
+											    </div>
+											    
+											    <span class="help-block">
+											    	当红包优惠设为“指定红包”时，需要输入关键词搜索并且设置指定红包，
 													如果优惠设为“不指定红包”则不需要设置。
-                                                </span>
-                                                
-                                                <ul id="range-div" {if $act_range_ext}style="display:block;"{/if}>
-                                                    <!-- {foreach from=$act_range_ext item=item} -->
-                                                    <li>
-                                                        <input name="act_range_ext[]" type="hidden" value="{$item.type_id}" />
-                                                        {$item.type_name}
-                                                        <a href="javascript:;" class="delact"><i class="fa fa-minus-circle ecjiafc-red"></i></a>
-                                                    </li>
-                                                    <!-- {/foreach} -->
-                                                </ul>
+											    </span>
+											    
+											    <ul id="range-div" {if $act_range_ext}style="display:block;"{/if}>
+											        <!-- {foreach from=$act_range_ext item=item} -->
+											        <li>
+											            <input name="act_range_ext[]" type="hidden" value="{$item.type_id}" />
+											            {$item.type_name}
+											            <a href="javascript:;" class="delact"><i class="fa fa-minus-circle ecjiafc-red"></i></a>
+											        </li>
+											        <!-- {/foreach} -->
+											    </ul>
 
-                                                <div class="form-group" id="selectbig" style="display:none">
-                                                    <div class="col-lg-10">
-                                                        <select name="result" id="result" class="noselect form-control" size="10">
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </fieldset>
-                            </div>
+											    <div class="form-group" id="selectbig" style="display:none">
+											        <div class="col-lg-10">
+											            <select name="result" id="result" class="noselect form-control" size="10">
+											            </select>
+											        </div>
+											    </div>
+											</div>
+										</div>
+				        			</div>
+								</div>
+							
+								<div class="panel-group">
+						            <div class="panel panel-info">
+						                <div class="panel-heading">
+						                    <a data-toggle="collapse" data-parent="#accordionTwo" href="#collapseFour" class="accordion-toggle">
+						                        <span class="glyphicon"></span>
+						                        <h4 class="panel-title">积分优惠</h4>
+						                    </a>
+						                </div>
+						                <div id="collapseFour" class="panel-collapse collapse in">
+						                	<div class="panel-body">
+						                		<div class="form-group">
+											    	<label class="control-label" style="float: left; padding-left: 15px;">是否允许同时使用积分抵现：</label>
+											       	<div>
+											            <input id="open_integral" name="use_integral_enabled" value="open" type="radio" {if $data.use_integral neq 'close'} checked="true" {/if}>
+											            <label for="open_integral">开启</label>
+											            <input id="close_integral" name="use_integral_enabled" value="close" type="radio" {if $data.use_integral eq 'close'} checked="true" {/if}>
+											            <label for="close_integral">关闭</label>
+											        </div>
+											  	</div>
+											  	
+							                	<div class="form-group p_l15 p_r15">
+			                                     	<div class="controls">
+				                                        <select class="form-control" id="use_integral_select" name="use_integral_select" {if $data.use_integral eq 'close'}disabled="disabled"{/if}>
+											                <option value="nolimit" {if $data.use_integral eq 'nolimit'}selected{/if}>不限制积分</option>
+											                <option value="integral" {if $act_range_ext}selected{/if}>限制积分</option>
+											            </select>
+			                                        </div>
+							                	</div>
+							                	
+							                	 <div class="form-group" id="range_search" >
+											        <div class="col-lg-8">
+											            <input name="integral_keyword" class="form-control" type="text" value="{if $integral_keyword}{$integral_keyword}{else}0{/if}"  id="integral_keyword" {if $data.use_integral eq 'close'}disabled="disabled"{/if} />
+											        </div>
+											    </div>
+											    
+											    <span class="help-block">
+											    	当积分优惠设为“限制积分”时，可设置最大可用积分数与优惠同时使用，
+													数量为0时则是不限制，如果选择“不限制积分”则不需要设置。
+											    </span>
+						                	</div>
+					              		</div>
+						 			</div>
+								</div>
+							</div>
                     	</form>
                 	</div>
            	 	</div>

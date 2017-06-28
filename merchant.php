@@ -140,6 +140,7 @@ class merchant extends ecjia_merchant {
 			'start_time'    => RC_Time::local_date('Y-m-d H:i', RC_Time::gmtime()),
 			'end_time'      => RC_Time::local_date('Y-m-d H:i',RC_Time::local_strtotime("+1 month")),
 			'use_bonus'     => 'close',	
+			'use_integral'  => 'close',
 		);
 		$this->assign('data', $data);
 		
@@ -182,7 +183,7 @@ class merchant extends ecjia_merchant {
 		} 
 		
 		
-		//是否可参与红包优惠
+		//是否可参与红包抵现
 		$use_bonus_enabled = trim($_POST['use_bonus_enabled']);
 		if ($use_bonus_enabled == 'close') {
 			$use_bonus = $use_bonus_enabled;
@@ -195,6 +196,23 @@ class merchant extends ecjia_merchant {
 					$use_bonus = implode(",", $_POST['act_range_ext']);
 				}else{
 					return $this->showmessage('请选择您要指定的红包项', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
+				}
+			}
+		}
+		
+		//是否可参与积分抵现
+		$use_integral_enabled = trim($_POST['use_integral_enabled']);
+		if ($use_integral_enabled == 'close') {
+			$use_integral = $use_integral_enabled;
+		} else{
+			$use_integral_select = trim($_POST['use_integral_select']);
+			if ($use_integral_select == 'nolimit') {
+				$use_integral = $use_integral_select;
+			} else{
+				if (!empty($_POST['integral_keyword'])) {
+					$use_integral = $_POST['integral_keyword'];
+				}else{
+					return $this->showmessage('设置最大可用积分数', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
 				}
 			}
 		}
@@ -215,11 +233,11 @@ class merchant extends ecjia_merchant {
 			'end_time'		=> $end_time,
 					
 			'use_bonus'		=> $use_bonus,
-			'use_integral'	=> '',
+			'use_integral'	=> $use_integral,
 			
 			'enabled' 		=> intval($_POST['enabled']),
 		);
-		
+		_dump($data,1);
 		$id = RC_DB::table('quickpay_activity')->insertGetId($data);
 		return $this->showmessage('添加闪惠规则成功', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('pjaxurl' => RC_Uri::url('quickpay/merchant/edit', array('id' => $id))));
 	}
@@ -297,7 +315,7 @@ class merchant extends ecjia_merchant {
 			$activity_value = implode(",", $activity_value);
 		}
 		
-		//是否可参与红包优惠
+		//是否可参与红包抵现
 		$use_bonus_enabled = trim($_POST['use_bonus_enabled']);
 		if ($use_bonus_enabled == 'close') {
 			$use_bonus = $use_bonus_enabled;
@@ -310,6 +328,24 @@ class merchant extends ecjia_merchant {
 					$use_bonus = implode(",", $_POST['act_range_ext']);
 				}else{
 					return $this->showmessage('请选择您要指定的红包项', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
+				}
+			}
+		}
+		
+		
+		//是否可参与积分抵现
+		$use_integral_enabled = trim($_POST['use_integral_enabled']);
+		if ($use_integral_enabled == 'close') {
+			$use_integral = $use_integral_enabled;
+		} else{
+			$use_integral_select = trim($_POST['use_integral_select']);
+			if ($use_integral_select == 'nolimit') {
+				$use_integral = $use_integral_select;
+			} else{
+				if (!empty($_POST['integral_keyword'])) {
+					$use_integral = $_POST['integral_keyword'];
+				}else{
+					return $this->showmessage('设置最大可用积分数', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
 				}
 			}
 		}
@@ -328,7 +364,7 @@ class merchant extends ecjia_merchant {
 			'start_time'	=> $start_time,
 			'end_time'		=> $end_time,		
 				
-			'use_integral'	=> '',
+			'use_integral'	=> $use_integral,
 			'use_bonus'		=> $use_bonus,	
 				
 			'enabled' 		=> intval($_POST['enabled']),
