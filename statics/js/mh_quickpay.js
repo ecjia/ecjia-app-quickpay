@@ -55,28 +55,10 @@
  
     app.quickpay_info = {
         init: function () {
-            /* 加载日期控件 */
-			$.fn.datetimepicker.dates['zh'] = {  
-                days:       ["星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六","星期日"],  
-                daysShort:  ["日", "一", "二", "三", "四", "五", "六","日"],  
-                daysMin:    ["日", "一", "二", "三", "四", "五", "六","日"],  
-                months:     ["一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月","十二月"],  
-                monthsShort:  ["一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月","十二月"], 
-                meridiem:    ["上午", "下午"],  
-                today:       "今天"  
-	        };
-			
-            $(".date").datetimepicker({
-                format: "yyyy-mm-dd hh:ii",
-                language: 'zh',  
-                weekStart: 1,
-                todayBtn: 1,
-                autoclose: 1,
-                todayHighlight: 1,
-                startView: 2,
-                forceParse: 0,
-                minuteStep: 1
+            $(".date").datepicker({
+                format: "yyyy-mm-dd",
             });
+
             app.quickpay_info.activity_type_change();
             app.quickpay_info.use_bonus_enabled_change();
             app.quickpay_info.select_bonus_change();

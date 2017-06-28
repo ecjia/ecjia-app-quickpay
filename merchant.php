@@ -59,9 +59,10 @@ class merchant extends ecjia_merchant {
 		
 		RC_Script::enqueue_script('bootstrap-editable-script', dirname(RC_App::app_dir_url(__FILE__)) . '/merchant/statics/assets/bootstrap-fileupload/bootstrap-fileupload.js', array());
 		RC_Style::enqueue_style('bootstrap-fileupload', dirname(RC_App::app_dir_url(__FILE__)) . '/merchant/statics/assets/bootstrap-fileupload/bootstrap-fileupload.css', array(), false, false);
+		
 		//时间控件
-		RC_Script::enqueue_script('bootstrap-datetimepicker', RC_Uri::admin_url('statics/lib/datepicker/bootstrap-datetimepicker.js'));
-		RC_Style::enqueue_style('datetimepicker', RC_Uri::admin_url('statics/lib/datepicker/bootstrap-datetimepicker.min.css'));
+		RC_Style::enqueue_style('datepicker', RC_Uri::admin_url('statics/lib/datepicker/datepicker.css'));
+		RC_Script::enqueue_script('bootstrap-datepicker', RC_Uri::admin_url('statics/lib/datepicker/bootstrap-datepicker.min.js'));
 		
 		RC_Script::enqueue_script('mh_quickpay', RC_App::apps_url('statics/js/mh_quickpay.js', __FILE__));
 		
@@ -137,8 +138,8 @@ class merchant extends ecjia_merchant {
 		
 		$data = array (
 			'enabled'       => 1,
-			'start_time'    => RC_Time::local_date('Y-m-d H:i', RC_Time::gmtime()),
-			'end_time'      => RC_Time::local_date('Y-m-d H:i',RC_Time::local_strtotime("+1 month")),
+			'start_time'    => date('Y-m-d'),
+			'end_time'      => date('Y-m-d', time() + 30 * 86400),
 			'use_bonus'     => 'close',	
 			'use_integral'  => 'close',
 		);
@@ -237,7 +238,6 @@ class merchant extends ecjia_merchant {
 			
 			'enabled' 		=> intval($_POST['enabled']),
 		);
-		_dump($data,1);
 		$id = RC_DB::table('quickpay_activity')->insertGetId($data);
 		return $this->showmessage('添加闪惠规则成功', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('pjaxurl' => RC_Uri::url('quickpay/merchant/edit', array('id' => $id))));
 	}
@@ -258,8 +258,8 @@ class merchant extends ecjia_merchant {
 		$id = intval($_GET['id']);
 		$data = RC_DB::table('quickpay_activity')->where('id', $id)->first();
 		
-		$data['start_time']   = RC_Time::local_date(ecjia::config('time_format'), $data ['start_time']);
-		$data['end_time']     = RC_Time::local_date(ecjia::config('time_format'), $data ['end_time']);
+		$data['start_time']   = RC_Time::local_date('Y-m-d', $data ['start_time']);
+		$data['end_time']     = RC_Time::local_date('Y-m-d', $data ['end_time']);
 		
 		//闪惠活动参数处理
 		if(strpos($data['activity_value'],',') !== false){
@@ -429,8 +429,8 @@ class merchant extends ecjia_merchant {
 		$res = array();
 		if (!empty($data)) {
 			foreach ($data as $row) {
-				$row['start_time'] = RC_Time::local_date(ecjia::config('time_format'), $row['start_time']);
-				$row['end_time'] = RC_Time::local_date(ecjia::config('time_format'), $row['end_time']);
+				$row['start_time'] = RC_Time::local_date(ecjia::config('date_format'), $row['start_time']);
+				$row['end_time'] = RC_Time::local_date(ecjia::config('date_format'), $row['end_time']);
 				$res[] = $row;
 			}
 		}
