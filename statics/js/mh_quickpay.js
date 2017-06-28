@@ -59,7 +59,39 @@
                 format: "yyyy-mm-dd",
             });
 
+            $(".tp_1").datetimepicker({
+				format: "hh:ii",
+                weekStart: 1,
+                todayBtn: 1,
+                autoclose: 1,
+                todayHighlight: 1,
+                startView: 1,
+                forceParse: 0,
+                minuteStep: 5
+			});
+            
+            $('.fontello-icon-plus').click(function(e) {
+				setTimeout(function () { 
+					$(".tp_1").datetimepicker({
+						format: "hh:ii",
+		                weekStart: 1,
+		                todayBtn: 1,
+		                autoclose: 1,
+		                todayHighlight: 1,
+		                startView: 1,
+		                forceParse: 0,
+		                minuteStep: 5
+					});
+					
+					$(".date").datepicker({
+		                format: "yyyy-mm-dd",
+		            });
+					
+			    }, 1);
+			});
+
             app.quickpay_info.activity_type_change();
+            app.quickpay_info.time_type_change();
             app.quickpay_info.use_bonus_enabled_change();
             app.quickpay_info.select_bonus_change();
             app.quickpay_info.bonus_plus();
@@ -87,6 +119,18 @@
                });
            });
         },
+        
+        
+        //时间类型处理
+        time_type_change: function () {
+    	   $("#limit_time_type").change(function () {
+               $(this).children().each(function (i) {
+                   $("#limit_time_type_" + $(this).val()).hide();
+               })
+               $("#limit_time_type_" + $(this).val()).show();
+           });
+        },
+
         
         //开启和关闭是否使用红包抵现
         use_bonus_enabled_change: function () {

@@ -119,16 +119,73 @@ table{border-collapse: separate; border-spacing: 0 3px;}
 		                                  </div>
 									</div>
 									
+									
+									
 	                                <div class="form-group">
-	                                    <label class="control-label col-lg-2">时间规则：</label>
+	                                    <label class="control-label col-lg-2">具体时间：</label>
 	                                    <div class="controls col-lg-9">
 	                                        <select name="limit_time_type" id="limit_time_type" class="form-control" >
-												<option value='nolimit'>不限制时间</option>
-												<option value='customize'>自定义时间</option>
+												<option value='nolimit' {if $data.limit_time_type eq 'nolimit'}selected{/if}>不限制时间</option>
+												<option value='customize' {if $data.limit_time_type eq 'customize'}selected{/if}>自定义时间</option>
 											</select>
 	                                    </div>
 	                                </div>
 	                                
+	                                <div id="limit_time_type_customize" {if $data.limit_time_type neq 'customize'}style="display:none"{/if}>
+		                                <div class="form-group" id="ship_time">
+											<label class="control-label col-lg-2">每天限时：</label>
+											<div class="controls col-lg-9">
+												{if $data.limit_time_daily}
+													<!-- {foreach from=$data.limit_time_daily item=daily_time name=daily} -->
+														<div class='time-picker'>
+															从&nbsp;&nbsp;<input class="w100 form-control tp_1" name="start_ship_time[]" type="text" value="{$daily_time.start}" autocomplete="off" />&nbsp;&nbsp;
+															至&nbsp;&nbsp;<input class="w100 form-control tp_1" name="end_ship_time[]" type="text" value="{$daily_time.end}" autocomplete="off" />
+															<!-- {if $smarty.foreach.daily.last} -->
+																<a class="no-underline" data-toggle="clone-obj" data-before="before" data-parent=".time-picker" href="javascript:;"><i class="fontello-icon-plus fa fa-plus"></i></a>
+															<!-- {else} -->
+																<a class="no-underline" href="javascript:;" data-parent=".time-picker" data-toggle="remove-obj"><i class="fontello-icon-cancel ecjiafc-red fa fa-times "></i></a>
+															<!-- {/if} -->
+														</div> 
+													<!-- {/foreach} -->   
+												{else}
+													<div class='time-picker'>
+														从&nbsp;&nbsp;<input placeholder="开始时间" class="w100 form-control tp_1" name="start_ship_time[]" type="text" value="" >&nbsp;&nbsp;
+														至&nbsp;&nbsp;<input placeholder="结束时间" class="w100 form-control tp_1" name="end_ship_time[]" type="text" value="" />
+														<a class="no-underline" data-toggle="clone-obj" data-before="before" data-parent=".time-picker" href="javascript:;"><i class="fontello-icon-plus fa fa-plus"></i></a>
+													</div> 
+												{/if}
+												<span class="help-block">例如，如果开始时间设9点，结束时间设12点，则表示每天9点到12点时段才可使用此优惠</span>
+											</div>
+										</div>
+		                                
+										<div id="limit_time_type_customize" >
+											<div class="form-group">
+			                                    <label class="control-label col-lg-2">限制日期：</label>
+			                                    <div class="controls col-lg-9">
+			                                    	 {if $data.limit_time_exclude}
+				                                    	<!-- {foreach from=$data.limit_time_exclude item=exclude_time name=exclude} -->
+														<div class='date-picker'>
+					                                        <input name="limit_time_exclude[]" class="form-control date w200" type="text" placeholder="请选择日期" value="{$exclude_time}"/>
+															<!-- {if $smarty.foreach.exclude.last} -->
+																<a class="no-underline" data-toggle="clone-obj" data-before="before" data-parent=".date-picker" href="javascript:;"><i class="fontello-icon-plus fa fa-plus"></i></a>
+															<!-- {else} -->
+																<a class="no-underline" href="javascript:;" data-parent=".date-picker" data-toggle="remove-obj"><i class="fontello-icon-cancel ecjiafc-red fa fa-times "></i></a>
+															<!-- {/if} -->
+														</div> 
+														<!-- {/foreach} -->   
+			                                    	 {else}
+			                                    	  	<div class='date-picker'>
+					                                         <input name="limit_time_exclude[]" class="form-control date w200" type="text" placeholder="请选择日期" value=""/>
+					                                         <a class="no-underline" data-toggle="clone-obj" data-before="before" data-parent=".date-picker" href="javascript:;"><i class="fontello-icon-plus fa fa-plus"></i></a>
+			                                         	</div>
+			                                    	 {/if}
+			                                         <span class="help-block">选择某天时间内不可使用买单功能，可增加多个日期</span>
+			                                    </div>
+			                                </div>
+										</div>
+									</div>
+									
+									
 	                                <div class="form-group">
 	                                    <label class=" control-label col-lg-2">有效时间：</label>
 	                                    <div class="col-lg-9">
@@ -254,14 +311,14 @@ table{border-collapse: separate; border-spacing: 0 3px;}
 			                                     	<div class="controls">
 				                                        <select class="form-control" id="use_integral_select" name="use_integral_select" {if $data.use_integral eq 'close'}disabled="disabled"{/if}>
 											                <option value="nolimit" {if $data.use_integral eq 'nolimit'}selected{/if}>不限制积分</option>
-											                <option value="integral" {if $act_range_ext}selected{/if}>限制积分</option>
+											                <option value="integral"{if $data.use_integral neq 'nolimit'}selected{/if}>限制积分</option>
 											            </select>
 			                                        </div>
 							                	</div>
 							                	
 							                	 <div class="form-group" id="range_search" >
 											        <div class="col-lg-8">
-											            <input name="integral_keyword" class="form-control" type="text" value="{if $integral_keyword}{$integral_keyword}{else}0{/if}"  id="integral_keyword" {if $data.use_integral eq 'close'}disabled="disabled"{/if} />
+											            <input name="integral_keyword" class="form-control" type="text" value="{if $data.use_integral}{$data.use_integral}{else}0{/if}"  id="integral_keyword" {if $data.use_integral eq 'close'}disabled="disabled"{/if} />
 											        </div>
 											    </div>
 											    
