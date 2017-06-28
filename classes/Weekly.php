@@ -69,11 +69,11 @@ class Weekly
     
     /**
      * 计算用户选中的总数
-     * @param array $clients
+     * @param array $weeks
      * @return integer
      */
     public static function weeklySelected(array $weeks) {
-        
+    	
         return collect($weeks)->sum();
     }
     
@@ -86,13 +86,13 @@ class Weekly
         
         $weeks = [];
         
-        if (self::Monday & $selected) $clients[] = self::Monday;
-        if (self::Tuesday & $selected) $clients[] = self::Tuesday;
-        if (self::Wednesday & $selected) $clients[] = self::Wednesday;
-        if (self::Thursday & $selected) $clients[] = self::Thursday;
-        if (self::Friday & $selected) $clients[] = self::Friday;
-        if (self::Saturday & $selected) $clients[] = self::Saturday;
-        if (self::Sunday & $selected) $clients[] = self::Sunday;
+        if (self::Monday & $selected) $weeks[] = self::Monday;
+        if (self::Tuesday & $selected) $weeks[] = self::Tuesday;
+        if (self::Wednesday & $selected) $weeks[] = self::Wednesday;
+        if (self::Thursday & $selected) $weeks[] = self::Thursday;
+        if (self::Friday & $selected) $weeks[] = self::Friday;
+        if (self::Saturday & $selected) $weeks[] = self::Saturday;
+        if (self::Sunday & $selected) $weeks[] = self::Sunday;
         
         return $weeks;
     }
