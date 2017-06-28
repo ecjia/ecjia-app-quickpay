@@ -310,8 +310,8 @@ table{border-collapse: separate; border-spacing: 0 3px;}
 							                	<div class="form-group p_l15 p_r15">
 			                                     	<div class="controls">
 				                                        <select class="form-control" id="use_integral_select" name="use_integral_select" {if $data.use_integral eq 'close'}disabled="disabled"{/if}>
-											                <option value="nolimit" {if $data.use_integral eq 'nolimit'}selected{/if}>不限制积分</option>
-											                <option value="integral"{if $data.use_integral neq 'nolimit'}selected{/if}>限制积分</option>
+											                <option value="nolimit" {if $data.use_integral eq 'close' || $data.use_integral eq 'nolimit'}selected{/if}>不限制积分</option>
+											                <option value="integral"{if $data.use_integral neq 'close' && $data.use_integral neq 'nolimit'}selected{/if}>限制积分</option>
 											            </select>
 			                                        </div>
 							                	</div>
