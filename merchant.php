@@ -192,8 +192,8 @@ class merchant extends ecjia_merchant {
 		
 		//时间规则处理
 		$limit_time_type = trim($_POST['limit_time_type']);//限制时间类型类型
+		$limit_time_weekly = 0;
 		if($limit_time_type == 'customize') {
-			
 			//每周星期0x1111111代表7天
 			if(!empty($_POST['limit_time_weekly'])){
 				$limit_time_weekly = Ecjia\App\Quickpay\Weekly::weeklySelected($_POST['limit_time_weekly']);
@@ -206,7 +206,6 @@ class merchant extends ecjia_merchant {
 				$time_quantum[$k]['end']	= $_POST['end_ship_time'][$k];
 			}
 			$limit_time_daily = serialize($time_quantum);
-				
 				
 			//排除日期
 			$limit_time_exclude_data = $_POST['limit_time_exclude'];
@@ -247,7 +246,6 @@ class merchant extends ecjia_merchant {
 				}
 			}
 		}
-		
 		$data = array(
 			'store_id'		=> $store_id,
 			'title'      	=> $title,
@@ -355,6 +353,7 @@ class merchant extends ecjia_merchant {
 		
 		//时间规则处理
 		$limit_time_type = trim($_POST['limit_time_type']);//限制时间类型类型
+		$limit_time_weekly = 0;
 		if($limit_time_type == 'customize') {
 			//每周星期0x1111111代表7天
 			if(!empty($_POST['limit_time_weekly'])){
