@@ -139,8 +139,8 @@ class merchant extends ecjia_merchant {
 		$type_list = $this->get_quickpay_type();
 		$this->assign('type_list', $type_list);
 		
-// 		$week_list = $this->get_week_list();
-// 		$this->assign('week_list', $week_list);
+		$week_list = $this->get_week_list();
+		$this->assign('week_list', $week_list);
 		 
 		$data = array (
 			'enabled'       => 1,
@@ -193,9 +193,11 @@ class merchant extends ecjia_merchant {
 		//时间规则处理
 		$limit_time_type = trim($_POST['limit_time_type']);//限制时间类型类型
 		if($limit_time_type == 'customize') {
-			//每周星期0x1111111代表7天(需更换)
-			//$limit_time_weekly_data = $_POST['limit_time_weekly'];
-			//$limit_time_weekly = implode(",", $limit_time_weekly_data);
+			
+			//每周星期0x1111111代表7天
+			if(!empty($_POST['limit_time_weekly'])){
+				$limit_time_weekly = Ecjia\App\Quickpay\Weekly::weeklySelected($_POST['limit_time_weekly']);
+			}
 				
 			//每天时间段
 			$time_quantum = array();
@@ -254,7 +256,7 @@ class merchant extends ecjia_merchant {
 			'activity_value'	=> $activity_value,	
 				
 			'limit_time_type'	=> $limit_time_type,
-// 			'limit_time_weekly'	=> $limit_time_weekly,
+			'limit_time_weekly'	=> $limit_time_weekly,
 			'limit_time_daily'	=> $limit_time_daily,	
 			'limit_time_exclude'=> $limit_time_exclude,	
 				
@@ -283,6 +285,9 @@ class merchant extends ecjia_merchant {
 		$type_list = $this->get_quickpay_type();
 		$this->assign('type_list', $type_list);
 		
+		$week_list = $this->get_week_list();
+		$this->assign('week_list', $week_list);
+		
 		$id = intval($_GET['id']);
 		$data = RC_DB::table('quickpay_activity')->where('id', $id)->first();
 		
@@ -293,12 +298,11 @@ class merchant extends ecjia_merchant {
 		if(strpos($data['activity_value'],',') !== false){
 			$data['activity_value']  = explode(",",$data['activity_value']);
 		}
-		
-		
+
 		//具体时间处理
-		$data['limit_time_daily']   =unserialize($data['limit_time_daily']);
-		$data['limit_time_exclude'] =explode(",", $data['limit_time_exclude']);
-		
+		$data['limit_time_weekly']  = Ecjia\App\Quickpay\Weekly::weeks($data['limit_time_weekly']);
+		$data['limit_time_daily']   = unserialize($data['limit_time_daily']);
+		$data['limit_time_exclude'] = explode(",", $data['limit_time_exclude']);
 		
 		//红包处理
 		if($data['use_bonus'] != 'close' && $data['use_bonus'] != 'nolimit') {
@@ -352,9 +356,10 @@ class merchant extends ecjia_merchant {
 		//时间规则处理
 		$limit_time_type = trim($_POST['limit_time_type']);//限制时间类型类型
 		if($limit_time_type == 'customize') {
-			//每周星期0x1111111代表7天(需更换)
-			//$limit_time_weekly_data = $_POST['limit_time_weekly'];
-			//$limit_time_weekly = implode(",", $limit_time_weekly_data);
+			//每周星期0x1111111代表7天
+			if(!empty($_POST['limit_time_weekly'])){
+				$limit_time_weekly = Ecjia\App\Quickpay\Weekly::weeklySelected($_POST['limit_time_weekly']);
+			}
 				
 			//每天时间段
 			$time_quantum = array();
@@ -411,7 +416,7 @@ class merchant extends ecjia_merchant {
 			'activity_value'=> $activity_value,	
 				
 			'limit_time_type'	=> $limit_time_type,
-// 			'limit_time_weekly'	=> $limit_time_weekly,
+			'limit_time_weekly'	=> $limit_time_weekly,
 			'limit_time_daily'	=> $limit_time_daily,	
 			'limit_time_exclude'=> $limit_time_exclude,	
 				
@@ -509,18 +514,18 @@ class merchant extends ecjia_merchant {
 	/**
 	 * 获取周
 	 */
-// 	private function get_week_list(){
-// 		$week_list = array(
-// 			'Monday' 	=> Ecjia\App\Quickpay\Weekly::Monday,
-// 			'Tuesday'	=> Ecjia\App\Quickpay\Weekly::Tuesday,
-// 			'Wednesday'	=> Ecjia\App\Quickpay\Weekly::Wednesday,
-// 			'Thursday'  => Ecjia\App\Quickpay\Weekly::Thursday,
-// 			'Friday' 	=> Ecjia\App\Quickpay\Weekly::Friday,
-// 			'Saturday'	=> Ecjia\App\Quickpay\Weekly::Saturday,
-// 			'Sunday' 	=> Ecjia\App\Quickpay\Weekly::Sunday,
-// 		);
-// 		return $week_list;
-// 	}
+	private function get_week_list(){
+		$week_list = array(
+			'星期一'	=> Ecjia\App\Quickpay\Weekly::Monday,
+			'星期二'	=> Ecjia\App\Quickpay\Weekly::Tuesday,
+			'星期三'	=> Ecjia\App\Quickpay\Weekly::Wednesday,
+			'星期四' => Ecjia\App\Quickpay\Weekly::Thursday,
+			'星期五' => Ecjia\App\Quickpay\Weekly::Friday,
+			'星期六' => Ecjia\App\Quickpay\Weekly::Saturday,
+			'星期日' => Ecjia\App\Quickpay\Weekly::Sunday,
+		);
+		return $week_list;
+	}
 }
 
 //end

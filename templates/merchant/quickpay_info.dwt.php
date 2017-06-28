@@ -120,7 +120,6 @@ table{border-collapse: separate; border-spacing: 0 3px;}
 									</div>
 									
 									
-									
 	                                <div class="form-group">
 	                                    <label class="control-label col-lg-2">具体时间：</label>
 	                                    <div class="controls col-lg-9">
@@ -132,7 +131,18 @@ table{border-collapse: separate; border-spacing: 0 3px;}
 	                                </div>
 	                                
 	                                <div id="limit_time_type_customize" {if $data.limit_time_type neq 'customize'}style="display:none"{/if}>
-		                                <div class="form-group" id="ship_time">
+	                                 	<div class="form-group">
+											<label class="control-label col-lg-2">每天限天：</label>
+											<div class="controls col-lg-9">
+												 <!-- {foreach from=$week_list key=key item=val} -->
+													<input type="checkbox" name="limit_time_weekly[]" value="{$val}" id="{$val}" {if in_array($val, $data.limit_time_weekly)}checked="true"{/if}/> <label for="{$val}">{$key}</label>
+												 <!-- {/foreach} -->
+												 <span class="help-block">勾选星期一，则表示一周中只有星期一可以使用，可多选。</span>
+											</div>
+										</div>
+										
+										
+		                                <div class="form-group">
 											<label class="control-label col-lg-2">每天限时：</label>
 											<div class="controls col-lg-9">
 												{if $data.limit_time_daily}
@@ -158,31 +168,29 @@ table{border-collapse: separate; border-spacing: 0 3px;}
 											</div>
 										</div>
 		                                
-										<div id="limit_time_type_customize" >
-											<div class="form-group">
-			                                    <label class="control-label col-lg-2">限制日期：</label>
-			                                    <div class="controls col-lg-9">
-			                                    	 {if $data.limit_time_exclude}
-				                                    	<!-- {foreach from=$data.limit_time_exclude item=exclude_time name=exclude} -->
-														<div class='date-picker'>
-					                                        <input name="limit_time_exclude[]" class="form-control date w200" type="text" placeholder="请选择日期" value="{$exclude_time}"/>
-															<!-- {if $smarty.foreach.exclude.last} -->
-																<a class="no-underline" data-toggle="clone-obj" data-before="before" data-parent=".date-picker" href="javascript:;"><i class="fontello-icon-plus fa fa-plus"></i></a>
-															<!-- {else} -->
-																<a class="no-underline" href="javascript:;" data-parent=".date-picker" data-toggle="remove-obj"><i class="fontello-icon-cancel ecjiafc-red fa fa-times "></i></a>
-															<!-- {/if} -->
-														</div> 
-														<!-- {/foreach} -->   
-			                                    	 {else}
-			                                    	  	<div class='date-picker'>
-					                                         <input name="limit_time_exclude[]" class="form-control date w200" type="text" placeholder="请选择日期" value=""/>
-					                                         <a class="no-underline" data-toggle="clone-obj" data-before="before" data-parent=".date-picker" href="javascript:;"><i class="fontello-icon-plus fa fa-plus"></i></a>
-			                                         	</div>
-			                                    	 {/if}
-			                                         <span class="help-block">选择某天时间内不可使用买单功能，可增加多个日期</span>
-			                                    </div>
-			                                </div>
-										</div>
+										<div class="form-group">
+		                                    <label class="control-label col-lg-2">限制日期：</label>
+		                                    <div class="controls col-lg-9">
+		                                    	 {if $data.limit_time_exclude}
+			                                    	<!-- {foreach from=$data.limit_time_exclude item=exclude_time name=exclude} -->
+													<div class='date-picker'>
+				                                        <input name="limit_time_exclude[]" class="form-control date w200" type="text" placeholder="请选择日期" value="{$exclude_time}"/>
+														<!-- {if $smarty.foreach.exclude.last} -->
+															<a class="no-underline" data-toggle="clone-obj" data-before="before" data-parent=".date-picker" href="javascript:;"><i class="fontello-icon-plus fa fa-plus"></i></a>
+														<!-- {else} -->
+															<a class="no-underline" href="javascript:;" data-parent=".date-picker" data-toggle="remove-obj"><i class="fontello-icon-cancel ecjiafc-red fa fa-times "></i></a>
+														<!-- {/if} -->
+													</div> 
+													<!-- {/foreach} -->   
+		                                    	 {else}
+		                                    	  	<div class='date-picker'>
+				                                         <input name="limit_time_exclude[]" class="form-control date w200" type="text" placeholder="请选择日期" value=""/>
+				                                         <a class="no-underline" data-toggle="clone-obj" data-before="before" data-parent=".date-picker" href="javascript:;"><i class="fontello-icon-plus fa fa-plus"></i></a>
+		                                         	</div>
+		                                    	 {/if}
+		                                         <span class="help-block">选择某天时间内不可使用买单功能，可增加多个日期</span>
+		                                    </div>
+		                                </div>
 									</div>
 									
 									
