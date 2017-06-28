@@ -318,7 +318,7 @@ table{border-collapse: separate; border-spacing: 0 3px;}
 							                	
 							                	 <div class="form-group" id="range_search" >
 											        <div class="col-lg-8">
-											            <input name="integral_keyword" class="form-control" type="text" value="{if $data.use_integral}{$data.use_integral}{else}0{/if}"  id="integral_keyword" {if $data.use_integral eq 'close'}disabled="disabled"{/if} />
+											            <input name="integral_keyword" class="form-control" type="text" value="{if $data.use_integral eq 'close' || $data.use_integral eq 'nolimit'}0{else}{$data.use_integral}{/if}"  id="integral_keyword" {if $data.use_integral eq 'close'}disabled="disabled"{/if} />
 											        </div>
 											    </div>
 											    
