@@ -53,19 +53,19 @@ namespace Ecjia\App\Quickpay;
 class Weekly
 {
 	
-    const Monday     = 0x0000001;
+    const Monday     = 0b0000001;
     
-    const Tuesday    = 0x0000010;
+    const Tuesday    = 0b0000010;
     
-    const Wednesday  = 0x0000100;
+    const Wednesday  = 0b0000100;
     
-    const Thursday   = 0x0001000;
+    const Thursday   = 0b0001000;
     
-    const Friday     = 0x0010000;
+    const Friday     = 0b0010000;
     
-    const Saturday   = 0x0100000;
+    const Saturday   = 0b0100000;
     
-    const Sunday     = 0x1000000;
+    const Sunday     = 0b1000000;
     
     /**
      * 计算用户选中的总数
