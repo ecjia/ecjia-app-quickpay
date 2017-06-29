@@ -96,6 +96,21 @@ class mh_order extends ecjia_merchant {
 	    $this->display('quickpay_order_list.dwt');
 	}
 	
+	
+
+	/**
+	 * 批量操作
+	 */
+	public function batch() {
+		$this->admin_priv('mh_quickpay_order_delete');
+	
+
+		$ids  = explode(',', $_POST['order_id']);
+		RC_DB::table('quickpay_orders')->whereIn('order_id', $ids)->delete();
+	
+		return $this->showmessage('批量删除成功', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('pjaxurl' => RC_Uri::url('quickpay/mh_order/init')));
+	}
+	
 // 	public function order_action() {
 // 		if (empty($username)) {
 // 			$username = empty($_SESSION['admin_name']) ? $_SESSION['staff_name'] : $_SESSION['admin_name'];
