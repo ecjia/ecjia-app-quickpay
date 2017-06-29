@@ -59,7 +59,8 @@ class quickpay_merchant_purview_api extends Component_Event_Api {
         	array('action_name' => __('闪惠规则删除'), 'action_code' => 'mh_quickpay_delete', 'relevance'   => ''),
         		
         	array('action_name' => __('闪惠订单查看'), 'action_code' => 'mh_quickpay_order_manage', 'relevance'   => ''),
-        	array('action_name' => __('闪惠订单核实'), 'action_code' => 'mh_quickpay_order_check', 'relevance'   => ''),
+        	array('action_name' => __('闪惠订单核实'), 'action_code' => 'mh_quickpay_order_update', 'relevance'   => ''),
+        	array('action_name' => __('闪惠订单删除'), 'action_code' => 'mh_quickpay_order_delete', 'relevance'   => ''),
         );
         return $purviews;
     }
