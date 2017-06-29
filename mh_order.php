@@ -89,6 +89,7 @@ class mh_order extends ecjia_merchant {
 	    
 	    $order_list = $this->order_list($_SESSION['store_id']);
 	    $this->assign('order_list', $order_list);
+	    $this->assign('filter', $order_list['filter']);
 	    
 	    $this->assign('search_action', RC_Uri::url('quickpay/mh_order/init'));
 	    
@@ -120,7 +121,9 @@ class mh_order extends ecjia_merchant {
 	 */
 	private function order_list($store_id) {
 		$db_quickpay_order = RC_DB::table('quickpay_orders');
-
+		
+		$db_quickpay_order->where('store_id', $store_id);
+		
 		$filter['keywords'] = empty($_GET['keywords']) ? '' : trim($_GET['keywords']);
 		if ($filter['keywords']) {
 			$db_quickpay_order->where('order_sn', 'like', '%'.mysql_like_quote($filter['keywords']).'%')->orWhere('user_name', 'like', '%' . mysql_like_quote($filter['keywords']) . '%');
@@ -131,8 +134,19 @@ class mh_order extends ecjia_merchant {
 			$db_quickpay_order->where('activity_type', $filter['activity_type']);
 		}
 		
-		$db_quickpay_order->where('store_id', $store_id);
+		$check_type = trim($_GET['check_type']);
+		$order_count = $db_quickpay_order->select(RC_DB::raw('count(*) as count'),
+				RC_DB::raw('SUM(IF(check_status != 0, 1, 0)) as check_ok'),
+				RC_DB::raw('SUM(IF(check_status = 0, 1, 0)) as check_no'))->first();
 		
+		if ($check_type == 'check_ok') {
+			$db_quickpay_order->where('check_status', '>', 0);
+		}
+		
+		if ($check_type == 'check_no') {
+			$db_quickpay_order->where('check_status', 0);
+		}
+
 		$count = $db_quickpay_order->count();
 		$page = new ecjia_merchant_page($count,10, 5);
 		$data = $db_quickpay_order
@@ -149,7 +163,7 @@ class mh_order extends ecjia_merchant {
 			}
 		}
 
-		return array('list' => $res, 'filter' => $filter, 'page' => $page->show(2), 'desc' => $page->page_desc());
+		return array('list' => $res, 'filter' => $filter, 'page' => $page->show(2), 'desc' => $page->page_desc(), 'count' => $order_count);
 	}
 	
 	/**

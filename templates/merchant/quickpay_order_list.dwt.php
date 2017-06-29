@@ -26,14 +26,15 @@ ecjia.merchant.order_list.init();
 	    <div class="panel">
 	     	<div class="panel-body panel-body-small">
         		<ul class="nav nav-pills pull-left">
-        			<li class="{if $smarty.get.type eq ''}active{/if}"><a class="data-pjax" href='{$favourable_list.quickuri.init}'>{lang key='favourable::favourable.all'} <span class="badge badge-info">{if $favourable_list.count.count}{$favourable_list.count.count}{else}0{/if}</span> </a></li>
-        			<li class="{if $smarty.get.type eq 'on_going'}active{/if}"><a class="data-pjax" href='{$favourable_list.quickuri.on_going}'>{lang key='favourable::favourable.on_going'}<span class="badge badge-info">{if $favourable_list.count.on_going}{$favourable_list.count.on_going}{else}0{/if}</span> </a></li>
+        			<li class="{if $smarty.get.check_type eq ''}active{/if}"><a class="data-pjax" href='{url path="quickpay/mh_order/init" args="{if $filter.keywords}&keywords={$filter.keywords}{/if}"}'>全部 <span class="badge badge-info">{if $order_list.count.count}{$order_list.count.count}{else}0{/if}</span> </a></li>
+        			<li class="{if $smarty.get.check_type eq 'check_ok'}active{/if}"><a class="data-pjax" href='{url path="quickpay/mh_order/init" args="check_type=check_ok{if $filter.keywords}&keywords={$filter.keywords}{/if}"}'>已审核<span class="badge badge-info">{if $order_list.count.check_ok}{$order_list.count.check_ok}{else}0{/if}</span> </a></li>
+        			<li class="{if $smarty.get.check_type eq 'check_no'}active{/if}"><a class="data-pjax" href='{url path="quickpay/mh_order/init" args="check_type=check_no{if $filter.keywords}&keywords={$filter.keywords}{/if}"}'>未审核<span class="badge badge-info">{if $order_list.count.check_no}{$order_list.count.check_no}{else}0{/if}</span> </a></li>
         		</ul>
             </div>
             
 			<div class='col-lg-12 panel-heading form-inline'>
         		<div class="btn-group form-group">
-        			<button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown"><i class="fa fa-cogs"></i> {lang key='goods::goods.batch_handle'} <span class="caret"></span></button>
+        			<button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown"><i class="fa fa-cogs"></i> 批量操作 <span class="caret"></span></button>
         			<ul class="dropdown-menu operate_note" data-url='{url path="orders/merchant/operate_note"}'>
         				<li><a class="batch-del-btn" data-toggle="ecjiabatch" data-name="order_id" data-idClass=".checkbox:checked" data-url="{$form_action}&operation=remove" data-msg="{lang key='orders::order.remove_confirm'}" data-noSelectMsg="{lang key='orders::order.pls_select_order'}" href="javascript:;"><i class="fa fa-trash-o"></i> {lang key='system::system.remove'}</a></li>
                    	</ul>
