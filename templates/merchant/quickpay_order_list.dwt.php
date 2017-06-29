@@ -108,15 +108,10 @@ ecjia.merchant.order_list.init();
     					<!-- {/foreach} -->
 				        </tbody>
 			         </table>
-					<br/>
-					<a href="{$action_link.href}" class="btn btn-primary data-pjax"><i class="fa fa-plus"></i> {$action_link.text}</a>
-					<br/><br/>
 				</section>
 				<!-- {$order_list.page} -->
 			</div>
 	     </div>
      </div>
 </div>
-
-<form action="{$form_action}" name="orderpostForm" id="listForm" data-pjax-url="{$search_action}" method="post"></form>
 <!-- {/block} -->
