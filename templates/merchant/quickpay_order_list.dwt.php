@@ -58,6 +58,35 @@ ecjia.merchant.order_list.init();
 					</div>
 				</form>
 			</div>
+			
+			<div id="actionmodal" class="modal fade">
+                <div class="modal-dialog" style="margin-top: 200px;">
+                    <div class="modal-content">
+	                    <div class="modal-header">
+		                    <button data-dismiss="modal" class="close" type="button">×</button>
+		                    <h4 class="modal-title">操作备注</h4>
+	                    </div>
+	                    
+	                    <div class="modal-body">
+	                     <div class="success-msg"></div>
+	                     <div class="error-msg"></div>
+		                    <form class="form-horizontal" method="post" name="actionForm" id="actionForm" action='{url path="quickpay/mh_order/order_action" args="order_id={$order.order_id}"}'>
+		                       <div class="form-group">
+		                           <div class="col-lg-12">
+		                              <textarea id="action_note" class="form-control" name="action_note"></textarea>
+		                           </div>
+		                       </div>
+		                      
+		                       <div class="form-group">
+		                          <div class="col-lg-10">
+		                               <button type="submit" class="btn btn-primary">确认核实</button>
+		                          </div>
+		                       </div>
+		                    </form>
+	                    </div>
+                    </div>
+                </div>
+           </div>
 
 			<div class="panel-body panel-body-small">
 				<section class="panel">
@@ -90,7 +119,8 @@ ecjia.merchant.order_list.init();
     						<td class="hide-edit-area">
     							{$order.order_sn}
     							<div class="edit-list">
-    								<a href='{url path="quickpay/mh_order/info" args="order_id={$order.order_id}"}' class="data-pjax" title="查看详情">{t}查看详情{/t}</a>&nbsp;|&nbsp;
+    								<a href="#actionmodal" data-toggle="modal">核实</a>&nbsp;|&nbsp;
+    								<a href='{url path="quickpay/mh_order/info" args="order_id={$order.order_id}"}' class="data-pjax" title="查看详情">{t}查看详情{/t}</a>
     							</div>
     						</td>
     						<td align="left">

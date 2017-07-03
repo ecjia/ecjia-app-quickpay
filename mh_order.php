@@ -87,6 +87,9 @@ class mh_order extends ecjia_merchant {
 	    $type_list = $this->get_quickpay_type();
 	    $this->assign('type_list', $type_list);
 	    
+	    $status_list = $this->get_status_list();
+	    $this->assign('status_list', $status_list);
+	    
 	    $order_list = $this->order_list($_SESSION['store_id']);
 	    $this->assign('order_list', $order_list);
 	    $this->assign('filter', $order_list['filter']);
@@ -111,24 +114,26 @@ class mh_order extends ecjia_merchant {
 		return $this->showmessage('批量删除成功', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('pjaxurl' => RC_Uri::url('quickpay/mh_order/init')));
 	}
 	
-// 	public function order_action() {
-// 		if (empty($username)) {
-// 			$username = empty($_SESSION['admin_name']) ? $_SESSION['staff_name'] : $_SESSION['admin_name'];
-// 			$username = empty($username) ? '' : $username;
-// 		}
-// 		$row = RC_DB::table('order_info')->where('order_sn', $order_sn)->first();
-// 		$data = array(
-// 				'order_id' => $row['order_id'],
-// 				'action_user' => $username,
-// 				'order_status' => $order_status,
-// 				'shipping_status' => $shipping_status,
-// 				'pay_status' => $pay_status,
-// 				'action_place' => $place,
-// 				'action_note' => $note,
-// 				'log_time' => RC_Time::gmtime()
-// 		);
-// 		RC_DB::table('order_action')->insert($data);
-// 	}
+	public function order_action() {
+		if (empty($username)) {
+			$username = empty($_SESSION['admin_name']) ? $_SESSION['staff_name'] : $_SESSION['admin_name'];
+			$username = empty($username) ? '' : $username;
+		}
+		$order_sn = $_POST['order_sn'];
+		$row = RC_DB::table('quickpay_orders')->where('order_sn', $order_sn)->first();
+		_dump($row,1);
+		$data = array(
+				'order_id' => $row['order_id'],
+				'action_user' => $username,
+				'order_status' => $order_status,
+				'shipping_status' => $shipping_status,
+				'pay_status' => $pay_status,
+				'action_place' => $place,
+				'action_note' => $note,
+				'log_time' => RC_Time::gmtime()
+		);
+		RC_DB::table('order_action')->insert($data);
+	}
 
 	
 	/**
@@ -150,17 +155,17 @@ class mh_order extends ecjia_merchant {
 		}
 		
 		$check_type = trim($_GET['check_type']);
-		$order_count = $db_quickpay_order->select(RC_DB::raw('count(*) as count'),
-				RC_DB::raw('SUM(IF(check_status != 0, 1, 0)) as check_ok'),
-				RC_DB::raw('SUM(IF(check_status = 0, 1, 0)) as check_no'))->first();
+// 		$order_count = $db_quickpay_order->select(RC_DB::raw('count(*) as count'),
+// 				RC_DB::raw('SUM(IF(check_status != 0, 1, 0)) as check_ok'),
+// 				RC_DB::raw('SUM(IF(check_status = 0, 1, 0)) as check_no'))->first();
 		
-		if ($check_type == 'check_ok') {
-			$db_quickpay_order->where('check_status', '>', 0);
-		}
+// 		if ($check_type == 'check_ok') {
+// 			$db_quickpay_order->where('check_status', '>', 0);
+// 		}
 		
-		if ($check_type == 'check_no') {
-			$db_quickpay_order->where('check_status', 0);
-		}
+// 		if ($check_type == 'check_no') {
+// 			$db_quickpay_order->where('check_status', 0);
+// 		}
 
 		$count = $db_quickpay_order->count();
 		$page = new ecjia_merchant_page($count,10, 5);
@@ -192,6 +197,22 @@ class mh_order extends ecjia_merchant {
 			'everyreduced' 	 => '每满多少减多少,最高减多少'
 		);
 		return $type_list;
+	}
+	
+	/**
+	 * 获取周
+	 */
+	private function get_status_list(){
+		$status_list = array(
+// 				'未确认'	=> Ecjia\App\Quickpay\Status::UNCONFIRMED,
+// 				'已确认'	=> Ecjia\App\Quickpay\Status::CONFIRMED,
+// 				'未支付'	=> Ecjia\App\Quickpay\Status::UNPAYED,
+// 				'已支付' => Ecjia\App\Quickpay\Status::PAYED,
+				'未核实' => Ecjia\App\Quickpay\Status::UNCHECKED,
+				'已核实' => Ecjia\App\Quickpay\Status::CHECKED,
+				'无效' => Ecjia\App\Quickpay\Status::INVALID,
+		);
+		return $status_list;
 	}
 
 }
