@@ -102,7 +102,7 @@ ecjia.merchant.order_list.init();
         						<th class="w150">订单号</th>
         						<th>购买者信息</th>
         						<th class="w150">闪惠类型</th>
-        						<th class="w200">买单时间</th>
+        						<th class="w200">下单时间</th>
         						<th class="w100">消费金额</th>
         						<th class="w100">实付金额</th>
         					</tr>

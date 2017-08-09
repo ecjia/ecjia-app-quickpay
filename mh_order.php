@@ -111,6 +111,7 @@ class mh_order extends ecjia_merchant {
 		$order_id = intval($_GET['order_id']);
 		$order_info = RC_DB::table('quickpay_orders')->where('order_id', $order_id)->first();
 		$order_info['pay_time'] = RC_Time::local_date(ecjia::config('time_format'), $order_info['pay_time']);
+		$order_info['add_time'] = RC_Time::local_date(ecjia::config('time_format'), $order_info['add_time']);
 		if ($order_info['activity_type'] == 'normal') {
 			$order_info['activity_name'] = '无优惠';
 		} elseif ($order_info['activity_type'] == 'discount') { 
@@ -120,7 +121,6 @@ class mh_order extends ecjia_merchant {
 		} elseif ($order_info['activity_type'] == 'reduced') { 
 			$order_info['activity_name'] = '满多少减多少';
 		}
-		
 		$this->assign('order_info', $order_info);
 		
 		$act_list = array();
@@ -227,12 +227,12 @@ class mh_order extends ecjia_merchant {
 		
 		if ($filter['start_time']) {
 			$start_time = RC_Time::local_strtotime($filter['start_time']);
-			$db_quickpay_order->where('pay_time', '>=', $start_time);
+			$db_quickpay_order->where('add_time', '>=', $start_time);
 		}
 		
 		if ($filter['end_time']) {
 			$end_time = RC_Time::local_strtotime($filter['end_time']);
-			$db_quickpay_order->where('pay_time', '<=', $end_time);
+			$db_quickpay_order->where('add_time', '<=', $end_time);
 		}
 
 		if ($filter['user_name']) {

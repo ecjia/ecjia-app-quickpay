@@ -55,7 +55,7 @@ ecjia.merchant.order_info.init();
 								<td>
 									{$order_info.pay_name}
 								</td>
-								<td><div align="right"><strong>买单时间：</strong></div></td>
+								<td><div align="right"><strong>支付时间：</strong></div></td>
 								<td>{$order_info.pay_time}</td>
 							</tr>
 							
@@ -66,6 +66,11 @@ ecjia.merchant.order_info.init();
 								</td>
 								<td><div align="right"><strong>买单来源：</strong></div></td>
 								<td>{$order_info.referer}</td>
+							</tr>
+							
+							<tr>
+								<td><div align="right"><strong>下单时间：</strong></div></td>
+								<td colspan="3">{$order_info.add_time}</td>
 							</tr>
 						</tbody>
 					</table>
@@ -95,7 +100,6 @@ ecjia.merchant.order_info.init();
 						<tr>
 							<td><div align="right"> = <strong>买单实付金额：</strong>{$order_info.order_amount}</div></td>
 						</tr>
-						
 					</table>
                 </div>
 			</div>
@@ -127,7 +131,7 @@ ecjia.merchant.order_info.init();
 							</tr>
 							<!-- {foreachelse} -->
 							<tr>
-								<td class="no-records w200" colspan="6">{t}该订单暂无操作记录{/t}</td>
+								<td class="no-records w200" colspan="4">{t}该订单暂无操作记录{/t}</td>
 							</tr>
 							<!-- {/foreach} -->
 						</tbody>
