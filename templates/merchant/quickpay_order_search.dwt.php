@@ -49,7 +49,7 @@
 							<label class="control-label col-lg-2">闪惠类型：</label>
 							<div class="col-lg-6">
 								<select class="form-control" name="activity_type" id="select9" >
-									<option value="-1">请选择……</option>
+									<option value="0">请选择……</option>
 									<!-- {foreach from =$type_list item = list key=key} -->
 									<option value="{$key}">{$list}</option>
 									<!-- {/foreach} -->

@@ -209,10 +209,10 @@ class mh_order extends ecjia_merchant {
 	 */
 	private function order_list($store_id) {
 		$db_quickpay_order = RC_DB::table('quickpay_orders');
+		
 		$db_quickpay_order->where('store_id', $store_id);
 		
 		$filter = $_GET;
-
 		if ($filter['keywords']) {
 			$db_quickpay_order->where('order_sn', 'like', '%'.mysql_like_quote($filter['keywords']).'%')->orWhere('user_name', 'like', '%' . mysql_like_quote($filter['keywords']) . '%');
 		}
