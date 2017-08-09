@@ -212,40 +212,39 @@ class mh_order extends ecjia_merchant {
 		$db_quickpay_order->where('store_id', $store_id);
 		
 		$filter = $_GET;
-		$where = array();
+
+		if ($filter['keywords']) {
+			$db_quickpay_order->where('order_sn', 'like', '%'.mysql_like_quote($filter['keywords']).'%')->orWhere('user_name', 'like', '%' . mysql_like_quote($filter['keywords']) . '%');
+		}
+		
 		if ($filter['order_sn']) {
 			$db_quickpay_order->where('order_sn', 'like', '%'.mysql_like_quote($filter['order_sn']).'%');
 		}
 		
+		if ($filter['activity_type']) {
+			$db_quickpay_order->where('activity_type', $filter['activity_type']);
+		}
+		
+		if ($filter['start_time']) {
+			$start_time = RC_Time::local_strtotime($filter['start_time']);
+			$db_quickpay_order->where('pay_time', '>=', $start_time);
+		}
+		
+		if ($filter['end_time']) {
+			$end_time = RC_Time::local_strtotime($filter['end_time']);
+			$db_quickpay_order->where('pay_time', '<=', $end_time);
+		}
+
 		if ($filter['user_name']) {
 			$db_quickpay_order->where('user_name', 'like', '%'.mysql_like_quote($filter['user_name']).'%');
 		}
 		
 		if ($filter['user_mobile']) {
-			$db_quickpay_order->where('mobile', 'like', '%'.mysql_like_quote($filter['user_mobile']).'%');
-		}
-		
-		if ($filter['start_time']) {
-			$start_time = RC_Time::local_strtotime($filter['start_time']);
-			$db_quickpay_order->where(RC_DB::raw('pay_time'), '>=', $start_time);
-		}
-		
-		if ($filter['end_time']) {
-			$end_time = RC_Time::local_strtotime($_GET['end_time']);
-			$db_quickpay_order->where(RC_DB::raw('pay_time'), '<=', $end_time);
+			$db_quickpay_order->where('user_mobile', 'like', '%'.mysql_like_quote($filter['user_mobile']).'%');
 		}
 
-		$filter['keywords'] = empty($_GET['keywords']) ? '' : trim($_GET['keywords']);
-		if ($filter['keywords']) {
-			$db_quickpay_order->where('order_sn', 'like', '%'.mysql_like_quote($filter['keywords']).'%')->orWhere('user_name', 'like', '%' . mysql_like_quote($filter['keywords']) . '%');
-		}	
 		
-		$filter['activity_type'] = empty($_GET['activity_type']) ? '' : trim($_GET['activity_type']);
-		if ($filter['activity_type']) {
-			$db_quickpay_order->where('activity_type', $filter['activity_type']);
-		}
-		
-		$check_type = trim($_GET['check_type']);
+// 		$check_type = trim($_GET['check_type']);
 // 		$order_count = $db_quickpay_order->select(RC_DB::raw('count(*) as count'),
 // 				RC_DB::raw('SUM(IF(check_status != 0, 1, 0)) as check_ok'),
 // 				RC_DB::raw('SUM(IF(check_status = 0, 1, 0)) as check_no'))->first();
