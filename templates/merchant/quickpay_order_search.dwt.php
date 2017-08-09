@@ -3,7 +3,7 @@
 
 <!-- {block name="footer"} -->
 <script type="text/javascript">
-// 	ecjia.merchant.order_query.init();
+	ecjia.merchant.order_search.init();
 </script>
 <!-- {/block} -->
 
@@ -33,24 +33,24 @@
 							</div>
 						</div>
 						
-						<div class="form-group">
-							<label class="control-label col-lg-2">订单状态：</label>
-							<div class="col-lg-6">
-								<select class="form-control" name="order_status" id="select9" >
-									<option value="-1">{lang key='system::system.select_please'}</option>
+<!-- 						<div class="form-group"> -->
+<!-- 							<label class="control-label col-lg-2">订单状态：</label> -->
+<!-- 							<div class="col-lg-6"> -->
+<!-- 								<select class="form-control" name="order_status" id="select9" > -->
+<!-- 									<option value="-1">请选择……</option> -->
 									<!-- {foreach from = $os_list item = list key=key} -->
-									<option value="{$key}">{$list}</option>
+<!-- 									<option value="{$key}">{$list}</option> -->
 									<!-- {/foreach} -->
-								</select>
-							</div>
-						</div>
+<!-- 								</select> -->
+<!-- 							</div> -->
+<!-- 						</div> -->
 						
 						<div class="form-group">
 							<label class="control-label col-lg-2">闪惠类型：</label>
 							<div class="col-lg-6">
 								<select class="form-control" name="order_status" id="select9" >
-									<option value="-1">{lang key='system::system.select_please'}</option>
-									<!-- {foreach from = $os_list item = list key=key} -->
+									<option value="-1">请选择……</option>
+									<!-- {foreach from =$type_list item = list key=key} -->
 									<option value="{$key}">{$list}</option>
 									<!-- {/foreach} -->
 								</select>
@@ -61,7 +61,7 @@
 							<label class="control-label col-lg-2">买单时间：</label>
 							<div class="col-lg-10"> 
 								<div class="form-group ">
-										<input name="start_time" class="date form-control w-form-control" type="text" placeholder="{t}开始时间{/t}"/>
+									<input name="start_time" class="date form-control w-form-control" type="text" placeholder="{t}开始时间{/t}"/>
 								</div>
 								<div class="form-group">至</div>
 								<div class="form-group">
@@ -73,14 +73,14 @@
 						<div class="form-group">
 							<label class="control-label col-lg-2">购买者姓名：</label>
 							<div class="col-lg-6">
-								<input class="form-control" type="text" name="user_name" autocomplete="off" />
+								<input class="form-control" type="text" name="user_name" />
 							</div>
 						</div>
 						
 						<div class="form-group">
 							<label class="control-label col-lg-2">购买者手机号</label>
 							<div class="col-lg-6">
-								<input class="form-control" type="text" name="mobile" />
+								<input class="form-control" type="text" name="user_mobile" />
 							</div>
 						</div>
 						

@@ -192,14 +192,14 @@ class mh_order extends ecjia_merchant {
 		$type_list = $this->get_quickpay_type();
 		$this->assign('type_list', $type_list);
 		 
-		$status_list = $this->get_status_list();
-		$this->assign('status_list', $status_list);
+// 		$status_list = $this->get_status_list();
+// 		$this->assign('status_list', $status_list);
 		 
 		$order_list = $this->order_list($_SESSION['store_id']);
 		$this->assign('order_list', $order_list);
 		$this->assign('filter', $order_list['filter']);
 		 
-		$this->assign('search_action', RC_Uri::url('quickpay/mh_order/init'));
+		$this->assign('form_action', RC_Uri::url('quickpay/mh_order/init'));
 		 
 		$this->display('quickpay_order_search.dwt');
 	}
@@ -209,9 +209,32 @@ class mh_order extends ecjia_merchant {
 	 */
 	private function order_list($store_id) {
 		$db_quickpay_order = RC_DB::table('quickpay_orders');
-		
 		$db_quickpay_order->where('store_id', $store_id);
 		
+		$filter = $_GET;
+		$where = array();
+		if ($filter['order_sn']) {
+			$db_quickpay_order->where('order_sn', 'like', '%'.mysql_like_quote($filter['order_sn']).'%');
+		}
+		
+		if ($filter['user_name']) {
+			$db_quickpay_order->where('user_name', 'like', '%'.mysql_like_quote($filter['user_name']).'%');
+		}
+		
+		if ($filter['user_mobile']) {
+			$db_quickpay_order->where('mobile', 'like', '%'.mysql_like_quote($filter['user_mobile']).'%');
+		}
+		
+		if ($filter['start_time']) {
+			$start_time = RC_Time::local_strtotime($filter['start_time']);
+			$db_quickpay_order->where(RC_DB::raw('pay_time'), '>=', $start_time);
+		}
+		
+		if ($filter['end_time']) {
+			$end_time = RC_Time::local_strtotime($_GET['end_time']);
+			$db_quickpay_order->where(RC_DB::raw('pay_time'), '<=', $end_time);
+		}
+
 		$filter['keywords'] = empty($_GET['keywords']) ? '' : trim($_GET['keywords']);
 		if ($filter['keywords']) {
 			$db_quickpay_order->where('order_sn', 'like', '%'.mysql_like_quote($filter['keywords']).'%')->orWhere('user_name', 'like', '%' . mysql_like_quote($filter['keywords']) . '%');
@@ -254,6 +277,8 @@ class mh_order extends ecjia_merchant {
 		return array('list' => $res, 'filter' => $filter, 'page' => $page->show(2), 'desc' => $page->page_desc(), 'count' => $order_count);
 	}
 	
+
+
 	/**
 	 * 获取闪惠类型
 	 */
