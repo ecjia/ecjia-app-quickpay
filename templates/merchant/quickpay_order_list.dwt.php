@@ -53,7 +53,7 @@ ecjia.merchant.order_list.init();
         		<form class="form-inline pull-right" name="searchForm" method="post" action="{$search_action}">
 					<div class="form-group">
 						<!-- 关键字 -->
-						<input type="text" class="form-control" name="keywords" value="{$smarty.get.keywords}" placeholder="请输入订单号或者购买者名称"/> 
+						<input type="text" class="form-control" name="keywords" value="{$smarty.get.keywords}" placeholder="请输入订单号"/> 
 						<button class="btn btn-primary" type="submit"><i class="fa fa-search"></i> 搜索</button>
 					</div>
 				</form>
@@ -120,7 +120,7 @@ ecjia.merchant.order_list.init();
     							{$order.order_sn}
     							<div class="edit-list">
     								<a href="#actionmodal" data-toggle="modal">核实</a>&nbsp;|&nbsp;
-    								<a href='{url path="quickpay/mh_order/info" args="order_id={$order.order_id}"}' class="data-pjax" title="查看详情">{t}查看详情{/t}</a>
+    								<a href='{url path="quickpay/mh_order/order_info" args="order_id={$order.order_id}"}' class="data-pjax" title="查看详情">{t}查看详情{/t}</a>
     							</div>
     						</td>
     						<td align="left">

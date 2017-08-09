@@ -99,6 +99,33 @@ class mh_order extends ecjia_merchant {
 	    $this->display('quickpay_order_list.dwt');
 	}
 	
+	/**
+	 * 闪惠订单详情页面加载
+	 */
+	public function order_info() {
+		$this->admin_priv('mh_quickpay_order_manage');
+		 
+		ecjia_merchant_screen::get_current_screen()->add_nav_here(new admin_nav_here('闪惠订单信息'));
+		$this->assign('ur_here', '闪惠订单信息');
+
+		$order_id = intval($_GET['order_id']);
+		$order_info = RC_DB::table('quickpay_orders')->where('order_id', $order_id)->first();
+		$order_info['pay_time'] = RC_Time::local_date(ecjia::config('time_format'), $order_info['pay_time']);
+		if ($order_info['activity_type'] == 'normal') {
+			$order_info['activity_name'] = '无优惠';
+		} elseif ($order_info['activity_type'] == 'discount') { 
+			$order_info['activity_name'] = '价格折扣';
+		} elseif ($order_info['activity_type'] == 'everyreduced') { 
+			$order_info['activity_name'] = '每满多少减多少,最高减多少';
+		} elseif ($order_info['activity_type'] == 'reduced') { 
+			$order_info['activity_name'] = '满多少减多少';
+		}
+		
+		$this->assign('order_info', $order_info);
+		
+		$this->display('quickpay_order_info.dwt');
+	}
+	
 	
 
 	/**
@@ -113,29 +140,7 @@ class mh_order extends ecjia_merchant {
 	
 		return $this->showmessage('批量删除成功', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('pjaxurl' => RC_Uri::url('quickpay/mh_order/init')));
 	}
-	
-	public function order_action() {
-		if (empty($username)) {
-			$username = empty($_SESSION['admin_name']) ? $_SESSION['staff_name'] : $_SESSION['admin_name'];
-			$username = empty($username) ? '' : $username;
-		}
-		$order_sn = $_POST['order_sn'];
-		$row = RC_DB::table('quickpay_orders')->where('order_sn', $order_sn)->first();
-		_dump($row,1);
-		$data = array(
-				'order_id' => $row['order_id'],
-				'action_user' => $username,
-				'order_status' => $order_status,
-				'shipping_status' => $shipping_status,
-				'pay_status' => $pay_status,
-				'action_place' => $place,
-				'action_note' => $note,
-				'log_time' => RC_Time::gmtime()
-		);
-		RC_DB::table('order_action')->insert($data);
-	}
-
-	
+		
 	/**
 	 * 获取闪惠规则列表
 	 */
@@ -200,7 +205,7 @@ class mh_order extends ecjia_merchant {
 	}
 	
 	/**
-	 * 获取周
+	 * 获取订单状态
 	 */
 	private function get_status_list(){
 		$status_list = array(
