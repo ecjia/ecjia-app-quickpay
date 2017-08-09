@@ -123,10 +123,49 @@ class mh_order extends ecjia_merchant {
 		
 		$this->assign('order_info', $order_info);
 		
+		$act_list = array();
+		$data = RC_DB::table('quickpay_order_action')->where('order_id', $order_id)->orderby('order_id', 'asc')->get();
+		foreach ($data as $key => $row) {
+			$row['add_time']	= RC_Time::local_date(ecjia::config('time_format'), $row['add_time']);
+			$act_list[]			= $row;
+		}
+	
+	
+		$this->assign('action_list', $act_list);
+		
+		
+		$this->assign('form_action', RC_Uri::url('quickpay/mh_order/order_action', array('type' => 'order_info')));
+		
 		$this->display('quickpay_order_info.dwt');
 	}
 	
-	
+	/**
+	 * 审核处理
+	 */
+	public function order_action() {
+		$this->admin_priv('mh_quickpay_order_update');
+		
+		$action_note = trim($_POST['action_note']);
+		$order_id    = intval($_POST['order_id']);
+		$type		 = trim($_GET['type']);
+		
+		$data = array(
+			'order_id'			=> $order_id,
+			'action_user_id'	=> $_SESSION['staff_id'],
+			'action_user_name'	=> $_SESSION['staff_name'],
+			'action_user_type'	=> 'merchant',
+			'order_status'		=> 0,
+			'action_note'		=> $action_note,
+			'add_time'			=> RC_Time::gmtime(),
+		);
+		RC_DB::table('quickpay_order_action')->insertGetId($data);
+		if($type) {
+			return $this->showmessage('核实成功', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('pjaxurl' => RC_Uri::url('quickpay/mh_order/order_info', array('order_id' => $order_id))));
+		} else {
+			return $this->showmessage('核实成功', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('pjaxurl' => RC_Uri::url('quickpay/mh_order/init')));
+		}
+		
+	}
 
 	/**
 	 * 批量操作

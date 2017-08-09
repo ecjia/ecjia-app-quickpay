@@ -3,7 +3,7 @@
 
 <!-- {block name="footer"} -->
 <script type="text/javascript">
-ecjia.merchant.order.info();
+ecjia.merchant.order_info.init();
 </script>
 <!-- {/block} -->
 
@@ -24,7 +24,7 @@ ecjia.merchant.order.info();
 
 <div class="row-fluid">
 	<div class="span12">
-		<form action="{$form_action}" method="post" name="orderpostForm" id="listForm" data-url='{url path="orders/merchant/operate_post" args="order_id={$order.order_id}"}'  data-pjax-url='{url path="orders/merchant/info" args="order_id={$order.order_id}"}' data-list-url='{url path="orders/merchant/init"}' data-remove-url="{$remove_action}">
+		<form action="{$form_action}" method="post" name="theForm" >
 			<div id="accordion2" class="panel panel-default">
 				<div class="panel-heading">
                     <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
@@ -76,7 +76,7 @@ ecjia.merchant.order.info();
 				<div class="panel-heading accordion-group-heading-relative">
                     <a data-toggle="collapse" data-parent="#accordion" href="#collapseSix">
                         <h4 class="panel-title">
-                            <strong>{lang key='orders::order.fee_info'}</strong>
+                            <strong>费用信息</strong>
                         </h4>
                     </a>
                 </div>
@@ -85,15 +85,15 @@ ecjia.merchant.order.info();
 						<tr>
 							<td>
 								<div align="right">
-									<strong>买单消费总金额：</strong>￥500.00
-									- <strong>闪惠：</strong>￥10.00
-									- <strong>使用积分抵扣：</strong>￥10.00
-									- <strong>使用红包抵扣：</strong>￥10.00
+									<strong>买单消费总金额：</strong>¥{if $order_info.goods_amount}{$order_info.goods_amount}{else}0{/if}
+									- <strong>闪惠：</strong>¥{if $order_info.discount}{$order_info.discount}{else}0{/if}
+									- <strong>使用积分抵扣：</strong>¥{if $order_info.integral_money}{$order_info.integral_money}{else}0{/if}
+									- <strong>使用红包抵扣：</strong>¥{if $order_info.bonus}{$order_info.bonus}{else}0{/if}
 								</div>
 							</td>
 						</tr>
 						<tr>
-							<td><div align="right"> = <strong>买单实付金额：</strong>$470.00</div></td>
+							<td><div align="right"> = <strong>买单实付金额：</strong>{$order_info.order_amount}</div></td>
 						</tr>
 						
 					</table>
@@ -103,7 +103,7 @@ ecjia.merchant.order.info();
 				<div class="panel-heading">
                     <a data-toggle="collapse" data-parent="#accordion" href="#collapseSeven">
                         <h4 class="panel-title">
-                            <strong>{t}操作记录{/t}</strong>
+                            <strong>操作记录</strong>
                         </h4>
                     </a>
                 </div>
@@ -112,21 +112,17 @@ ecjia.merchant.order.info();
 						<thead>
 							<tr>
 								<th class="w150"><strong>操作者</strong></th>
-								<th class="w180"><strong>{lang key='orders::order.action_time'}</strong></th>
-								<th class="w130"><strong>{lang key='orders::order.order_status'}</strong></th>
-								<th class="w130"><strong>{lang key='orders::order.pay_status'}</strong></th>
-								<th class="w130"><strong>{lang key='orders::order.shipping_status'}</strong></th>
-								<th class="ecjiafc-pre t_c"><strong>{lang key='orders::order.action_note'}</strong></th>
+								<th class="w180"><strong>操作时间</strong></th>
+								<th class="w130"><strong>订单状态</strong></th>
+								<th class="ecjiafc-pre t_c"><strong>操作备注</strong></th>
 							</tr>
 						</thead>
 						<tbody>
 							<!-- {foreach from=$action_list item=action} -->
 							<tr>
-								<td>{$action.action_user}</td>
-								<td>{$action.action_time}</td>
+								<td>{$action.action_user_name}</td>
+								<td>{$action.add_time}</td>
 								<td>{$action.order_status}</td>
-								<td>{$action.pay_status}</td>
-								<td>{$action.shipping_status}</td>
 								<td class="t_c">{$action.action_note|nl2br}</td>
 							</tr>
 							<!-- {foreachelse} -->
@@ -160,7 +156,6 @@ ecjia.merchant.order.info();
 									<button class="btn operatesubmit btn-info" type="submit" name="confirm">确认核实</button>
 									<button class="btn operatesubmit btn-info" type="submit" name="confirm">取消</button>
 									<button class="btn operatesubmit btn-info" type="submit" name="confirm">无效</button>
-									<input type='hidden' class="operate_note" data-url='{url path="orders/merchant/operate_note"}'>
 									<input type="hidden" name="order_id" class="order_id"  value="{$order_info.order_id}">
 								</td>
 							</tr>

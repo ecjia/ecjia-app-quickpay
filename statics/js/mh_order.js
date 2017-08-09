@@ -26,6 +26,35 @@
             });
         }
     };
+    
+    app.order_info = {
+	    init: function () {
+	        var $form = $("form[name='theForm']");
+	        var option = {
+	            rules: {
+	            	action_note: {
+	                    required: true
+	                }
+	            },
+	            messages: {
+	            	action_note: {
+	                	required: "请输入操作备注"
+	                }
+	            },
+	            submitHandler: function () {
+	                $form.ajaxSubmit({
+	                    dataType: "json",
+	                    success: function (data) {
+	                        ecjia.merchant.showmessage(data);
+	                    }
+	                });
+	            }
+	        }
+	        var options = $.extend(ecjia.merchant.defaultOptions.validate, option);
+	        $form.validate(options);
+	    
+	    }
+	};
 })(ecjia.merchant, jQuery);
  
 // end
