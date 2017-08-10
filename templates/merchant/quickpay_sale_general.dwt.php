@@ -10,6 +10,11 @@ var templateCounts = '{$data}';
 	ecjia.merchant.chart.order_amount();
 {/if}
 </script>
+<style>
+
+
+
+</style>
 <!-- {/block} -->
 
 <!-- {block name="home-content"} -->
@@ -39,6 +44,53 @@ var templateCounts = '{$data}';
 </div>
 <div class="row">
 	<div class="col-lg-12">
+	  <div class="row state-overview">
+	    <div class="col-lg-3 col-sm-3">
+                <section class="panel">
+                    <div class="symbol">
+                        <i class=""></i>
+                    </div>
+                    <div class="value">
+                        <h1> 200</h1>
+                        <p>订单总数量（单）</p>
+                    </div>
+                </section>
+            </div>
+            <div class="col-lg-3 col-sm-3">
+                <section class="panel">
+                    <div class="symbol">
+                        <i class=""></i>
+                    </div>
+                    <div class="value">
+                        <h1> 1200 </h1>
+                        <p>消费总金额（元）</p>
+                    </div>
+                </section>
+            </div>
+            <div class="col-lg-3 col-sm-3">
+                <section class="panel">
+                    <div class="symbol">
+                        <i class=""></i>
+                    </div>
+                    <div class="value">
+                        <h1>200 </h1>
+                        <p>优惠总金额（元）</p>
+                    </div>
+                </section>
+            </div>
+            <div class="col-lg-3 col-sm-3">
+                <section class="panel">
+                    <div class="symbol">
+                        <i class=""></i>
+                    </div>
+                    <div class="value">
+                        <h1>1000</h1>
+                        <p>实付总金额（元）</p>
+                    </div>
+                </section>
+            </div>
+        </div>
+                          
 		<section class="panel">
 			<header class="panel-heading col-lg-12">
 				<div class="form-group choose_list">

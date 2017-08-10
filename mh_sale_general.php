@@ -81,7 +81,7 @@ class mh_sale_general extends ecjia_merchant {
 	public function init() {
 		$this->admin_priv('mh_quickpay_sale_general_stats');
 
-		ecjia_merchant_screen::get_current_screen()->add_nav_here(new admin_nav_here('订单统计'));
+		ecjia_merchant_screen::get_current_screen()->add_nav_here(new admin_nav_here('闪惠订单统计'));
 		
 		$this->assign('ur_here', '订单统计');
 		$this->assign('action_link', array('text' => '闪惠订单统计报表下载', 'href' => RC_Uri::url('quickpay/mh_sale_general/download')));
