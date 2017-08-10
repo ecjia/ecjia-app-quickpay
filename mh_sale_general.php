@@ -84,7 +84,7 @@ class mh_sale_general extends ecjia_merchant {
 		ecjia_merchant_screen::get_current_screen()->add_nav_here(new admin_nav_here('订单统计'));
 		
 		$this->assign('ur_here', '订单统计');
-		$this->assign('action_link', array('text' => '订单统计报表下载', 'href' => RC_Uri::url('quickpay/mh_sale_general/download')));
+		$this->assign('action_link', array('text' => '闪惠订单统计报表下载', 'href' => RC_Uri::url('quickpay/mh_sale_general/download')));
         
         $this->assign('page', 'init');
         $this->assign('form_action', RC_Uri::url('quickpay/mh_sale_general/init'));
@@ -127,6 +127,8 @@ class mh_sale_general extends ecjia_merchant {
 	 */
 	public function download() {
 		$this->admin_priv('mh_quickpay_sale_general_stats');
+		
+		$db_quickpay_order = RC_DB::table('quickpay_orders');
 	
 		$start_time = RC_Time::local_strtotime($_GET['start_time']);
 		$end_time   = RC_Time::local_strtotime($_GET['end_time']);
@@ -157,20 +159,23 @@ class mh_sale_general extends ecjia_merchant {
 		if ($start_time < 0 || $end_time < 0) {
 			return $this->showmessage('参数错误', ecjia::MSGTYPE_HTML | ecjia::MSGSTAT_ERROR);
 		}
-		$where =  " (order_status = '" . OS_CONFIRMED . "' OR order_status >= '" . OS_SPLITED . "' ) AND ( pay_status = '" . PS_PAYED . "' OR pay_status = '" . PS_PAYING . "') AND (shipping_status = '" . SS_SHIPPED . "' OR shipping_status = '" . SS_RECEIVED . "' ) AND (shipping_time >= '". $start_time ."' AND shipping_time <= '" .$end_time. "'  )";
-		$where .= " AND store_id = ". $_SESSION['store_id'];
-		$where .= " AND is_delete = 0";
-	
-		$data_list = $this->db_order_info->field("DATE_FORMAT(FROM_UNIXTIME(shipping_time), '". $format ."') AS period, COUNT(DISTINCT order_sn) AS order_count, SUM(goods_amount + shipping_fee + insure_fee + pay_fee + pack_fee + card_fee - discount) AS order_amount")
-		->where($where)->group('period')->select();
+		
+		$db_quickpay_order->where('store_id', $_SESSION['store_id']);
+		$db_quickpay_order->where('pay_time', '>=', $start_time);
+		$db_quickpay_order->where('pay_time', '<=', $end_time);
+		$data_list = $db_quickpay_order
+		->selectRaw("DATE_FORMAT(FROM_UNIXTIME(pay_time), '". $format ."') AS period,COUNT(DISTINCT order_sn) AS order_count, SUM(order_amount) AS order_amount")
+		->groupby('period')
+		->get();
+		
 		/* 文件名 */
-		$filename = RC_Lang::get('orders::statistic.sale_general_statement');
+		$filename = '闪惠订单统计概况报表';
 	
 		header("Content-type: application/vnd.ms-excel; charset=utf-8");
 		header("Content-Disposition: attachment; filename=$filename.xls");
 	
 		/* 文件标题 */
-		echo mb_convert_encoding($filename . RC_Lang::get('orders::statistic.sales_statistics'),'UTF-8', 'UTF-8') . "\t\n";
+		echo mb_convert_encoding($filename . '闪惠订单统计','UTF-8', 'UTF-8') . "\t\n";
 	
 		/* 订单数量, 销售出商品数量, 销售金额 */
 		echo mb_convert_encoding(RC_LANG::lang('period'),'UTF-8', 'UTF-8') . "\t";
