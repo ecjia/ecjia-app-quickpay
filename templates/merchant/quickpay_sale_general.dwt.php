@@ -40,29 +40,29 @@ var templateCounts = '{$data}';
 <div class="row">
 	<div class="col-lg-12">
 	  <div class="row state-overview">
-	    <div class="col-lg-3 col-sm-3">
-                    <div class="value">
-                        <h3>{$data_count.order_count}</h3>
-                        <p>订单总数量（单）</p>
-                    </div>
+	    	<div class="col-lg-3 col-sm-3">
+                <div class="value">
+                    <h3>{$data_count.order_count}</h3>
+                    <p>订单总数量（单）</p>
+                </div>
             </div>
             <div class="col-lg-3 col-sm-3">
-                    <div class="value">
-                        <h3>¥{$data_count.goods_amount}</h3>
-                        <p>消费总金额（元）</p>
-                    </div>
+                <div class="value">
+                    <h3>¥{$data_count.goods_amount}</h3>
+                    <p>消费总金额（元）</p>
+                </div>
             </div>
             <div class="col-lg-3 col-sm-3">
-                    <div class="value">
-                        <h3>¥{$data_count.favorable_amount}</h3>
-                        <p>优惠总金额（元）</p>
-                    </div>
+                <div class="value">
+                    <h3>¥{$data_count.favorable_amount}</h3>
+                    <p>优惠总金额（元）</p>
+                </div>
             </div>
             <div class="col-lg-3 col-sm-3">
-                    <div class="value">
-                        <h3>¥{$data_count.order_amount}</h3>
-                        <p>实付总金额（元）</p>
-                    </div>
+                <div class="value">
+                    <h3>¥{$data_count.order_amount}</h3>
+                    <p>实付总金额（元）</p>
+                </div>
             </div>
         </div>
                           
