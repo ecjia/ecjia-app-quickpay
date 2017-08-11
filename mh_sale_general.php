@@ -73,6 +73,16 @@ class mh_sale_general extends ecjia_merchant {
         ecjia_merchant_screen::get_current_screen()->set_parentage('quickpay', 'quickpay/mh_sale_general.php');
         
         ecjia_merchant_screen::get_current_screen()->add_nav_here(new admin_nav_here('闪惠管理', RC_Uri::url('quickpay/mh_order/init')));
+        
+        $data_count = RC_DB::table('quickpay_orders')
+        ->selectRaw("COUNT(DISTINCT order_sn) AS order_count, 
+        		SUM(goods_amount) AS goods_amount,
+        		SUM(order_amount) AS order_amount, 
+        		SUM(goods_amount - order_amount) AS favorable_amount")
+        ->where('store_id', $_SESSION['store_id'])
+        ->where('pay_time','<>','0')
+        ->first();
+        $this->assign('data_count', $data_count);
 	}
 	
 	/**
@@ -85,7 +95,9 @@ class mh_sale_general extends ecjia_merchant {
 		
 		$this->assign('ur_here', '订单统计');
 		$this->assign('action_link', array('text' => '闪惠订单统计报表下载', 'href' => RC_Uri::url('quickpay/mh_sale_general/download')));
-        
+
+
+		
         $this->assign('page', 'init');
         $this->assign('form_action', RC_Uri::url('quickpay/mh_sale_general/init'));
 		
