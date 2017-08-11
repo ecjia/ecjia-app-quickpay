@@ -66,7 +66,8 @@ class quickpay_merchant_purview_api extends Component_Event_Api {
         		
         	array('action_name' => '闪惠订单统计', 'action_code' => 'mh_quickpay_sale_general_stats', 'relevance'   => ''),
         		
-        		
+        	array('action_name' => '闪惠销售明细', 'action_code' => 'mh_sale_list_stats', 'relevance'   => ''),
+	
         );
         return $purviews;
     }

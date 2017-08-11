@@ -59,6 +59,7 @@ class quickpay_merchant_menu_api extends Component_Event_Api {
         	ecjia_merchant::make_admin_menu('02_quickpay_order', '闪惠订单', RC_Uri::url('quickpay/mh_order/init'), 2)->add_purview('mh_quickpay_order_manage')->add_icon('fa fa-list-ul'),
         	ecjia_merchant::make_admin_menu('03_quickpay_order_search', '闪惠订单查询', RC_Uri::url('quickpay/mh_order/search_order'), 3)->add_purview('mh_quickpay_order_search')->add_icon('fa-search'),
         	ecjia_merchant::make_admin_menu('04_quickpay_order_stats', '闪惠订单统计', RC_Uri::url('quickpay/mh_sale_general/init'), 4)->add_purview('mh_quickpay_sale_general_stats')->add_icon('fa-bar-chart-o'),
+        	ecjia_merchant::make_admin_menu('05_quickpay_order_sale', '闪惠销售明细', RC_Uri::url('quickpay/mh_sale_list/init'), 5)->add_purview('mh_sale_list_stats')->add_icon('fa fa-list'),
         );
         
         $menus->add_submenu($submenus);

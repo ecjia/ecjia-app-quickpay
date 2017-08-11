@@ -96,8 +96,6 @@ class mh_sale_general extends ecjia_merchant {
 		$this->assign('ur_here', '订单统计');
 		$this->assign('action_link', array('text' => '闪惠订单统计报表下载', 'href' => RC_Uri::url('quickpay/mh_sale_general/download')));
 
-
-		
         $this->assign('page', 'init');
         $this->assign('form_action', RC_Uri::url('quickpay/mh_sale_general/init'));
 		
@@ -271,7 +269,6 @@ class mh_sale_general extends ecjia_merchant {
 		
 		return array('item' => json_encode($templateCount), 'filter' => $filter);
 	}
-
 }
 
 // end
