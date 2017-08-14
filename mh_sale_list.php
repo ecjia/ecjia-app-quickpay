@@ -86,6 +86,8 @@ class mh_sale_list extends ecjia_merchant {
 
 		$sale_list_data = $this->get_sale_list();
         $this->assign('sale_list_data', $sale_list_data);
+        $this->assign('order_count', $sale_list_data['count_data'][0]['order_count']);
+        $this->assign('order_amount', $sale_list_data['count_data'][0]['order_amount']);
         $this->assign('filter', $sale_list_data['filter']);
 
         $this->assign('search_action', RC_Uri::url('quickpay/mh_sale_list/init'));
@@ -121,8 +123,6 @@ class mh_sale_list extends ecjia_merchant {
 		exit;
 	}
 	
-	
-
 	/**
 	 * 取得销售明细数据信息
 	 * @return  array销售明细数据
@@ -148,24 +148,26 @@ class mh_sale_list extends ecjia_merchant {
 		$db_quickpay_order->where('pay_time', '>=', $start);
 		$db_quickpay_order->where('pay_time', '<=', $end);
 	
+		$count_data = $db_quickpay_order
+		->selectRaw("COUNT(DISTINCT order_sn) AS order_count,
+				SUM(order_amount) AS order_amount")
+		->get();
+		
 		$sale_list_data = $db_quickpay_order
 		->selectRaw("DATE_FORMAT(FROM_UNIXTIME(pay_time), '". $format ."') AS period,
 				COUNT(DISTINCT order_sn) AS order_count, 
 				SUM(goods_amount) AS goods_amount,
 				SUM(order_amount) AS order_amount, 
 				SUM(goods_amount - order_amount) AS favorable_amount")
-		->where('store_id', $_SESSION['store_id'])
 		->groupby('period')
 		->get();
-		
 		
 		$filter['start_date'] = RC_Time::local_date('Y-m-d', $start);
 		$filter['end_date']   = RC_Time::local_date('Y-m-d', $end);
 
-		$arr = array('item' => $sale_list_data, 'filter' => $filter);
+		$arr = array('item' => $sale_list_data, 'count_data' => $count_data, 'filter' => $filter);
 		return $arr;
 	}
-	
 }
 
 // end
