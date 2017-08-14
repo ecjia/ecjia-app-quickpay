@@ -3,6 +3,12 @@
 <!-- {block name="footer"} -->
 <script type="text/javascript">
 	ecjia.merchant.sale_list.init()
+	var test = '{$sale_list_data.select_value}';
+	if(test) {
+		$("select[name='month_beginMonth']").find("option[value='']").attr("selected",true);
+	} else {
+		$("select[name='month_beginMonth']").find("option[value='']").attr("selected",false);
+	}
 </script>
 <style>
 .panel-heading {

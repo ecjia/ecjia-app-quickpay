@@ -79,11 +79,6 @@ class mh_sale_list extends ecjia_merchant {
 		$this->assign('ur_here', '闪惠销售明细');
 		$this->assign('action_link', array('text' => '销售明细报表下载', 'href' => RC_Uri::url('quickpay/mh_sale_list/download')));
 		
-		$start_date = !empty($_GET['start_date']) ? $_GET['start_date'] : RC_Time::local_date(ecjia::config('date_format'),RC_Time::local_strtotime('-7 days'));
-		$end_date   = !empty($_GET['end_date']) ? $_GET['end_date'] : RC_Time::local_date(ecjia::config('date_format'));
-		$this->assign('start_date', $start_date);//2017-08-04
-		$this->assign('end_date', $end_date);//2017-08-11
-
 		$sale_list_data = $this->get_sale_list();
         $this->assign('sale_list_data', $sale_list_data);
         $this->assign('order_count', $sale_list_data['count_data'][0]['order_count']);
@@ -129,17 +124,28 @@ class mh_sale_list extends ecjia_merchant {
 	 */
 	private function get_sale_list() {
 		$db_quickpay_order = RC_DB::table('quickpay_orders');
-
-		if(empty($_GET['year_beginYear'])) {
-			$start = RC_Time::local_mktime(0, 0, 0, 1, 1, intval(date('Y')));
-			$end   = RC_Time::local_mktime(0, 0, 0, intval(date('m')), 31, intval(date('Y')));
+		
+		if(empty($_GET['year_beginYear'])) {//当年当月的数据
+			$start = RC_Time::local_mktime(0, 0, 0, intval(date('m')), 1, intval(date('Y')));
+			$end   = RC_Time::local_mktime(23, 59, 59, intval(date('m')), 31, intval(date('Y')));
 		} else {
-			if($_GET['month_beginMonth'] == 'all') {
+			if($_GET['month_beginMonth'] == 'all') {//指定某年（一年数据）
 				$start = RC_Time::local_mktime(0, 0, 0, 1, 1, intval($_GET['year_beginYear']));
-				$end   = RC_Time::local_mktime(0, 0, 0, 12, 31, intval($_GET['year_beginYear']));
-			} else {
-				$start = RC_Time::local_mktime(0, 0, 0, intval($_GET['month_beginMonth']), 1, intval($_GET['year_beginYear']));
-				$end   = RC_Time::local_mktime(0, 0, 0, intval($_GET['month_beginMonth']), 31, intval($_GET['year_beginYear']));
+				$end   = RC_Time::local_mktime(23, 59, 59, 12, 31, intval($_GET['year_beginYear']));
+				$select_value = 'select_all';
+			} else {//指定某年某月的数据
+				$month_beginMonth = intval($_GET['month_beginMonth']);
+				$year_beginYear   = intval($_GET['year_beginYear']);
+				$start = RC_Time::local_mktime(0, 0, 0, $month_beginMonth, 1, $year_beginYear);
+				if ($month_beginMonth ==1 || $month_beginMonth ==3 || $month_beginMonth ==5 || $month_beginMonth ==7 || $month_beginMonth ==8 || $month_beginMonth ==10 || $month_beginMonth ==12) {
+					$end   = RC_Time::local_mktime(23, 59, 59, $month_beginMonth, 31, $year_beginYear);//每年大月
+				} elseif($month_beginMonth == 4 || $month_beginMonth == 6 || $month_beginMonth == 9 || $month_beginMonth == 11) {
+					$end = RC_Time::local_mktime(23, 59, 59, $month_beginMonth, 30, $year_beginYear);//每年小月
+				} elseif($month_beginMonth == 2 && ($year_beginYear%4 == 0 && $year_beginYear%100 != 0) || ($year_beginYear%400 == 0)){
+					$end = RC_Time::local_mktime(23, 59, 59, $month_beginMonth, 29, $year_beginYear);//闰年2月
+				} else {
+					$end = RC_Time::local_mktime(23, 59, 59, $month_beginMonth, 28, $year_beginYear);//平年2月
+				}
 			}
 		}
 		
@@ -161,11 +167,10 @@ class mh_sale_list extends ecjia_merchant {
 				SUM(goods_amount - order_amount) AS favorable_amount")
 		->groupby('period')
 		->get();
-		
 		$filter['start_date'] = RC_Time::local_date('Y-m-d', $start);
 		$filter['end_date']   = RC_Time::local_date('Y-m-d', $end);
-
-		$arr = array('item' => $sale_list_data, 'count_data' => $count_data, 'filter' => $filter);
+		
+		$arr = array('item' => $sale_list_data, 'count_data' => $count_data, 'filter' => $filter, 'select_value' => $select_value);
 		return $arr;
 	}
 }
