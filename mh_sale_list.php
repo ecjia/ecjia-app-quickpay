@@ -83,9 +83,10 @@ class mh_sale_list extends ecjia_merchant {
 		$end_date   = !empty($_GET['end_date']) ? $_GET['end_date'] : RC_Time::local_date(ecjia::config('date_format'));
 		$this->assign('start_date', $start_date);//2017-08-04
 		$this->assign('end_date', $end_date);//2017-08-11
-	
+
 		$sale_list_data = $this->get_sale_list();
         $this->assign('sale_list_data', $sale_list_data);
+        $this->assign('filter', $sale_list_data['filter']);
 
         $this->assign('search_action', RC_Uri::url('quickpay/mh_sale_list/init'));
         
@@ -128,23 +129,24 @@ class mh_sale_list extends ecjia_merchant {
 	 */
 	private function get_sale_list() {
 		$db_quickpay_order = RC_DB::table('quickpay_orders');
-		
-		if (!empty($_GET['start_date'])) {
-			$filter['start_date'] = RC_Time::local_strtotime($_GET['start_date']);
-		} else {
-			$filter['start_date'] = RC_Time::local_strtotime('-7 days');
-		}
-		
-		if (!empty($_GET['end_date'])) {
-			$filter['end_date'] = RC_Time::local_strtotime($_GET['end_date']);
-		} else {
-			$filter['end_date']   = RC_Time::local_strtotime('today');
-		}
 
+		if(empty($_GET['year_beginYear'])) {
+			$start = RC_Time::local_mktime(0, 0, 0, 1, 1, intval(date('Y')));
+			$end   = RC_Time::local_mktime(0, 0, 0, intval(date('m')), 31, intval(date('Y')));
+		} else {
+			if($_GET['month_beginMonth'] == 'all') {
+				$start = RC_Time::local_mktime(0, 0, 0, 1, 1, intval($_GET['year_beginYear']));
+				$end   = RC_Time::local_mktime(0, 0, 0, 12, 31, intval($_GET['year_beginYear']));
+			} else {
+				$start = RC_Time::local_mktime(0, 0, 0, intval($_GET['month_beginMonth']), 1, intval($_GET['year_beginYear']));
+				$end   = RC_Time::local_mktime(0, 0, 0, intval($_GET['month_beginMonth']), 31, intval($_GET['year_beginYear']));
+			}
+		}
+		
 		$format = '%Y-%m-%d';
 		$db_quickpay_order->where('store_id', $_SESSION['store_id']);
-		$db_quickpay_order->where('pay_time', '>=', $filter['start_date']);
-		$db_quickpay_order->where('pay_time', '<=', $filter['end_date']);
+		$db_quickpay_order->where('pay_time', '>=', $start);
+		$db_quickpay_order->where('pay_time', '<=', $end);
 	
 		$sale_list_data = $db_quickpay_order
 		->selectRaw("DATE_FORMAT(FROM_UNIXTIME(pay_time), '". $format ."') AS period,
@@ -156,8 +158,11 @@ class mh_sale_list extends ecjia_merchant {
 		->groupby('period')
 		->get();
 		
+		
+		$filter['start_date'] = RC_Time::local_date('Y-m-d', $start);
+		$filter['end_date']   = RC_Time::local_date('Y-m-d', $end);
+
 		$arr = array('item' => $sale_list_data, 'filter' => $filter);
-		 
 		return $arr;
 	}
 	

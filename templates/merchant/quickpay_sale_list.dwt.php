@@ -4,6 +4,16 @@
 <script type="text/javascript">
 	ecjia.merchant.sale_list.init()
 </script>
+<style>
+.panel-heading {
+    line-height:30px;
+}
+
+.sale_desc span{
+	color:#e62129;
+}
+
+</style>
 <!-- {/block} -->
 
 <!-- {block name="home-content"} -->
@@ -26,18 +36,22 @@
 </div>
 <div class="row">
 	<div class="col-lg-12">
-		<section class="panel">
+		<section class="panel" >
 			<header class="panel-heading">
-				<div class="t_r">
-					<form class="form-inline" action="{$search_action}" method="post" name="theForm">
-						<span>按时间段查询：</span>
-						<input class="form-control start_date w110" name="start_date" type="text" placeholder="开始时间" value="{$start_date}">
-						<span class="">-</span>
-						<input class="form-control end_date w110" name="end_date" type="text" placeholder="结束时间" value="{$end_date}">
-						<input class="btn btn-primary screen-btn" type="submit" value="搜索">
+				<div class="form-group choose_list">
+					<form class="form-inline" action="{$search_action}" method="post" name="searchForm">
+						<span>按照年份查：</span>
+		                {html_select_date prefix="year_begin" class="no_search w110" time=$filter.start_date start_year="-10" reverse_years=true display_months=false display_days=false }
+		                <span style="margin-left: 15px;">按月份查：</span>
+						{html_select_date prefix="month_begin" class="no_search w110" time=$filter.end_date display_years=false display_days=false field_order="YMD" month_format="%m" month_empty="全年"}
+						<input type="submit" name="search_sale_data" value="查询" class="btn btn-primary screen-btn"/>
 					</form>
-				</div>
+				</div><br>
+				<div class="sale_desc">订单共计：<span>200</span>&nbsp;单&nbsp;&nbsp;&nbsp;实际总金额共计：<span>¥1000.00</span>&nbsp;元</div>
 			</header>
+		</section>
+		
+		<section class="panel">
 			<div class="panel-body">
 				<section id="unseen">
 					<table class="table table-striped table-advance table-hover">
