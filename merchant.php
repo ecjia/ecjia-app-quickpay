@@ -456,6 +456,14 @@ class merchant extends ecjia_merchant {
     		$db_bonus->where('type_name', 'like', '%'.mysql_like_quote($keyword).'%');
     	}
     	$arr = $db_bonus->get();
+    	if (empty($arr)) {
+    		$arr = array(
+    			0 => array(
+		    		'type_id'   => 0,
+		    		'type_name' => '没有找到相应的红包记录，请重新搜索'
+    			)
+    		);
+    	}
     	return $this->showmessage('', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('content' => $arr));
     }
 	
