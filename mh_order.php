@@ -213,6 +213,11 @@ class mh_order extends ecjia_merchant {
 		$db_quickpay_order->where('store_id', $store_id);
 		
 		$filter = $_GET;
+		
+		if ($filter['act_id']) {
+			$db_quickpay_order->where('activity_id', $filter['act_id']);
+		}
+		
 		if ($filter['keywords']) {
 			$db_quickpay_order->where('order_sn', 'like', '%'.mysql_like_quote($filter['keywords']).'%')->orWhere('user_name', 'like', '%' . mysql_like_quote($filter['keywords']) . '%');
 		}

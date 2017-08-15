@@ -120,7 +120,7 @@ ecjia.merchant.order_list.init();
     							{$order.order_sn}
     							<div class="edit-list">
     								<a href="#actionmodal" data-toggle="modal">核实</a>&nbsp;|&nbsp;
-    								<a href='{url path="quickpay/mh_order/order_info" args="order_id={$order.order_id}"}' class="data-pjax" title="查看详情">{t}查看详情{/t}</a>
+    								<a target="_blank" href='{url path="quickpay/mh_order/order_info" args="order_id={$order.order_id}"}' title="查看详情">{t}查看详情{/t}</a>
     							</div>
     						</td>
     						<td align="left">

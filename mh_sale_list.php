@@ -141,9 +141,9 @@ class mh_sale_list extends ecjia_merchant {
 				$start = RC_Time::local_mktime(0, 0, 0, $month_beginMonth, 1, $year_beginYear);
 				if ($month_beginMonth ==1 || $month_beginMonth ==3 || $month_beginMonth ==5 || $month_beginMonth ==7 || $month_beginMonth ==8 || $month_beginMonth ==10 || $month_beginMonth ==12) {
 					$end   = RC_Time::local_mktime(23, 59, 59, $month_beginMonth, 31, $year_beginYear);//每年大月
-				} elseif($month_beginMonth == 4 || $month_beginMonth == 6 || $month_beginMonth == 9 || $month_beginMonth == 11) {
+				} elseif ($month_beginMonth == 4 || $month_beginMonth == 6 || $month_beginMonth == 9 || $month_beginMonth == 11) {
 					$end = RC_Time::local_mktime(23, 59, 59, $month_beginMonth, 30, $year_beginYear);//每年小月
-				} elseif($month_beginMonth == 2 && ($year_beginYear%4 == 0 && $year_beginYear%100 != 0) || ($year_beginYear%400 == 0)){
+				} elseif ($month_beginMonth == 2 && ($year_beginYear%4 == 0 && $year_beginYear%100 != 0) || ($year_beginYear%400 == 0)) {
 					$end = RC_Time::local_mktime(23, 59, 59, $month_beginMonth, 29, $year_beginYear);//闰年2月
 				} else {
 					$end = RC_Time::local_mktime(23, 59, 59, $month_beginMonth, 28, $year_beginYear);//平年2月
