@@ -125,6 +125,7 @@ class mh_sale_list extends ecjia_merchant {
 	private function get_sale_list() {
 		$db_quickpay_order = RC_DB::table('quickpay_orders');
 		
+		$format = '%Y-%m-%d';
 		if(empty($_GET['year_beginYear'])) {//当年当月的数据
 			$start = RC_Time::local_mktime(0, 0, 0, intval(date('m')), 1, intval(date('Y')));
 			$end   = RC_Time::local_mktime(23, 59, 59, intval(date('m')), 31, intval(date('Y')));
@@ -133,6 +134,7 @@ class mh_sale_list extends ecjia_merchant {
 				$start = RC_Time::local_mktime(0, 0, 0, 1, 1, intval($_GET['year_beginYear']));
 				$end   = RC_Time::local_mktime(23, 59, 59, 12, 31, intval($_GET['year_beginYear']));
 				$select_value = 'select_all';
+				$format = '%Y-%m';
 			} else {//指定某年某月的数据
 				$month_beginMonth = intval($_GET['month_beginMonth']);
 				$year_beginYear   = intval($_GET['year_beginYear']);
@@ -149,7 +151,6 @@ class mh_sale_list extends ecjia_merchant {
 			}
 		}
 		
-		$format = '%Y-%m-%d';
 		$db_quickpay_order->where('store_id', $_SESSION['store_id']);
 		$db_quickpay_order->where('pay_time', '>=', $start);
 		$db_quickpay_order->where('pay_time', '<=', $end);
@@ -167,6 +168,7 @@ class mh_sale_list extends ecjia_merchant {
 				SUM(goods_amount - order_amount) AS favorable_amount")
 		->groupby('period')
 		->get();
+		
 		$filter['start_date'] = RC_Time::local_date('Y-m-d', $start);
 		$filter['end_date']   = RC_Time::local_date('Y-m-d', $end);
 		

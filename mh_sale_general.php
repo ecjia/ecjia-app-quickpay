@@ -50,19 +50,17 @@ defined('IN_ECJIA') or exit('No permission resources.');
  * 销售概况
 */
 class mh_sale_general extends ecjia_merchant {
-	private $db_order_info;
-	private $db_orderinfo_view;
 	public function __construct() {
 		parent::__construct();
+		
 		RC_Script::enqueue_script('bootstrap-placeholder');
 		RC_Script::enqueue_script('jquery-validate');
 		RC_Script::enqueue_script('jquery-form');
 		RC_Script::enqueue_script('smoke');
 		RC_Script::enqueue_script('jquery-uniform');
 		RC_Style::enqueue_style('uniform-aristo');
-
-		$this->db_order_info = RC_Loader::load_app_model('order_info_model', 'orders');
-        $this->db_orderinfo_view = RC_Loader::load_app_model('order_info_viewmodel', 'orders');
+		
+		RC_Loader::load_app_func('global', 'quickpay');
         
         RC_Script::enqueue_script('acharts-min', RC_App::apps_url('statics/js/acharts-min.js', __FILE__), array('ecjia-merchant'), false, 1);
         RC_Script::enqueue_script('mh_sale_general', RC_App::apps_url('statics/js/mh_sale_general.js', __FILE__), array('ecjia-merchant'), false, 1);
