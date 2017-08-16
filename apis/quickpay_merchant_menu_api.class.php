@@ -48,7 +48,7 @@ defined('IN_ECJIA') or exit('No permission resources.');
 
 /**
  * 闪惠管理菜单
- * @author songqian
+ * @author songqianqian
  */
 class quickpay_merchant_menu_api extends Component_Event_Api {
 

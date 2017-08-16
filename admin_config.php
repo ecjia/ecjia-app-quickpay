@@ -47,23 +47,52 @@
 defined('IN_ECJIA') or exit('No permission resources.');
 
 /**
- * 闪惠
+ * ECJIA闪惠活动规则设置模块
  * @author songqianqian
  */
-class quickpay_admin_menu_api extends Component_Event_Api
-{
+class admin_config extends ecjia_admin {
+	public function __construct() {
+		parent::__construct();
+		
+		RC_Script::enqueue_script('jquery-validate');
+		RC_Script::enqueue_script('jquery-form');
+		RC_Script::enqueue_script('smoke');
+		RC_Style::enqueue_style('chosen');
+		RC_Style::enqueue_style('uniform-aristo');
+		RC_Script::enqueue_script('jquery-uniform');
+		RC_Script::enqueue_script('jquery-chosen');
+		
+		RC_Script::enqueue_script('quickpay_config', RC_App::apps_url('statics/js/quickpay_config.js', __FILE__), array(), false, true);
+		
+	}
 
-    public function call(&$options)
-    {
-        $menus = ecjia_admin::make_admin_menu('15_content', '闪惠管理', '', 3);
-        
-        $submenus = array(
-        	ecjia_admin::make_admin_menu('01_quickpay', '闪惠规则', RC_Uri::url('quickpay/admin/init'), 1)->add_purview('quickpay_manage'),
-        );
-        
-        $menus->add_submenu($submenus);
-        return $menus;
-    }
+	/**
+	 * 闪惠活动规则配置
+	 */
+	public function init() {
+	    $this->admin_priv('quickpay_config_manage');
+	    
+		ecjia_screen::get_current_screen()->add_nav_here(new admin_nav_here('闪惠设置'));
+		$this->assign('ur_here', '闪惠设置');
+		
+	    $this->assign('quickpay_rule', ecjia::config('quickpay_rule'));
+	    
+		$this->assign('form_action', RC_Uri::url('quickpay/admin_config/update'));
+		
+		$this->display('quickpay_config.dwt');
+	}
+		
+	/**
+	 * 处理闪惠活动规则配置
+	 */
+	public function update() {
+		$this->admin_priv('quickpay_config_manage');
+		
+		$quickpay_rule = $_POST['quickpay_rule'];
+		ecjia_config::instance()->write_config('quickpay_rule', $quickpay_rule);
+		
+		return $this->showmessage('闪惠活动规则配置成功', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('pjaxurl' => RC_Uri::url('quickpay/admin_config/init')));
+	}
 }
 
-// end
+//end

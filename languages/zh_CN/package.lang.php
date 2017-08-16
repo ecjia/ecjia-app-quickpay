@@ -47,23 +47,11 @@
 defined('IN_ECJIA') or exit('No permission resources.');
 
 /**
- * 闪惠
- * @author songqianqian
+ * ECJIA 应用语言包
  */
-class quickpay_admin_menu_api extends Component_Event_Api
-{
-
-    public function call(&$options)
-    {
-        $menus = ecjia_admin::make_admin_menu('15_content', '闪惠管理', '', 3);
-        
-        $submenus = array(
-        	ecjia_admin::make_admin_menu('01_quickpay', '闪惠规则', RC_Uri::url('quickpay/admin/init'), 1)->add_purview('quickpay_manage'),
-        );
-        
-        $menus->add_submenu($submenus);
-        return $menus;
-    }
-}
+return array(
+	'quickpay'      => '闪惠规则',
+	'quickpay_desc' => '新一款闪付优惠活动',
+);
 
 // end

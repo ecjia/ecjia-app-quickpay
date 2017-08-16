@@ -46,24 +46,19 @@
 //
 defined('IN_ECJIA') or exit('No permission resources.');
 
-/**
- * 闪惠
- * @author songqianqian
- */
-class quickpay_admin_menu_api extends Component_Event_Api
-{
-
-    public function call(&$options)
-    {
-        $menus = ecjia_admin::make_admin_menu('15_content', '闪惠管理', '', 3);
-        
-        $submenus = array(
-        	ecjia_admin::make_admin_menu('01_quickpay', '闪惠规则', RC_Uri::url('quickpay/admin/init'), 1)->add_purview('quickpay_manage'),
-        );
-        
-        $menus->add_submenu($submenus);
-        return $menus;
-    }
+class quickpay_admin_hooks {
+	
+   public static function append_admin_setting_group($menus) {
+       $setting = ecjia_admin_setting::singleton();
+       
+       $menus[] = ecjia_admin::make_admin_menu('nav-header', '闪惠设置', '', 22)->add_purview(array('push_config_manage'));
+       $menus[] = ecjia_admin::make_admin_menu('quickpay', '规则描述', RC_Uri::url('quickpay/admin_config/init'), 23)->add_purview('quickpay_config_manage');
+       
+       return $menus;
+   }
+    
 }
+
+RC_Hook::add_action('append_admin_setting_group', array('quickpay_admin_hooks', 'append_admin_setting_group') );
 
 // end
