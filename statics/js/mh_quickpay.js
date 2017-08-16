@@ -268,7 +268,7 @@
 	            	title: {
 	                    required: true
 	                },
-	                activity_value: {
+	                activity_discount_value: {
 	                    required: true
 	                }
 	            },
@@ -276,7 +276,7 @@
 	                title: {
 	                	required: "请输入闪惠名称"
 	                },
-	                activity_value: {
+	                activity_discount_value: {
 	                    required: "请输入折扣价格"
 	                }
 	            },

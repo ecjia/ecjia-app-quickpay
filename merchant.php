@@ -179,17 +179,20 @@ class merchant extends ecjia_merchant {
 		}
 		
 		//相对应的闪惠类型活动参数处理
-		$activity_value = $_POST['activity_value'];
-		if (is_array($activity_value)) {
-			foreach($activity_value as $row){
-				if(empty($row)){
-					return $this->showmessage('活动参数不能为空', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
+		$activity_discount_value = $_POST['activity_discount_value'];
+		if (!empty($activity_discount_value)) {
+			$activity_value = $activity_discount_value;
+		} else {
+			if (is_array($_POST['activity_value'])) {
+				foreach($_POST['activity_value'] as $row){
+					if(empty($row)){
+						return $this->showmessage('活动参数不能为空', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
+					}
 				}
+				$activity_value = implode(",", $_POST['activity_value']);
 			}
-			$activity_value = implode(",", $activity_value);
 		}
-		
-		
+
 		//时间规则处理
 		$limit_time_type = trim($_POST['limit_time_type']);//限制时间类型类型
 		$limit_time_weekly = 0;
@@ -341,16 +344,20 @@ class merchant extends ecjia_merchant {
 		}
 		
 		//相对应的闪惠类型活动参数处理
-		$activity_value = $_POST['activity_value'];
-		if (is_array($activity_value)) {
-			foreach($activity_value as $row){
-				if(empty($row)){
-					return $this->showmessage('活动参数不能为空', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
+		$activity_discount_value = $_POST['activity_discount_value'];
+		if (!empty($activity_discount_value)) {
+			$activity_value = $activity_discount_value;
+		} else {
+			if (is_array($_POST['activity_value'])) {
+				foreach($_POST['activity_value'] as $row){
+					if(empty($row)){
+						return $this->showmessage('活动参数不能为空', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
+					}
 				}
+				$activity_value = implode(",", $_POST['activity_value']);
 			}
-			$activity_value = implode(",", $activity_value);
 		}
-		
+
 		//时间规则处理
 		$limit_time_type = trim($_POST['limit_time_type']);//限制时间类型类型
 		$limit_time_weekly = 0;
@@ -429,7 +436,7 @@ class merchant extends ecjia_merchant {
 		);
 		
 		RC_DB::table('quickpay_activity')->where('id', $id)->update($data);
-		return $this->showmessage('添加闪惠规则成功', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('pjaxurl' => RC_Uri::url('quickpay/merchant/edit', array('id' => $id))));
+		return $this->showmessage('编辑闪惠规则成功', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('pjaxurl' => RC_Uri::url('quickpay/merchant/edit', array('id' => $id))));
 	}
 	
 	/**
