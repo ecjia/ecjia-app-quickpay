@@ -157,9 +157,9 @@ ecjia.merchant.order_info.init();
 							<tr>
 								<td><div align="right"><strong>当前可执行操作：</strong></div></td>
 								<td colspan="3">
-									<button class="btn operatesubmit btn-info" type="submit" name="confirm">确认核实</button>
-									<button class="btn operatesubmit btn-info" type="submit" name="confirm">取消</button>
-									<button class="btn operatesubmit btn-info" type="submit" name="confirm">无效</button>
+									<button class="btn operatesubmit btn-info" type="submit" name="confirm_order">确认核实</button>
+									<button class="btn operatesubmit btn-info" type="submit" name="cancel_order">取消</button>
+									<button class="btn operatesubmit btn-info" type="submit" name="invalid_order">无效</button>
 									<input type="hidden" name="order_id" class="order_id"  value="{$order_info.order_id}">
 								</td>
 							</tr>

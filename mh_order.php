@@ -146,7 +146,9 @@ class mh_order extends ecjia_merchant {
 		$action_note = trim($_POST['action_note']);
 		$order_id    = intval($_POST['order_id']);
 		$type		 = trim($_GET['type']);
-		
+		if (empty($action_note)) {
+			return $this->showmessage('操作备注不能为空', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
+		}
 		$data = array(
 			'order_id'			=> $order_id,
 			'action_user_id'	=> $_SESSION['staff_id'],
