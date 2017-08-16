@@ -100,6 +100,30 @@ class admin extends ecjia_admin {
 		$this->display('quickpay_list.dwt');
 	}
 	
+	/**
+	 * 编辑闪惠活动（只允许自营店铺）非自营店铺只允许查看
+	 */
+	public function edit() {
+		$this->admin_priv('quickpay_update');
+		
+		ecjia_screen::get_current_screen()->add_nav_here(new admin_nav_here('闪惠规则'));
+		$this->assign('ur_here', '闪惠规则列表');
+		
+		$this->display('quickpay_edit.dwt');
+	}
+	
+
+	/**
+	 * 删除闪惠活动（只允许自营店铺）
+	 */
+	public function remove() {
+		$this->admin_priv('quickpay_delete');
+	
+		$id = intval($_GET['id']);
+		RC_DB::table('quickpay_activity')->where('id', $id)->delete();
+	
+		return $this->showmessage('成功删除该闪惠规则', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS);
+	}
 
 	/**
 	 * 批量操作
@@ -146,6 +170,7 @@ class admin extends ecjia_admin {
 		
 		$data = $db_quickpay_activity
 		->select('id', 'title', 'activity_type', 'start_time', 'end_time', RC_DB::raw('s.merchants_name'),RC_DB::raw('s.manage_mode'))
+		->orderby('id', 'desc')
 		->take(10)
 		->skip($page->start_id-1)
 		->get();

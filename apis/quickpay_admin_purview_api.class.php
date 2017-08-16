@@ -54,12 +54,22 @@ class quickpay_admin_purview_api extends Component_Event_Api {
     
     public function call(&$options) {
         $purviews = array(
+        	array('action_name' => '闪惠活动设置', 'action_code' => 'quickpay_config_manage', 'relevance'   => ''),
+        		
         	array('action_name' => '闪惠活动管理', 'action_code' => 'quickpay_manage', 'relevance'   => ''),
         	array('action_name' => '闪惠活动编辑', 'action_code' => 'quickpay_update', 'relevance'   => ''),
         	array('action_name' => '闪惠活动删除', 'action_code' => 'quickpay_delete', 'relevance'   => ''),
-        	array('action_name' => '闪惠活动设置', 'action_code' => 'quickpay_config_manage', 'relevance'   => ''),
         		
+        	array('action_name' => '闪惠订单管理', 'action_code' => 'quickpay_order_manage', 'relevance'   => ''),
+        	array('action_name' => '闪惠订单核实', 'action_code' => 'quickpay_order_update', 'relevance'   => ''),
+        	array('action_name' => '闪惠订单删除', 'action_code' => 'quickpay_order_delete', 'relevance'   => ''),
         		
+        	array('action_name' => '闪惠订单查询', 'action_code' => 'quickpay_order_search', 'relevance'   => ''),
+        		
+        	array('action_name' => '闪惠订单统计', 'action_code' => 'quickpay_sale_general_stats', 'relevance'   => ''),
+        		
+        	array('action_name' => '闪惠销售明细', 'action_code' => 'quickpay_sale_list', 'relevance'   => ''),
+		
         );
         return $purviews;
     }
