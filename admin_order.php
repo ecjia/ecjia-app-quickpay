@@ -108,6 +108,8 @@ class admin_order extends ecjia_admin {
 		ecjia_screen::get_current_screen()->add_nav_here(new admin_nav_here('闪惠订单信息'));
 		$this->assign('ur_here', '闪惠订单信息');
 
+		$this->assign('action_link', array('text' => '闪惠订单列表', 'href' => RC_Uri::url('quickpay/admin_order/init')));
+		
 		$order_id = intval($_GET['order_id']);
 		$order_info = RC_DB::table('quickpay_orders')->where('order_id', $order_id)->first();
 		$order_info['pay_time'] = RC_Time::local_date(ecjia::config('time_format'), $order_info['pay_time']);
