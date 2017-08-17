@@ -96,26 +96,46 @@ class mh_sale_list extends ecjia_merchant {
 	 */
 	public function download() {
 		$this->admin_priv('mh_sale_list_stats');
+		
+		$db_quickpay_order = RC_DB::table('quickpay_orders');
+		
 	
-		$start_date = !empty($_GET['start_date']) ? $_GET['start_date'] : RC_Time::local_date(ecjia::config('date_format'), RC_Time::local_strtotime('-7 days'));
-		$end_date = !empty($_GET['end_date']) ? $_GET['end_date'] : RC_Time::local_date(ecjia::config('date_format'), RC_Time::local_strtotime('today'));
-	
-		/*文件名*/
-		$file_name = RC_Lang::get('orders::statistic.sales_list');
-		$goods_sales_list = $this->get_sale_list(false);
-		/*强制下载,下载类型EXCEL*/
+		$start_date = RC_Time::local_strtotime($_GET['start_date']);
+		$end_date   = RC_Time::local_strtotime($_GET['end_date']);
+			
+		$format = '%Y-%m-%d';
+		
+		$db_quickpay_order->where('store_id', $_SESSION['store_id']);
+		$db_quickpay_order->where('pay_time', '>=', $start_date);
+		$db_quickpay_order->where('pay_time', '<=', $end_date);
+
+		$sale_list_data = $db_quickpay_order
+		->selectRaw("DATE_FORMAT(FROM_UNIXTIME(pay_time), '". $format ."') AS period,
+				COUNT(DISTINCT order_sn) AS order_count,
+				SUM(goods_amount) AS goods_amount,
+				SUM(order_amount) AS order_amount,
+				SUM(goods_amount - order_amount) AS favorable_amount")
+		->groupby('period')
+		->get();
+
+		$filename = mb_convert_encoding('商家闪惠销售明细报表' . '_' . $_GET['start_date'] . '至' . $_GET['end_date'], "GBK", "UTF-8");
 		header("Content-type: application/vnd.ms-excel; charset=utf-8");
-		header("Content-Disposition: attachment; filename=$file_name.xls");
-	
-		echo mb_convert_encoding($filename . RC_LANG::lang('sales_list_statement'),'UTF-8', 'UTF-8') . "\t\n";
-		$data = RC_Lang::get('orders::statistic.goods_name')."\t".RC_Lang::get('orders::statistic.order_sn')."\t".RC_Lang::get('orders::statistic.amount')."\t".RC_Lang::get('orders::statistic.sell_price')."\t".RC_Lang::get('orders::statistic.sell_date')."\n";
-	
-		foreach ($goods_sales_list as $row) {
-			foreach ($row as $v) {
-				$data .= mb_convert_encoding("$v[goods_name]\t$v[order_sn]\t$v[goods_num]\t$v[sales_price]\t$v[sales_time]\n",'UTF-8','auto');
-			}
+		header("Content-Disposition: attachment; filename=$filename.xls");
+
+		echo mb_convert_encoding('商家闪惠销售明细','UTF-8', 'UTF-8') . "\t\n";
+		echo mb_convert_encoding('日期','UTF-8', 'UTF-8') . "\t";
+		echo mb_convert_encoding('订单数量（单）','UTF-8', 'UTF-8') . "\t";
+		echo mb_convert_encoding('消费总金额（元）','UTF-8', 'UTF-8') . "\t";
+		echo mb_convert_encoding('优惠总金额（元）','UTF-8', 'UTF-8') . "\t";
+		echo mb_convert_encoding('实付总金额（元）','UTF-8', 'UTF-8') . "\t\n";
+		foreach ($sale_list_data AS $data) {
+			echo mb_convert_encoding($data['period'],'UTF-8', 'UTF-8') . "\t";
+			echo mb_convert_encoding($data['order_count'],'UTF-8', 'UTF-8') . "\t";
+			echo mb_convert_encoding($data['goods_amount'],'UTF-8', 'UTF-8') . "\t";
+			echo mb_convert_encoding($data['favorable_amount'],'UTF-8', 'UTF-8') . "\t";
+			echo mb_convert_encoding($data['order_amount'],'UTF-8', 'UTF-8') . "\t";
+			echo "\n";
 		}
-		echo mb_convert_encoding($data."\t",'UTF-8','auto');
 		exit;
 	}
 	

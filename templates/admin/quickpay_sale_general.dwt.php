@@ -26,6 +26,7 @@ var templateCounts = '{$data}';
 	    <!-- {/if} -->
 	</h3>
 </div>
+
 <div class="row-fluid">
 	<div class="span12">
 		<ul class="list-mod list-mod-briefing move-mod-head">
@@ -57,34 +58,36 @@ var templateCounts = '{$data}';
 				</div>
 			</li>
 		</ul>
-</div>
+	</div>
 </div>
 
-<div class="row-fluid">
+<div class="sale-filter">
+	<form action="{$form_action}" method="post" name="searchForm">
+		<div class="row-fluid">
+			<div class="choose_list f_r">
+				<strong class="f_l">{lang key='orders::statistic.year_status_lable'}</strong>
+				{html_select_date prefix="year_begin" class="w80" time=$filter.start_time start_year="2006" end_year="+1" display_days=false display_months=false}
+				<span class="f_l">-</span>
+				{html_select_date prefix="year_end" class="w80" time=$filter.end_time start_year="2006" end_year="+1" display_days=false display_months=false}
+				<input type="submit" name="query_by_year" value="{lang key='orders::statistic.query'}" class="btn screen-btn" />
+			</div>
+		</div>
+		
+		<div class="row-fluid">
+			<div class="choose_list f_r">
+				<strong class="f_l">{lang key='orders::statistic.month_status_lable'}</strong>
+				{html_select_date prefix="month_begin" class="w80" time=$filter.start_month_time start_year="2006" end_year="+1" display_days=false field_order="YMD" month_format="%m"}
+				<span class="f_l">-</span>
+				{html_select_date prefix="month_end" class="w80" time=$filter.end_month_time start_year="2006" end_year="+1" display_days=false field_order="YMD" month_format="%m"}
+				<input type="submit" name="query_by_month" value="{lang key='orders::statistic.query'}" class="btn screen-btn1" />
+			</div>
+		</div>
+	</form>
+</div>
+
+<div class="row-fluid edit-page">
 	<div class="span12">
 		<div class="tabbable">
-			<form action="{$form_action}" method="post" name="searchForm">
-				<div class="row-fluid">
-					<div class="choose_list f_r">
-						<strong class="f_l">{lang key='orders::statistic.year_status_lable'}</strong>
-						{html_select_date prefix="year_begin" class="w80" time=$filter.start_time start_year="2006" end_year="+1" display_days=false display_months=false}
-						<span class="f_l">-</span>
-						{html_select_date prefix="year_end" class="w80" time=$filter.end_time start_year="2006" end_year="+1" display_days=false display_months=false}
-						<input type="submit" name="query_by_year" value="{lang key='orders::statistic.query'}" class="btn screen-btn" />
-					</div>
-				</div>
-				
-				<div class="row-fluid">
-					<div class="choose_list f_r">
-						<strong class="f_l">{lang key='orders::statistic.month_status_lable'}</strong>
-						{html_select_date prefix="month_begin" class="w80" time=$filter.start_month_time start_year="2006" end_year="+1" display_days=false field_order="YMD" month_format="%m"}
-						<span class="f_l">-</span>
-						{html_select_date prefix="month_end" class="w80" time=$filter.end_month_time start_year="2006" end_year="+1" display_days=false field_order="YMD" month_format="%m"}
-						<input type="submit" name="query_by_month" value="{lang key='orders::statistic.query'}" class="btn screen-btn1" />
-					</div>
-				</div>
-			</form>
-		
 			<ul class="nav nav-tabs">
 				<li class="{if $page eq 'init'}active{/if}"><a class="data-pjax" href='{url path="quickpay/admin_sale_general/init"}'>{lang key='orders::statistic.order_status'}</a></li>
 				<li class="{if $page eq 'sales_trends'}active{/if}"><a class="data-pjax" href='{url path="quickpay/admin_sale_general/sales_trends"}'>{lang key='orders::statistic.turnover_status'}</a></li>

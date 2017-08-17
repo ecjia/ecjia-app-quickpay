@@ -181,7 +181,7 @@ class mh_sale_general extends ecjia_merchant {
 		header("Content-type: application/vnd.ms-excel; charset=utf-8");
 		header("Content-Disposition: attachment; filename=$filename.xls");
 	
-		echo mb_convert_encoding($filename . '商家闪惠订单统计','UTF-8', 'UTF-8') . "\t\n";
+		echo mb_convert_encoding('商家闪惠订单统计','UTF-8', 'UTF-8') . "\t\n";
 		echo mb_convert_encoding('时间段','UTF-8', 'UTF-8') . "\t";
 		echo mb_convert_encoding('订单数(单位:个)','UTF-8', 'UTF-8') . "\t";
 		echo mb_convert_encoding('营业额(单位:元)','UTF-8', 'UTF-8') . "\t\n";
