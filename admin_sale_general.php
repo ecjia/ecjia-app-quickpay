@@ -45,159 +45,141 @@
 //  ---------------------------------------------------------------------------------
 //
 defined('IN_ECJIA') or exit('No permission resources.');
-
 /**
- * 销售概况
+ * 闪惠订单统计
+ * songqianqian
 */
-class mh_sale_general extends ecjia_merchant {
-	public function __construct() {
-		parent::__construct();
-		
-		RC_Script::enqueue_script('bootstrap-placeholder');
-		RC_Script::enqueue_script('jquery-validate');
-		RC_Script::enqueue_script('jquery-form');
-		RC_Script::enqueue_script('smoke');
-		RC_Script::enqueue_script('jquery-uniform');
-		RC_Style::enqueue_style('uniform-aristo');
-		
-		RC_Loader::load_app_func('global', 'quickpay');
+class admin_sale_general extends ecjia_admin {
+    public function __construct() {
+        parent::__construct();
         
-        RC_Script::enqueue_script('acharts-min', RC_App::apps_url('statics/js/acharts-min.js', __FILE__), array('ecjia-merchant'), false, 1);
-        RC_Script::enqueue_script('mh_sale_general', RC_App::apps_url('statics/js/mh_sale_general.js', __FILE__), array('ecjia-merchant'), false, 1);
-        RC_Script::enqueue_script('mh_sale_general_chart', RC_App::apps_url('statics/js/mh_sale_general_chart.js', __FILE__), array('ecjia-merchant'), false, 1);
+        RC_Loader::load_app_func('global', 'quickpay');
         
-        RC_Style::enqueue_style('mh_stats', RC_App::apps_url('statics/css/mh_stats.css', __FILE__));
+        RC_Script::enqueue_script('bootstrap-placeholder');
+        RC_Script::enqueue_script('jquery-validate');
+        RC_Script::enqueue_script('jquery-form');
+        RC_Script::enqueue_script('smoke');
+        RC_Script::enqueue_script('jquery-chosen');
+        RC_Style::enqueue_style('chosen');
+        RC_Script::enqueue_script('jquery-uniform');
+        RC_Style::enqueue_style('uniform-aristo');
         
-        ecjia_merchant_screen::get_current_screen()->set_parentage('quickpay', 'quickpay/mh_sale_general.php');
+        RC_Script::enqueue_script('acharts-min', RC_App::apps_url('statics/js/acharts-min.js', __FILE__));
+        RC_Script::enqueue_script('admin_sale_general', RC_App::apps_url('statics/js/admin_sale_general.js', __FILE__));
+        RC_Script::enqueue_script('sale_general_chart', RC_App::apps_url('statics/js/admin_sale_general_chart.js', __FILE__));
+        RC_Script::localize_script('admin_sale_general_chart', 'js_lang', RC_Lang::get('orders::statistic.js_lang'));
         
-        ecjia_merchant_screen::get_current_screen()->add_nav_here(new admin_nav_here('闪惠管理', RC_Uri::url('quickpay/mh_order/init')));
+        RC_Script::localize_script('sale_general_chart', 'js_lang', RC_Lang::get('orders::statistic.js_lang'));
         
+        RC_Style::enqueue_style('admin_order', RC_App::apps_url('statics/css/admin_order.css', __FILE__));
+
         $data_count = RC_DB::table('quickpay_orders')
-        ->selectRaw("COUNT(DISTINCT order_sn) AS order_count, 
+        ->selectRaw("COUNT(DISTINCT order_sn) AS order_count,
         		SUM(goods_amount) AS goods_amount,
-        		SUM(order_amount) AS order_amount, 
+        		SUM(order_amount) AS order_amount,
         		SUM(goods_amount - order_amount) AS favorable_amount")
-        ->where('store_id', $_SESSION['store_id'])
-        ->where('pay_time','<>','0')
-        ->first();
+                		->where('pay_time','<>','0')
+                		->first();
         $this->assign('data_count', $data_count);
-	}
-	
-	/**
-	 * 显示统计信息
-	 */
-	public function init() {
-		$this->admin_priv('mh_quickpay_sale_general_stats');
-
-		ecjia_merchant_screen::get_current_screen()->add_nav_here(new admin_nav_here('闪惠订单统计'));
-		
-		$this->assign('ur_here', '订单统计');
-		$this->assign('action_link', array('text' => '闪惠订单统计报表下载', 'href' => RC_Uri::url('quickpay/mh_sale_general/download')));
-
+        
+        ecjia_screen::get_current_screen()->add_nav_here(new admin_nav_here('闪惠管理', RC_Uri::url('quickpay/admin_order/init')));
+    }
+    
+    /**
+     * 显示统计信息
+     */
+    public function init() {
+        $this->admin_priv('quickpay_sale_general_stats');
+        
+        ecjia_screen::get_current_screen()->add_nav_here(new admin_nav_here('闪惠订单统计'));
+        
+        $this->assign('ur_here', '闪惠订单统计');
+        $this->assign('action_link', array('text' => '闪惠订单统计报表下载', 'href' => RC_Uri::url('quickpay/admin_sale_general/download')));
+        
         $this->assign('page', 'init');
-        $this->assign('form_action', RC_Uri::url('quickpay/mh_sale_general/init'));
-		
+        $this->assign('form_action', RC_Uri::url('quickpay/admin_sale_general/init'));
+        
         $order_type = !empty($_GET['order_type']) ? intval($_GET['order_type']) : 1;
         $data = $this->get_order_status($order_type);
-
+        
         $this->assign('data', $data['item']);
         $this->assign('filter', $data['filter']);
         
-		$this->display('quickpay_sale_general.dwt');
-	}
-	
-	/**
-	 * 显示销售额走势
-	 */
-	public function sales_trends() {
-		$this->admin_priv('mh_quickpay_sale_general_stats');
-		
-		ecjia_merchant_screen::get_current_screen()->add_nav_here(new admin_nav_here('销售概况'));
-	
-		$this->assign('ur_here', '销售概况');
-		$this->assign('action_link',array('text' => '销售概况报表下载','href' => RC_Uri::url('quickpay/mh_sale_general/download')));
-		
-		$this->assign('page', 'sales_trends');
-		$this->assign('form_action', RC_Uri::url('quickpay/mh_sale_general/sales_trends'));
-		
-		$order_type = !empty($_GET['order_type']) ? intval($_GET['order_type']) : 0;
-		$data = $this->get_order_status($order_type);
-		
+        $this->display('quickpay_sale_general.dwt');
+    }
+    
+    
+    /**
+     * 显示销售额走势
+     */
+    public function sales_trends() {
+        $this->admin_priv('quickpay_sale_general_stats');
+        
+        ecjia_screen::get_current_screen()->add_nav_here(new admin_nav_here('销售概况'));
+        $this->assign('ur_here', '销售概况');
+        $this->assign('action_link', array('text' => '销售概况报表下载', 'href' => RC_Uri::url('quickpay/admin_sale_general/download')));
+        
+        $this->assign('page', 'sales_trends');
+        $this->assign('form_action', RC_Uri::url('quickpay/admin_sale_general/sales_trends'));
+        
+        $order_type = !empty($_GET['order_type']) ? intval($_GET['order_type']) : 0;
+        $data = $this->get_order_status($order_type);
+        
         $this->assign('data', $data['item']);
         $this->assign('filter', $data['filter']);
-		
-		$this->display('quickpay_sale_general.dwt');
-	}
-	
-	
-	/**
-	 * 下载EXCEL报表
-	 */
-	public function download() {
-		$this->admin_priv('mh_quickpay_sale_general_stats');
-		
-		$db_quickpay_order = RC_DB::table('quickpay_orders');
-		
-		//默认查询时间
-		$query_type = 'month';
-		$start_year = RC_Time::local_date('Y')-3;
-		$end_year = RC_Time::local_date('Y');
-		$start_month = '';
-		$end_month = '';
-		//按年查询
-		if ($_GET['query_by_year']) {
-			$query_type = 'year';
-			$start_year = intval($_GET['year_beginYear']);
-			$end_year = intval($_GET['year_endYear']);
-			$start_month = '';
-			$end_month = '';
-			//按月查询
-		} elseif ($_GET['query_by_month']) {
-			$start_year = intval($_GET['month_beginYear']);
-			$end_year = intval($_GET['month_endYear']);
-			$start_month = intval($_GET['month_beginMonth']);
-			$end_month = intval($_GET['month_endMonth']);
-		}
-		$start_time = getTimestamp($start_year, $start_month)['start'];
-		$end_time = getTimestamp($end_year, $end_month)['end'];
-		
-		$format = ($query_type == 'year') ? '%Y' : '%Y-%m';
-		if ($start_time < 0 || $end_time < 0) {
-			return $this->showmessage('参数错误', ecjia::MSGTYPE_HTML | ecjia::MSGSTAT_ERROR);
-		}
-		
-		$db_quickpay_order->where('store_id', $_SESSION['store_id']);
-		$db_quickpay_order->where('pay_time', '>=', $start_time);
-		$db_quickpay_order->where('pay_time', '<=', $end_time);
-		$data_list = $db_quickpay_order
-		->selectRaw("DATE_FORMAT(FROM_UNIXTIME(pay_time), '". $format ."') AS period,COUNT(DISTINCT order_sn) AS order_count, SUM(order_amount) AS order_amount")
-		->groupby('period')
-		->get();
-		
-		$start_time = RC_Time::local_date('Y-m-d', $start_time);
-		$end_time = RC_Time::local_date('Y-m-d', $end_time);
-		$filename = mb_convert_encoding('商家闪惠订单统计概况报表' . '_' . $start_time . '至' . $end_time, "GBK", "UTF-8");
-	
-		header("Content-type: application/vnd.ms-excel; charset=utf-8");
-		header("Content-Disposition: attachment; filename=$filename.xls");
-	
-		echo mb_convert_encoding($filename . '商家闪惠订单统计','UTF-8', 'UTF-8') . "\t\n";
-		echo mb_convert_encoding('时间段','UTF-8', 'UTF-8') . "\t";
-		echo mb_convert_encoding('订单数(单位:个)','UTF-8', 'UTF-8') . "\t";
-		echo mb_convert_encoding('营业额(单位:元)','UTF-8', 'UTF-8') . "\t\n";
-		foreach ($data_list AS $data) {
-			echo mb_convert_encoding($data['period'],'UTF-8', 'UTF-8') . "\t";
-			echo mb_convert_encoding($data['order_count'],'UTF-8', 'UTF-8') . "\t";
-			echo mb_convert_encoding($data['order_amount'],'UTF-8', 'UTF-8') . "\t";
-			echo "\n";
-		}
-		exit;
-	}
-	
-	/**
-	 * 获取销售概况图表数据
-	 */
-	private function get_order_status ($order_type) {
+        
+        $this->display('quickpay_sale_general.dwt');
+    }
+   
+    /**
+     * 下载EXCEL报表
+     */
+    public function download() {
+        $this->admin_priv('quickpay_sale_general_stats');
+        
+        $db_quickpay_order = RC_DB::table('quickpay_orders');
+        
+        $start_time = RC_Time::local_strtotime($_GET['start_time']);
+        $end_time = RC_Time::local_strtotime($_GET['end_time']);
+        $query_type = $_GET['query_type'];
+        
+        /* 分组统计订单数和销售额：已发货时间为准 */
+        $format = $query_type == 'year' ? '%Y' : '%Y-%m';
+        
+        $db_quickpay_order->where('pay_time', '>=', $start_time);
+        $db_quickpay_order->where('pay_time', '<=', $end_time);
+        $data_list = $db_quickpay_order
+        ->selectRaw("DATE_FORMAT(FROM_UNIXTIME(pay_time), '". $format ."') AS period,COUNT(DISTINCT order_sn) AS order_count, SUM(order_amount) AS order_amount")
+        ->groupby('period')
+        ->get();
+        
+        $start_time = RC_Time::local_date('Y-m-d', $start_time);
+        $end_time = RC_Time::local_date('Y-m-d', $end_time);
+        $filename = mb_convert_encoding('平台闪惠订单统计概况报表' . '_' . $start_time . '至' . $end_time, "GBK", "UTF-8");
+        
+        header("Content-type: application/vnd.ms-excel; charset=utf-8");
+        header("Content-Disposition: attachment; filename={$filename}.xls");
+        
+        echo mb_convert_encoding('平台闪惠订单统计', "GBK", "UTF-8") . "\t\n";
+        echo mb_convert_encoding('时间段', "GBK", "UTF-8") . "\t";
+        echo mb_convert_encoding('订单数(单位:个)', "GBK", "UTF-8") . "\t";
+        echo mb_convert_encoding('营业额(单位:元)', "GBK", "UTF-8") . "\t\n";
+        if (!empty($data_list)) {
+            foreach ($data_list as $data) {
+                echo mb_convert_encoding($data['period'], "GBK", "UTF-8") . "\t";
+                echo mb_convert_encoding($data['order_count'], "GBK", "UTF-8") . "\t";
+                echo mb_convert_encoding($data['order_amount'], "GBK", "UTF-8") . "\t";
+                echo "\n";
+            }
+        }
+        exit;
+    }
+    
+    
+    /**
+     * 获取销售概况图表数据
+     */
+    private function get_order_status($order_type) {
 		$db_quickpay_order = RC_DB::table('quickpay_orders');
 		
 		if (empty($_GET['query_type'])) {
@@ -230,12 +212,9 @@ class mh_sale_general extends ecjia_merchant {
             $start_time = $filter['start_month_time'];
             $end_time = $filter['end_month_time'];
         }
-        
-        
-        
+
 		$format = ($query_type == 'year') ? '%Y' : '%Y-%m';
 
-		$db_quickpay_order->where('store_id', $_SESSION['store_id']);
 		$db_quickpay_order->where('pay_time', '>=', $start_time);
 		$db_quickpay_order->where('pay_time', '<=', $end_time);
 		$templateCount = $db_quickpay_order
@@ -270,5 +249,4 @@ class mh_sale_general extends ecjia_merchant {
 		return array('item' => json_encode($templateCount), 'filter' => $filter);
 	}
 }
-
 // end
