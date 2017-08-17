@@ -129,7 +129,6 @@ class admin_order extends ecjia_admin {
 			$row['add_time']	= RC_Time::local_date(ecjia::config('time_format'), $row['add_time']);
 			$act_list[]			= $row;
 		}
-	
 		$this->assign('action_list', $act_list);
 		
 		$this->assign('form_action', RC_Uri::url('quickpay/admin_order/order_action', array('type' => 'order_info')));

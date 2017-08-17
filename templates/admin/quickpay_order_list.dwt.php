@@ -84,7 +84,7 @@
 						<td><input type="checkbox" class="checkbox" name="order_id[]"  value="{$order.order_id}" /></td>
 						<td class="hide-edit-area">
 							{$order.order_sn}
-							<div class="edit-list"><a href='{url path="quickpay/admin_order/info" args="order_id={$order.order_id}"}' class="data-pjax" title="查看详情">查看详情</a></div>
+							<div class="edit-list"><a href='{url path="quickpay/admin_order/order_info" args="order_id={$order.order_id}"}' class="data-pjax" title="查看详情">查看详情</a></div>
 						</td>
 						<td class="ecjiafc-red">
 							{$order.merchants_name}
