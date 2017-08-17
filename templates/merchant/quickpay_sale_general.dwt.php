@@ -60,7 +60,7 @@ var templateCounts = '{$data}';
             </div>
             <div class="col-lg-3 col-sm-3">
                 <div class="value">
-                    <h3>¥{if $data_count.order_amount}$data_count.order_amount{else}0{/if}</h3>
+                    <h3>¥{if $data_count.order_amount}{$data_count.order_amount}{else}0{/if}</h3>
                     <p>实付总金额（元）</p>
                 </div>
             </div>

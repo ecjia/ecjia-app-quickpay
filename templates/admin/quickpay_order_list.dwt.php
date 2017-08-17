@@ -42,23 +42,21 @@
 				<i class="fontello-icon-cog"></i>批量操作<span class="caret"></span>
 			</a>
 			<ul class="dropdown-menu operate_note" data-url='{url path="orders/admin/operate_note"}'>
-				<li><a class="batch-del-btn" data-toggle="ecjiabatch" data-name="order_id" data-idClass=".checkbox:checked" data-url="{$form_action}&operation=confirm" data-msg="{lang key='orders::order.confirm_approval_order'}" data-noSelectMsg="{lang key='orders::order.pls_select_order'}" href="javascript:;"><i class="fontello-icon-ok"></i>{lang key='orders::order.op_confirm'}</a></li>
-				<li><a class="batch-operate batch-operate-invalid" data-operatetype="invalid" data-url="{$form_action}&operation=invalid" data-invalid-msg="{lang key='orders::order.confirm_order_invalid'}" href="javascript:;"><i class="fontello-icon-block"></i>{lang key='orders::order.op_invalid'}</a></li>
-				<li><a class="batch-operate batch-operate-cancel" data-operatetype="cancel" data-url="{$form_action}&operation=cancel" data-cancel-msg="{lang key='orders::order.confirm_order_cancel'}" href="javascript:;"><i class="fontello-icon-cancel"></i>{lang key='orders::order.op_cancel'}</a></li>
 				<li><a class="batch-del-btn" data-toggle="ecjiabatch" data-name="order_id" data-idClass=".checkbox:checked" data-url="{$form_action}&operation=remove" data-msg="{lang key='orders::order.remove_confirm'}" href="javascript:;"><i class="fontello-icon-trash"></i>{lang key='system::system.remove'}</a></li>
-				<li><a class="batch-print" data-url="{$form_action}&print=1" href="javascript:;"><i class="fontello-icon-print"></i>{lang key='orders::order.print_order'}</a></li>
 			</ul>
-			<input name="batch" type="hidden" value="1" />
 		</div>
-		<!-- 订单状态-->
-		<select class="down-menu w120" name="status" id="select-rank">
-			<option value="-1">{lang key='orders::order.all_status'}</option>
-			<!-- {html_options options=$status_list selected=$order_list.filter.composite_status } -->
+		
+		<select class="w200" name="activity_type">
+			<option value="0">闪惠类型</option>
+			<!-- {foreach from=$type_list item=list key=key} -->
+			<option value="{$key}" {if $key eq $smarty.get.activity_type}selected="selected"{/if}>{$list}</option>
+			<!-- {/foreach} -->
 		</select>
 		<a class="btn m_l5 screen-btn">筛选</a>
+		
 		<div class="choose_list f_r" >
-			<input type="text" name="merchant_keywords" value="{$order_list.filter.merchant_keywords}" placeholder="{lang key='orders::order.enter_merchant_keywords'}"/> 
-			<input type="text" name="keywords" value="{$order_list.filter.keywords}" placeholder="{lang key='orders::order.pls_consignee'}"/> 
+			<input type="text" name="merchant_keywords" value="{$order_list.filter.merchant_keywords}" placeholder="请输入商家名称"/> 
+			<input type="text" name="keywords" value="{$order_list.filter.keywords}" placeholder="请输入订单号或者购买者姓名"/> 
 			<button class="btn" type="submit">搜索</button>
 		</div>
 	</form>

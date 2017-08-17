@@ -207,7 +207,7 @@ class mh_order extends ecjia_merchant {
 	}
 
 	/**
-	 * 获取闪惠规则列表
+	 * 获取订单列表
 	 */
 	private function order_list($store_id) {
 		$db_quickpay_order = RC_DB::table('quickpay_orders');

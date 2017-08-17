@@ -91,11 +91,10 @@ class admin_order extends ecjia_admin {
 	    
 	    $order_list = $this->order_list();
 	    $this->assign('order_list', $order_list);
-// 	    _dump($order_list,1);
 	    
 	    $this->assign('filter', $order_list['filter']);
 	    
-	    $this->assign('search_action', RC_Uri::url('quickpay/mh_order/init'));
+	    $this->assign('search_action', RC_Uri::url('quickpay/admin_order/init'));
 	    
 	    $this->display('quickpay_order_list.dwt');
 	}
@@ -210,22 +209,18 @@ class admin_order extends ecjia_admin {
 	/**
 	 * 获取闪惠规则列表
 	 */
-	private function order_list($store_id) {
+	private function order_list() {
 		$db_quickpay_order = RC_DB::table('quickpay_orders as qo')
 		->leftJoin('store_franchisee as sf', RC_DB::raw('sf.store_id'), '=', RC_DB::raw('qo.store_id'));
 		
 		$filter = $_GET;
 		
-		if ($filter['act_id']) {
-			$db_quickpay_order->where('activity_id', $filter['act_id']);
+		if ($filter['merchant_keywords']) {
+			$db_quickpay_order->where(RC_DB::raw('sf.merchants_name'), 'like', '%'.mysql_like_quote($filter['merchant_keywords']).'%');
 		}
 		
 		if ($filter['keywords']) {
 			$db_quickpay_order->where('order_sn', 'like', '%'.mysql_like_quote($filter['keywords']).'%')->orWhere('user_name', 'like', '%' . mysql_like_quote($filter['keywords']) . '%');
-		}
-		
-		if ($filter['order_sn']) {
-			$db_quickpay_order->where('order_sn', 'like', '%'.mysql_like_quote($filter['order_sn']).'%');
 		}
 		
 		if ($filter['activity_type']) {
@@ -242,6 +237,10 @@ class admin_order extends ecjia_admin {
 			$db_quickpay_order->where('add_time', '<=', $end_time);
 		}
 
+		if ($filter['order_sn']) {
+			$db_quickpay_order->where('order_sn', 'like', '%'.mysql_like_quote($filter['order_sn']).'%');
+		}
+		
 		if ($filter['user_name']) {
 			$db_quickpay_order->where('user_name', 'like', '%'.mysql_like_quote($filter['user_name']).'%');
 		}
