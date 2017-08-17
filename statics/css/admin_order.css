@@ -219,3 +219,24 @@
 .order-status-base .step-last .step-cur .step-no {
 	background-position: 50% -68px;
 }
+
+
+
+ul.list-mod-briefing {
+	margin: 0;
+}
+
+ul.list-mod-briefing li .bd {
+	height: 90px;
+	font-size: 14px;
+	text-align: center;
+	border: 1px solid #ccc;
+	border-radius: 5px;
+	padding-top:30px;
+}
+
+.count_p{
+	font-size: 20px;
+	color:#e62129;
+}
+
