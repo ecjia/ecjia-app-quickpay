@@ -69,7 +69,7 @@ class admin_order extends ecjia_admin {
 		RC_Script::enqueue_script('admin_order', RC_App::apps_url('statics/js/admin_order.js', __FILE__), array());
 		RC_Style::enqueue_style('admin_order', RC_App::apps_url('statics/css/admin_order.css', __FILE__), array(), false, false);
 	
-		ecjia_screen::get_current_screen()->add_nav_here(new admin_nav_here('闪惠管理', RC_Uri::url('quickpay/mh_order/init')));
+		ecjia_screen::get_current_screen()->add_nav_here(new admin_nav_here('闪惠管理', RC_Uri::url('quickpay/admin_order/init')));
 	}
 
 	/**
@@ -81,7 +81,7 @@ class admin_order extends ecjia_admin {
 	    ecjia_screen::get_current_screen()->add_nav_here(new admin_nav_here('闪惠订单'));
 	    $this->assign('ur_here', '闪惠订单列表');
 	    
-	    $this->assign('action_link', array('text' => '订单查询', 'href' => RC_Uri::url('quickpay/mh_order/search_order')));
+	    $this->assign('action_link', array('text' => '订单查询', 'href' => RC_Uri::url('quickpay/admin_order/search_order')));
 	    	    
 	    $type_list = $this->get_quickpay_type();
 	    $this->assign('type_list', $type_list);
@@ -132,7 +132,7 @@ class admin_order extends ecjia_admin {
 	
 		$this->assign('action_list', $act_list);
 		
-		$this->assign('form_action', RC_Uri::url('quickpay/mh_order/order_action', array('type' => 'order_info')));
+		$this->assign('form_action', RC_Uri::url('quickpay/admin_order/order_action', array('type' => 'order_info')));
 		
 		$this->display('quickpay_order_info.dwt');
 	}
@@ -160,9 +160,9 @@ class admin_order extends ecjia_admin {
 		);
 		RC_DB::table('quickpay_order_action')->insertGetId($data);
 		if($type) {
-			return $this->showmessage('核实成功', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('pjaxurl' => RC_Uri::url('quickpay/mh_order/order_info', array('order_id' => $order_id))));
+			return $this->showmessage('核实成功', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('pjaxurl' => RC_Uri::url('quickpay/admin_order/order_info', array('order_id' => $order_id))));
 		} else {
-			return $this->showmessage('核实成功', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('pjaxurl' => RC_Uri::url('quickpay/mh_order/init')));
+			return $this->showmessage('核实成功', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('pjaxurl' => RC_Uri::url('quickpay/admin_order/init')));
 		}
 		
 	}
@@ -176,7 +176,7 @@ class admin_order extends ecjia_admin {
 		$ids  = explode(',', $_POST['order_id']);
 		RC_DB::table('quickpay_orders')->whereIn('order_id', $ids)->delete();
 	
-		return $this->showmessage('批量删除成功', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('pjaxurl' => RC_Uri::url('quickpay/mh_order/init')));
+		return $this->showmessage('批量删除成功', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('pjaxurl' => RC_Uri::url('quickpay/admin_order/init')));
 	}
 	
 	
@@ -189,19 +189,12 @@ class admin_order extends ecjia_admin {
 		ecjia_screen::get_current_screen()->add_nav_here(new admin_nav_here('闪惠订单查询'));
 		$this->assign('ur_here', '闪惠订单查询');
 		 
-		$this->assign('action_link', array('text' => '闪惠订单列表', 'href' => RC_Uri::url('quickpay/mh_order/init')));
+		$this->assign('action_link', array('text' => '闪惠订单列表', 'href' => RC_Uri::url('quickpay/admin_order/init')));
 	
 		$type_list = $this->get_quickpay_type();
 		$this->assign('type_list', $type_list);
 		 
-// 		$status_list = $this->get_status_list();
-// 		$this->assign('status_list', $status_list);
-		 
-		$order_list = $this->order_list($_SESSION['store_id']);
-		$this->assign('order_list', $order_list);
-		$this->assign('filter', $order_list['filter']);
-		 
-		$this->assign('form_action', RC_Uri::url('quickpay/mh_order/init'));
+		$this->assign('form_action', RC_Uri::url('quickpay/admin_order/init'));
 		 
 		$this->display('quickpay_order_search.dwt');
 	}

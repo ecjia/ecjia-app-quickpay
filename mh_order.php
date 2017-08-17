@@ -194,13 +194,6 @@ class mh_order extends ecjia_merchant {
 		$type_list = $this->get_quickpay_type();
 		$this->assign('type_list', $type_list);
 		 
-// 		$status_list = $this->get_status_list();
-// 		$this->assign('status_list', $status_list);
-		 
-		$order_list = $this->order_list($_SESSION['store_id']);
-		$this->assign('order_list', $order_list);
-		$this->assign('filter', $order_list['filter']);
-		 
 		$this->assign('form_action', RC_Uri::url('quickpay/mh_order/init'));
 		 
 		$this->display('quickpay_order_search.dwt');
