@@ -48,25 +48,25 @@ defined('IN_ECJIA') or exit('No permission resources.');
 
 /**
  * 闪惠销售明细列表
+ * songqianqian
 */
-class mh_sale_list extends ecjia_merchant {
+class admin_sale_list extends ecjia_admin {
 	public function __construct() {
 		parent::__construct();
 		
-		RC_Script::enqueue_script('bootstrap-placeholder');
-		RC_Script::enqueue_script('jquery-validate');
-		RC_Script::enqueue_script('jquery-form');
-		RC_Script::enqueue_script('smoke');
-		RC_Script::enqueue_script('jquery-uniform');
-		RC_Style::enqueue_style('uniform-aristo');
-		RC_Script::enqueue_script('bootstrap-datepicker', RC_Uri::admin_url('statics/lib/datepicker/bootstrap-datepicker.min.js'));
-		RC_Style::enqueue_style('datepicker', RC_Uri::admin_url('statics/lib/datepicker/datepicker.css'));
-		
-        RC_Script::enqueue_script('mh_sale_list', RC_App::apps_url('statics/js/mh_sale_list.js', __FILE__));
-        RC_Style::enqueue_style('mh_stats', RC_App::apps_url('statics/css/mh_stats.css', __FILE__));
+ 		RC_Script::enqueue_script('bootstrap-placeholder');
+        RC_Script::enqueue_script('jquery-validate');
+        RC_Script::enqueue_script('jquery-form');
+        RC_Script::enqueue_script('smoke');
+        RC_Script::enqueue_script('jquery-chosen');
+        RC_Style::enqueue_style('chosen');
+        RC_Script::enqueue_script('jquery-uniform');
+        RC_Style::enqueue_style('uniform-aristo');
+
+        RC_Script::enqueue_script('admin_sale_list', RC_App::apps_url('statics/js/admin_sale_list.js', __FILE__));
+        RC_Style::enqueue_style('admin_order', RC_App::apps_url('statics/css/admin_order.css', __FILE__));
         
-        ecjia_merchant_screen::get_current_screen()->set_parentage('quickpay', 'quickpay/mh_sale_list.php');
-        ecjia_merchant_screen::get_current_screen()->add_nav_here(new admin_nav_here('闪惠管理', RC_Uri::url('quickpay/mh_order/init')));
+        ecjia_screen::get_current_screen()->add_nav_here(new admin_nav_here('闪惠管理', RC_Uri::url('quickpay/admin_order/init')));
 	}
 	
 	/**
@@ -75,10 +75,10 @@ class mh_sale_list extends ecjia_merchant {
 	public function init() {
 		$this->admin_priv('mh_sale_list_stats');
 		
-		ecjia_merchant_screen::get_current_screen()->add_nav_here(new admin_nav_here('闪惠销售明细'));
+		ecjia_screen::get_current_screen()->add_nav_here(new admin_nav_here('闪惠销售明细'));
 		
 		$this->assign('ur_here', '闪惠销售明细');
-		$this->assign('action_link', array('text' => '销售明细报表下载', 'href' => RC_Uri::url('quickpay/mh_sale_list/download')));
+		$this->assign('action_link', array('text' => '销售明细报表下载', 'href' => RC_Uri::url('quickpay/admin_sale_list/download')));
 		
 		$sale_list_data = $this->get_sale_list();
         $this->assign('sale_list_data', $sale_list_data);
@@ -86,7 +86,7 @@ class mh_sale_list extends ecjia_merchant {
         $this->assign('order_amount', $sale_list_data['count_data'][0]['order_amount']);
         $this->assign('filter', $sale_list_data['filter']);
 
-        $this->assign('search_action', RC_Uri::url('quickpay/mh_sale_list/init'));
+        $this->assign('search_action', RC_Uri::url('quickpay/admin_sale_list/init'));
         
 		$this->display('quickpay_sale_list.dwt');
 	}
@@ -98,12 +98,11 @@ class mh_sale_list extends ecjia_merchant {
 		$this->admin_priv('mh_sale_list_stats');
 		
 		$db_quickpay_order = RC_DB::table('quickpay_orders');
-	
+
 		$start_date = RC_Time::local_strtotime($_GET['start_date']);
 		$end_date   = RC_Time::local_strtotime($_GET['end_date']);
 			
 		$format = '%Y-%m-%d';
-		$db_quickpay_order->where('store_id', $_SESSION['store_id']);
 		$db_quickpay_order->where('pay_time', '>=', $start_date);
 		$db_quickpay_order->where('pay_time', '<=', $end_date);
 
@@ -170,7 +169,6 @@ class mh_sale_list extends ecjia_merchant {
 			}
 		}
 		
-		$db_quickpay_order->where('store_id', $_SESSION['store_id']);
 		$db_quickpay_order->where('pay_time', '>=', $start);
 		$db_quickpay_order->where('pay_time', '<=', $end);
 	

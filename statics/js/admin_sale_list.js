@@ -6,9 +6,6 @@
 		},
 		
 		theForm : function () {
-			$(".start_date,.end_date").datepicker({
-				format: "yyyy-mm-dd"
-			});
 			$('.screen-btn').on('click', function(e) {
 				e.preventDefault();
 				var year_beginYear	= $("select[name='year_beginYear']").val(); 		

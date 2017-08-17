@@ -55,7 +55,6 @@ class admin extends ecjia_admin {
 	public function __construct() {
 		parent::__construct();
 		
-		
 		/* 加载全局 js/css */
 		RC_Script::enqueue_script('jquery-validate');
 		RC_Script::enqueue_script('jquery-form');
