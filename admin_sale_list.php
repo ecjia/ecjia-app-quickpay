@@ -115,11 +115,11 @@ class admin_sale_list extends ecjia_admin {
 		->groupby('period')
 		->get();
 
-		$filename = mb_convert_encoding('商家闪惠销售明细报表' . '_' . $_GET['start_date'] . '至' . $_GET['end_date'], "GBK", "UTF-8");
+		$filename = mb_convert_encoding('平台闪惠销售明细报表' . '_' . $_GET['start_date'] . '至' . $_GET['end_date'], "GBK", "UTF-8");
 		header("Content-type: application/vnd.ms-excel; charset=utf-8");
-		header("Content-Disposition: attachment; filename=$filename.xls");
+		header("Content-Disposition: attachment; filename={$filename}.xls");
 
-		echo mb_convert_encoding('商家闪惠销售明细','UTF-8', 'UTF-8') . "\t\n";
+		echo mb_convert_encoding('平台闪惠销售明细','UTF-8', 'UTF-8') . "\t\n";
 		echo mb_convert_encoding('日期','UTF-8', 'UTF-8') . "\t";
 		echo mb_convert_encoding('订单数量（单）','UTF-8', 'UTF-8') . "\t";
 		echo mb_convert_encoding('消费总金额（元）','UTF-8', 'UTF-8') . "\t";
