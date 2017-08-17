@@ -12,9 +12,6 @@
 }
 
 
-
-
-
 .state-overview .value {
 	background-color: #fff;
 	border-radius: 4px;
@@ -32,4 +29,12 @@
     color: #333;
     margin: 0;
     padding: 0;
+}
+
+
+.panel-heading {
+    line-height:30px;
+}
+.sale_desc span{
+	color:#e62129;
 }

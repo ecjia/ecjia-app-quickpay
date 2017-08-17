@@ -63,6 +63,7 @@ class mh_sale_list extends ecjia_merchant {
 		RC_Style::enqueue_style('datepicker', RC_Uri::admin_url('statics/lib/datepicker/datepicker.css'));
 		
         RC_Script::enqueue_script('mh_sale_list', RC_App::apps_url('statics/js/mh_sale_list.js', __FILE__));
+        RC_Style::enqueue_style('mh_stats', RC_App::apps_url('statics/css/mh_stats.css', __FILE__));
         
         ecjia_merchant_screen::get_current_screen()->set_parentage('quickpay', 'quickpay/mh_sale_list.php');
         ecjia_merchant_screen::get_current_screen()->add_nav_here(new admin_nav_here('闪惠管理', RC_Uri::url('quickpay/mh_order/init')));

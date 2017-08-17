@@ -16,7 +16,7 @@ var templateCounts = '{$data}';
 <!-- {block name="main_content"} -->
 <div class="alert alert-info">
 	<a class="close" data-dismiss="alert">×</a>
-	<strong>{lang key='orders::statistic.tips'}</strong>{lang key='orders::statistic.no_order_default'}
+	<strong>温馨提示：</strong>没有完成的订单不计入订单统计。
 </div>
 <div>
 	<h3 class="heading">
@@ -39,7 +39,7 @@ var templateCounts = '{$data}';
 			<li class="span3">
 				<div class="bd">
 					<p class="count_p">¥{if $data_count.goods_amount}{$data_count.goods_amount}{else}0{/if}</p>
-					<p>消费总金额（元）</span>
+					<p>消费总金额（元）</p>
 				</div>
 			</li>
 			

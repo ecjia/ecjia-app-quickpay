@@ -10,23 +10,13 @@
 		$("select[name='month_beginMonth']").find("option[value='']").attr("selected",false);
 	}
 </script>
-<style>
-.panel-heading {
-    line-height:30px;
-}
-
-.sale_desc span{
-	color:#e62129;
-}
-
-</style>
 <!-- {/block} -->
 
 <!-- {block name="home-content"} -->
 <!--销售明细-->
 <div class="alert alert-info">
 	<button type="button" class="close" data-dismiss="alert" aria-hidden="true"><i class="fa fa-times" data-original-title="" title=""></i></button>
-	<strong>温馨提示：</strong>{t}没有完成的订单不计入销售明细{/t}
+	<strong>温馨提示：</strong>没有完成的订单不计入销售明细。
 </div>
 <div class="page-header">
 	<div class="pull-left">

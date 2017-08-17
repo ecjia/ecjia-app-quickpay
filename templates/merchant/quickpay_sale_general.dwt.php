@@ -15,7 +15,7 @@ var templateCounts = '{$data}';
 <!-- {block name="home-content"} -->
 <div class="alert alert-info">
 	<button type="button" class="close" data-dismiss="alert" aria-hidden="true"><i class="fa fa-times" data-original-title="" title=""></i></button>
-	<strong>温馨提示：</strong>{t}没有完成的订单不计入销售概况，默认为月走势{/t}
+	<strong>温馨提示：</strong>没有完成的订单不计入订单统计。
 </div>
 
 <div class="page-header">
