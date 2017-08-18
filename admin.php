@@ -64,6 +64,9 @@ class admin extends ecjia_admin {
 		RC_Style::enqueue_style('chosen');
 		RC_Style::enqueue_style('uniform-aristo');
 
+		RC_Script::enqueue_script('jquery.toggle.buttons', RC_Uri::admin_url('statics/lib/toggle_buttons/jquery.toggle.buttons.js'));
+		RC_Style::enqueue_style('bootstrap-toggle-buttons', RC_Uri::admin_url('statics/lib/toggle_buttons/bootstrap-toggle-buttons.css'));
+
 		//时间控件
 		RC_Script::enqueue_script('bootstrap-datetimepicker', RC_Uri::admin_url('statics/lib/datepicker/bootstrap-datetimepicker.js'));
 		RC_Style::enqueue_style('datetimepicker', RC_Uri::admin_url('statics/lib/datepicker/bootstrap-datetimepicker.min.css'));
@@ -71,6 +74,7 @@ class admin extends ecjia_admin {
 		RC_Script::enqueue_script('jquery-uniform');
 		RC_Script::enqueue_script('jquery-chosen');
 		RC_Script::enqueue_script('qucikpay', RC_App::apps_url('statics/js/quickpay.js', __FILE__));
+		RC_Style::enqueue_style('admin_quickpay', RC_App::apps_url('statics/css/admin_quickpay.css', __FILE__));
 		
 	
 		ecjia_screen::get_current_screen()->add_nav_here(new admin_nav_here('闪惠管理', RC_Uri::url('quickpay/admin/init')));
@@ -109,6 +113,52 @@ class admin extends ecjia_admin {
 		$this->assign('ur_here', '闪惠规则列表');
 		
 		$this->display('quickpay_edit.dwt');
+	}
+	
+	
+	/**
+	 * 非自营店铺只允许查看闪惠活动
+	 */
+	public function detail() {
+		$this->admin_priv('quickpay_manage');
+
+		ecjia_screen::get_current_screen()->add_nav_here(new admin_nav_here('查看闪惠规则'));
+		$this->assign('ur_here', '查看闪惠规则');
+		$this->assign('action_link', array('text' => '闪惠规则列表', 'href' => RC_Uri::url('quickpay/admin/init')));
+		
+		$type_list = $this->get_quickpay_type();
+		$this->assign('type_list', $type_list);
+		
+		$week_list = $this->get_week_list();
+		$this->assign('week_list', $week_list);
+		
+		$id = intval($_GET['id']);
+		$data = RC_DB::table('quickpay_activity')->where('id', $id)->first();
+		$data['start_time']  = RC_Time::local_date('Y-m-d', $data ['start_time']);
+		$data['end_time']    = RC_Time::local_date('Y-m-d', $data ['end_time']);
+		
+		//闪惠活动参数处理
+		if(strpos($data['activity_value'],',') !== false){
+			$data['activity_value']  = explode(",",$data['activity_value']);
+		}
+
+		//具体时间处理
+		$data['limit_time_weekly']  = Ecjia\App\Quickpay\Weekly::weeks($data['limit_time_weekly']);
+		$data['limit_time_daily']   = unserialize($data['limit_time_daily']);
+		$data['limit_time_exclude'] = explode(",", $data['limit_time_exclude']);
+		
+		//红包处理
+		if($data['use_bonus'] != 'close' && $data['use_bonus'] != 'nolimit') {
+			$data['use_bonus'] = explode(',', $data['use_bonus']);
+			$use_bonus = RC_DB::table('bonus_type')
+			->whereIn('type_id', $data['use_bonus'])
+			->select(RC_DB::raw('type_id'), RC_DB::raw('type_name'))
+			->get();
+			$this->assign('act_range_ext', $use_bonus);
+		}
+		$this->assign('data', $data);
+		
+		$this->display('quickpay_detail.dwt');
 	}
 	
 
@@ -183,6 +233,35 @@ class admin extends ecjia_admin {
 			}
 		}
 		return array('list' => $list, 'filter' => $filter, 'page' => $page->show(5), 'desc' => $page->page_desc(), 'count' => $quickpay_count);
+	}
+	
+	/**
+	 * 获取闪惠类型
+	 */
+	private function get_quickpay_type(){
+		$type_list = array(
+			'normal' 	=> '无优惠',
+			'discount'	=> '价格折扣',
+			'reduced'   => '满多少减多少',
+			'everyreduced' 	 => '每满多少减多少,最高减多少'
+		);
+		return $type_list;
+	}
+	
+	/**
+	 * 获取周
+	 */
+	private function get_week_list(){
+		$week_list = array(
+			'星期一'	=> Ecjia\App\Quickpay\Weekly::Monday,
+			'星期二'	=> Ecjia\App\Quickpay\Weekly::Tuesday,
+			'星期三'	=> Ecjia\App\Quickpay\Weekly::Wednesday,
+			'星期四' => Ecjia\App\Quickpay\Weekly::Thursday,
+			'星期五' => Ecjia\App\Quickpay\Weekly::Friday,
+			'星期六' => Ecjia\App\Quickpay\Weekly::Saturday,
+			'星期日' => Ecjia\App\Quickpay\Weekly::Sunday,
+		);
+		return $week_list;
 	}
 }
 

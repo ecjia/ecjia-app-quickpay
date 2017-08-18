@@ -59,6 +59,10 @@ class quickpay_admin_menu_api extends Component_Event_Api
         
         $submenus = array(
         	ecjia_admin::make_admin_menu('01_quickpay', '闪惠规则', RC_Uri::url('quickpay/admin/init'), 1)->add_purview('quickpay_manage'),
+        	ecjia_admin::make_admin_menu('02_quickpay', '闪惠订单', RC_Uri::url('quickpay/admin_order/init'), 2)->add_purview('quickpay_order_manage'),
+        	ecjia_admin::make_admin_menu('03_quickpay', '闪惠订单查询', RC_Uri::url('quickpay/admin_order/search_order'), 3)->add_purview('quickpay_order_search'),
+        	ecjia_admin::make_admin_menu('04_quickpay', '闪惠订单统计', RC_Uri::url('quickpay/admin_sale_general/init'), 4)->add_purview('quickpay_sale_general_stats'),
+        	ecjia_admin::make_admin_menu('05_quickpay', '闪惠销售明细', RC_Uri::url('quickpay/admin_sale_list/init'), 5)->add_purview('quickpay_sale_list'),
         );
         
         $menus->add_submenu($submenus);

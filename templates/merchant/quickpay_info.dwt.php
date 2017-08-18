@@ -69,6 +69,7 @@ table{border-collapse: separate; border-spacing: 0 3px;}
 		                                    <label class="control-label col-lg-2">折扣价：</label>
 		                                    <div class="controls col-lg-9">
 		                                        <input class="form-control" type="text" name="activity_discount_value" value="{$data.activity_value}" {if $data.activity_type neq 'discount'}disabled="disabled"{/if}/>
+		                                        <span class="help-block">如：打9折，请输入90</span>
 		                                    </div>
 		                                    <span class="input-must">{lang key='system::system.require_field'}</span>
 		                                </div>
