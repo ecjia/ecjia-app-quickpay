@@ -70,36 +70,11 @@ class quickpay_quickpay_activity_list_api extends Component_Event_Api {
 				
 				/*每周可用星期处理*/
 				if (!empty($val['limit_time_weekly'])) {
-					$limit_time_weekly  = Ecjia\App\Quickpay\Weekly::weeks($val['limit_time_weekly']);
-
-					foreach ($week_list as $k => $v) {
-						if (in_array($v, $limit_time_weekly)) {
-							$week[] = $k;
-						}
-					}
-					
-					if (!empty($week)) {
-						if (array_diff($limit_time_weekly, array(1,2,4,8,16)) === true) {
-							$list[$key]['limit_time_weekly'] = '周一至周五全天可用';
-						} elseif (array_diff($limit_time_weekly, array(1,2,4,8,16,32,64)) === true) {
-							$list[$key]['limit_time_weekly'] = '周一至周日全天可用';
-							
-						} else {
-							$list[$key]['limit_time_weekly'] = implode(',', $week);
-						}
-					}
+					$list[$key]['limit_time_weekly'] = $this->get_format_limit_weekly($val['limit_time_weekly']);
 				}
 				/*每天限时时间段处理*/
 				if (!empty($val['limit_time_daily'])) {
-					$limit_time_daily = unserialize($val['limit_time_daily']);
-					foreach ($limit_time_daily as $val) {
-						$days[] = $val['start'].'-'.$val['end'];
-					}
-					if (!empty($days)) {
-						$list[$key]['limit_time_daily'] = implode(',', $days);
-					}
-				} else{
-					$list[$key]['limit_time_daily'] = '';
+					$list[$key]['limit_time_daily'] = $this->get_format_limit_daily($val['limit_time_daily']);
 				}
 				/*开始和结束时间处理*/
 				$list[$key]['formated_start_time'] = RC_Time::local_date(ecjia::config('date_format'), $val['start_time']);
@@ -126,6 +101,44 @@ class quickpay_quickpay_activity_list_api extends Component_Event_Api {
 		return $week_list;
 	}
 	
+	/**
+	 * 获取限制星期
+	 */
+	public function get_format_limit_weekly($limit_time_weekly){
+		$limit_time_weekly  = Ecjia\App\Quickpay\Weekly::weeks($limit_time_weekly);
+		$week_list = $this->get_week_list();
+		foreach ($week_list as $k => $v) {
+			if (in_array($v, $limit_time_weekly)) {
+				$week[] = $k;
+			}
+		}
+		if (!empty($week)) {
+			if ($limit_time_weekly == array(1,2,4,8,16)) {
+				$str = '周一至周五全天可用';
+			} elseif ($limit_time_weekly == array(1,2,4,8,16,32,64)) {
+				$str = '周一至周日全天可用';
+			} else {
+				$str = implode(',', $week);
+			}
+		}
+		return $str;
+	}
+	
+	/**
+	 * 获取每天限制时间段
+	 */
+	public function get_format_limit_daily($limit_time_daily){
+		$limit_time_daily = unserialize($limit_time_daily);
+		foreach ($limit_time_daily as $val) {
+			$days[] = $val['start'].'-'.$val['end'];
+		}
+		if (!empty($days)) {
+			asort($days);
+			$str = implode(',', $days);
+		}
+		
+		return $str;
+	}
 }
 
 // end
