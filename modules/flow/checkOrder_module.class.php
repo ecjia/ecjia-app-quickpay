@@ -57,7 +57,9 @@ class checkOrder_module extends api_front implements api_interface {
     	if ($_SESSION['user_id'] <= 0) {
     		return new ecjia_error(100, 'Invalid session');
     	}
-
+    	
+    	RC_Loader::load_app_class('quickpay_activity', 'quickpay', false);
+    	
     	$store_id	 		= $this->requestData('store_id', 0);
 		$activity_id		= $this->requestData('activity_id', 0);
 		$goods_amount 		= $this->requestData('goods_amount', '0.00');
@@ -84,9 +86,9 @@ class checkOrder_module extends api_front implements api_interface {
 			/*每周限制时间*/
 			if (!empty($quickpay_activity_info['limit_time_weekly'])){
 				$w = date('w');
-				$current_week = current_week($w);
+				$current_week = quickpay_activity::current_week($w);
 				$limit_time_weekly = Ecjia\App\Quickpay\Weekly::weeks($quickpay_activity_info['limit_time_weekly']);
-				$weeks_str = get_weeks_str($limit_time_weekly);
+				$weeks_str = quickpay_activity::get_weeks_str($limit_time_weekly);
 				 
 				if (!in_array($current_week, $limit_time_weekly)){
 					return new ecjia_error('limit_time_weekly_error', '此活动只限'.$weeks_str.'可使用');
@@ -137,12 +139,14 @@ class checkOrder_module extends api_front implements api_interface {
 		$user_integral = RC_DB::table('users')->where('user_id', $_SESSION['user_id'])->pluck('pay_points');
 		
 		/*活动是否允许使用红包*/
+		$bonus_list = array();
+		$allow_use_bonus =0;
 		if (ecjia::config('use_bonus') == '1') {
 			if ($quickpay_activity_info['use_bonus'] == 'nolimit') {
 				//无限制红包；获取用户可用红包
 				// 取得用户可用红包
 				$real_amount = $goods_amount - $exclude_amount;
-				$user_bonus = user_bonus($_SESSION['user_id'], $real_amount);
+				$user_bonus = quickpay_activity::user_bonus($_SESSION['user_id'], $real_amount, $store_id);
 				if (!empty($user_bonus)) {
 					foreach ($user_bonus AS $key => $val) {
 						$user_bonus[$key]['bonus_money_formated'] = price_format($val['type_money'], false);
@@ -152,7 +156,15 @@ class checkOrder_module extends api_front implements api_interface {
 				// 能使用红包
 				$allow_use_bonus = 1;
 			} elseif (($quickpay_activity_info['use_bonus'] != 'nolimit') && $quickpay_activity_info['use_bonus'] != 'close') {
-				$bonus_list = get_acyivity_bonus();
+				//活动指定红包类型
+				$bonus_type_ids = explode(',', $quickpay_activity_info['use_bonus']);
+				$bonus_list = quickpay_activity::get_acyivity_bonus(array('user_id' => $_SESSION['user_id'], 'bonus_type_ids' => $bonus_type_ids, 'store_id' => $store_id));
+			
+				if (!empty($bonus_list)) {
+					foreach ($bonus_list AS $key => $val) {
+						$bonus_list[$key]['bonus_money_formated'] = price_format($val['type_money'], false);
+					}
+				}
 				$allow_use_bonus = 1;
 			} else{
 				$allow_use_bonus = 0;
@@ -160,90 +172,32 @@ class checkOrder_module extends api_front implements api_interface {
 			}
 		}
 		
-	}
-}
-
-
-/**
- * 获取周
- */
- function get_week_list(){
-	$week_list = array(
-			'星期一'	=> Ecjia\App\Quickpay\Weekly::Monday,
-			'星期二'	=> Ecjia\App\Quickpay\Weekly::Tuesday,
-			'星期三'	=> Ecjia\App\Quickpay\Weekly::Wednesday,
-			'星期四' => Ecjia\App\Quickpay\Weekly::Thursday,
-			'星期五' => Ecjia\App\Quickpay\Weekly::Friday,
-			'星期六' => Ecjia\App\Quickpay\Weekly::Saturday,
-			'星期日' => Ecjia\App\Quickpay\Weekly::Sunday,
-	);
-	return $week_list;
-}
-
-/**
- * 获取当前天是星期几
- */
-function current_week($w){
-	if ($w == 1) {
-		$current_week = Ecjia\App\Quickpay\Weekly::Monday;
-	} elseif ($w == 2) {
-		$current_week = Ecjia\App\Quickpay\Weekly::Tuesday;
-	} elseif ($w == 3) {
-		$current_week = Ecjia\App\Quickpay\Weekly::Wednesday;
-	} elseif ($w == 4) {
-		$current_week = Ecjia\App\Quickpay\Weekly::Thursday;
-	} elseif ($w == 5) {
-		$current_week = Ecjia\App\Quickpay\Weekly::Friday;
-	} elseif ($w == 6) {
-		$current_week = Ecjia\App\Quickpay\Weekly::Saturday;
-	} elseif ($w == 0) {
-		$current_week = Ecjia\App\Quickpay\Weekly::Sunday;
-	}
+		/*活动可优惠金额*/
+		$discount = quickpay_activity::get_quickpay_discount(array('activity_type' => $quickpay_activity_info['activity_type'], 'activity_value' => $quickpay_activity_info['activity_value'], 'goods_amount' => $goods_amount, 'exclude_amount' => $exclude_amount)); 
+		$discount = sprintf("%.2f", $discount);
+		$formated_discount = price_format($discount, false);
+		
+		//支付方式列表
+		$payment_list = RC_Api::api('payment', 'available_payments');
 	
-	return $current_week;
-}
-
-/**
- * 获取活动可使用的星期
- * 
- */
-function get_weeks_str($limit_time_weekly){
-	$week_list = get_week_list();
-	foreach ($week_list as $k => $v) {
-		if (in_array($v, $limit_time_weekly)) {
-			$week[] = $k;
-		}
+		/*返回数据*/
+		$data = array(
+				'activity_id' 		=> $quickpay_activity_info['id'],
+				'activity_type' 	=> $quickpay_activity_info['activity_type'],
+				'title'				=> $quickpay_activity_info['title'],
+				'goods_amount'		=> $goods_amount,
+				'exclude_amount'	=> $exclude_amount,
+				'allow_use_bonus'	=> $allow_use_bonus,
+				'allow_use_integral'=> $allow_use_integral,
+				'order_max_integral'=> $order_max_integral,
+				'bonus_list'		=> $bonus_list,
+				'user_integral'		=> $user_integral,
+				'discount'			=> $discount,
+				'formated_discount'	=> $formated_discount,
+				'payment_list'		=> $payment_list
+				
+		);
+		return $data;
 	}
-	if (!empty($week)) {
-		if ($week == array(1,2,4,8,16)) {
-			$week = '周一至周五';
-		} elseif ($week == array(1,2,4,8,16,32,64)) {
-			$week = '周一至周日';
-		} else {
-			$week = implode(',', $week);
-		}
-	}
-	return $week;
 }
-
-
-/**
- * 取得用户当前可用红包
- * @param   int	 $user_id		用户id
- * @param   float   $goods_amount   订单商品金额
- * @return  array   红包数组
- */
-function user_bonus($user_id, $goods_amount = 0) {
-	$today = RC_Time::gmtime();
-	$dbview = RC_DB::table('user_bonus as ub')
-				->leftJoin('bonus_type as bt', RC_DB::raw('bt.type_id'), '=', RC_DB::raw('ub.bonus_type_id'));
-	$dbview->where(RC_DB::raw('bt.use_start_date'), '<=', $today)
-			->where(RC_DB::raw('bt.use_end_date'), '>=', $today)
-			->where(RC_DB::raw('bt.min_goods_amount'), '<=', $goods_amount)
-			->where(RC_DB::raw('ub.user_id'), $user_id)
-			->where(RC_DB::raw('ub.order_id'), 0);
-	$row = $dbview->selectRaw('bt.type_id, bt.type_name, bt.type_money, ub.bonus_id, bt.usebonus_type')->get();
-	return $row;
-}
-
 // end
