@@ -322,7 +322,7 @@ class merchant extends ecjia_merchant {
 	}
 	
 	/**
-	 * 编辑员工信息处理
+	 * 编辑闪惠活动处理
 	 */
 	public function update() {
 		$this->admin_priv('mh_quickpay_update');
