@@ -3,17 +3,7 @@
 
 <!-- {block name="footer"} -->
 <script type="text/javascript">
-// 	ecjia.admin.quickpay_info.init();
-$('.info-toggle-button').toggleButtons({
-	label: {  
-         enabled: "开启",  
-         disabled: "关闭"  
-    },  
-    style: {
-        enabled: "info",
-        disabled: "success"
-    }
-});
+	ecjia.admin.quickpay_info.init();
 </script>
 <!-- {/block} -->
 

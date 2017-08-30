@@ -69,7 +69,7 @@
 					{$quickpay.title}
 		     	  	<div class="edit-list">
 			     	  	{if $quickpay.manage_mode eq 'self'}
-						  	<a class="data-pjax" href='{url path="quickpay/admin/edit" args="id={$quickpay.id}"}' title="编辑">编辑</a>&nbsp;|&nbsp;
+						  	<a class="data-pjax" href='{url path="quickpay/admin/edit" args="id={$quickpay.id}&store_id={$quickpay.store_id}"}' title="编辑">编辑</a>&nbsp;|&nbsp;
 				          	<a class="ajaxremove ecjiafc-red" data-toggle="ajaxremove" data-msg="你确定要删除该闪惠规则吗？" href='{url path="quickpay/admin/remove" args="id={$quickpay.id}"}' title="删除">删除</a>
 				        {else}
 				        	<a target="_blank" href='{url path="quickpay/admin/detail" args="id={$quickpay.id}"}' title="查看详情">查看详情</a>
