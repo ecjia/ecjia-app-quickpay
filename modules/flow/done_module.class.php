@@ -165,6 +165,9 @@ class done_module extends api_front implements api_interface {
 		/*红包是否可用*/
 		if ($bonus_id > 0) {
 			$bonus_info = RC_Api::api('bonus', 'bonus_info', array('bonus_id' => $bonus_id));
+			if (is_ecjia_error($bonus_info)) {
+				return $bonus_info;
+			}
 			if (empty($bonus_info)){
 				return new ecjia_error('bonus_error', '红包信息不存在！');
 			}
