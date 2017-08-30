@@ -18,353 +18,260 @@
             });
         },
     }
- 
-    /* 文章编辑新增js初始化 */
-    app.favourable_info = {
-        init: function () {
-            /* 加载日期控件 */
-			$.fn.datetimepicker.dates['zh'] = {  
-                days:       ["星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六","星期日"],  
-                daysShort:  ["日", "一", "二", "三", "四", "五", "六","日"],  
-                daysMin:    ["日", "一", "二", "三", "四", "五", "六","日"],  
-                months:     ["一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月","十二月"],  
-                monthsShort:  ["一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月","十二月"], 
-                meridiem:    ["上午", "下午"],  
-                today:       "今天"  
-	        }; 
-            $(".date").datetimepicker({
-                format: "yyyy-mm-dd hh:ii:ss",
-                weekStart: 1,
-				language: 'zh', 
-                todayBtn: 1,
-                autoclose: 1,
-                todayHighlight: 1,
-                startView: 2,
-                forceParse: 0,
-                minuteStep: 1,
-                container: '.main_content',
-            });
- 
-            app.favourable_info.submitfavourable();
-            app.favourable_info.act_range(true);
-            app.favourable_info.act_type();
-            app.favourable_info.act_range_plus();
-            app.favourable_info.act_type_plus();
-            app.favourable_info.remove();
-            app.favourable_info.remove1();
- 
- 
-            $('#act_range_id').change(function () {
-                app.favourable_info.act_range(false);
-            });
-            $('#act_type_id').change(function () {
-                app.favourable_info.act_type();
-            });
- 
-            $("#search").on('click', function () {
-                var keyword = document.forms['theForm'].elements['keyword'].value;
-                var act_range = document.forms['theForm'].elements['act_range'].value;
-                var store_id = document.forms['theForm'].elements['store_id'].value;
-                var searchurl = $(this).attr('data-url');
-                $.ajax({
-                    url: searchurl,
-                    dataType: "JSON",
-                    type: "POST",
-                    data: {
-                        keyword: keyword,
-                        act_range: act_range,
-                        store_id: store_id
-                    },
-                    success: function (data) {
-                        app.favourable_info.searchResponse(data);
-                    }
+
+    app.quickpay_info = {
+            init: function () {
+            	$('.info-toggle-button').toggleButtons({
+            		label: {  
+            	         enabled: "开启",  
+            	         disabled: "关闭"  
+            	    },  
+            	    style: {
+            	        enabled: "info",
+            	        disabled: "success"
+            	    }
+            	});
+            	
+                $(".date").datepicker({
+                    format: "yyyy-mm-dd",
                 });
-            });
-            $("#search1").on('click', function () {
-                var keyword = document.forms['theForm'].elements['keyword1'].value;
-                var act_range = 3;
-                var searchurl = $(this).attr('data-url');
-                $.ajax({
-                    url: searchurl,
-                    dataType: "JSON",
-                    type: "POST",
-                    data: {
-                        keyword: keyword,
-                        act_range: act_range
-                    },
-                    success: function (data) {
-                        app.favourable_info.searchResponse1(data);
-                    }
-                });
-            });
-        },
- 
-        submitfavourable: function () {
-            var $form = $('form[name="theForm"]');
-            var start_time = $("input[name='start_time']").val();
-            /* 给表单加入submit事件 */
-            var option = {
-                rules: {
-                    act_name: {
-                        required: true,
-                        minlength: 1
-                    },
-                    start_time: {
-                        required: true,
-                        date: false
-                    },
-                    end_time: {
-                        required: true,
-                        date: false
-                    },
-                },
-                messages: {
-                    act_name: {
-                        required: js_lang.act_name_not_null
-                    },
-                    start_time: {
-                        required: "",
-                    },
-                    end_time: {
-                        required: "",
-                    }
-                },
-                submitHandler: function () {
-                    $form.ajaxSubmit({
-                        dataType: "json",
+
+                $(".tp_1").datetimepicker({
+    				format: "hh:ii",
+                    weekStart: 1,
+                    todayBtn: 1,
+                    autoclose: 1,
+                    todayHighlight: 1,
+                    startView: 1,
+                    forceParse: 0,
+                    minuteStep: 5
+    			});
+                
+                $('.fontello-icon-plus').click(function(e) {
+    				setTimeout(function () { 
+    					$(".tp_1").datetimepicker({
+    						format: "hh:ii",
+    		                weekStart: 1,
+    		                todayBtn: 1,
+    		                autoclose: 1,
+    		                todayHighlight: 1,
+    		                startView: 1,
+    		                forceParse: 0,
+    		                minuteStep: 5
+    					});
+    					
+    					$(".date").datepicker({
+    		                format: "yyyy-mm-dd",
+    		            });
+    					
+    			    }, 1);
+    			});
+
+                app.quickpay_info.activity_type_change();
+                app.quickpay_info.time_type_change();
+                app.quickpay_info.use_bonus_enabled_change();
+                app.quickpay_info.select_bonus_change();
+                app.quickpay_info.bonus_plus();
+                app.quickpay_info.bonus_remove();
+                app.quickpay_info.use_integral_enabled_change();
+                app.quickpay_info.submit_form();
+                
+            },
+            
+            //闪惠类型处理
+            activity_type_change: function () {
+        	   $("#activity_type").change(function () {
+                   $(this).children().each(function (i) {
+                       $("#activity_type_" + $(this).val()).hide();
+                       $("#activity_type_" + $(this).val() +" :input").each(function () {
+                           $(this).val("");
+                       });
+                       $("#activity_type_" + $(this).val() +" :input").each(function () {
+                           $(this).attr("disabled",true);
+                       });
+                   })
+                   $("#activity_type_" + $(this).val()).show();
+                   $("#activity_type_" + $(this).val() +" :input").each(function () {
+                       $(this).attr("disabled",false);
+                   });
+               });
+            },
+            
+            
+            //时间类型处理
+            time_type_change: function () {
+        	   $("#limit_time_type").change(function () {
+                   $(this).children().each(function (i) {
+                       $("#limit_time_type_" + $(this).val()).hide();
+                   })
+                   $("#limit_time_type_" + $(this).val()).show();
+               });
+            },
+
+            
+            //开启和关闭是否使用红包抵现
+            use_bonus_enabled_change: function () {
+            	 $("input[name='use_bonus_enabled']").change(function () {
+            		 var use_bonus_enabled = $("input[name='use_bonus_enabled']:checked").val();
+                	 if(use_bonus_enabled == 'on'){
+                		 $("#use_bonus_select").attr("disabled",false); 
+                		 $("#use_bonus_select").trigger("liszt:updated");
+                		 $("#keyword").attr("disabled",false);
+                		 $("#search").attr("disabled",false);
+                	 }else{
+                		 $("#use_bonus_select").attr("disabled","disabled");
+                		 $("#use_bonus_select").trigger("liszt:updated");
+                		 $("#keyword").attr("disabled","disabled");
+                		 $("#search").attr("disabled","disabled");
+                	 }
+            	 })
+            },
+            
+            //获取商家所有红包列表
+            select_bonus_change: function () {
+                $("#search").on('click', function () {
+                    var keyword = document.forms['theForm'].elements['keyword'].value;
+                    var searchurl = $(this).attr('data-url');
+                    var store_id = $("input[name='store_id']").val()
+                    $.ajax({
+                        url: searchurl,
+                        dataType: "JSON",
+                        type: "POST",
+                        data: {
+                            keyword: keyword,
+                            store_id: store_id,
+                        },
                         success: function (data) {
-                            if (data.state == "success") {
-                                if (data.refresh_url != undefined) {
-                                    var pjaxurl = data.refresh_url;
-                                    ecjia.pjax(pjaxurl, function () {
-                                        ecjia.admin.showmessage(data);
-                                    });
-                                } else {
-                                    ecjia.admin.showmessage(data);
-                                }
-                            } else {
-                                ecjia.admin.showmessage(data);
-                            }
+                            app.quickpay_info.searchResponse(data);
                         }
                     });
-                }
-            }
-            var options = $.extend(ecjia.admin.defaultOptions.validate, option);
-            $form.validate(options);
-        },
- 
-        searchResponse: function (data) {
-            if (data.state == 'success' && data.content) {
-                var $selectbig1 = $('#selectbig1');
-                $selectbig1.show();
-                var goods = data.content;
-                var tmpobj = '';
-                var $select = $('form[name="theForm"] select[name="result"]');
-                for (i = 0; i < goods.length; i++) {
-                    if (goods[i].level) {
-                        tmpobj += '<option value=' + goods[i].id + ' style=padding-left:' + goods[i].level * 20 + 'px>' + goods[i].name + '</option>';
-                    } else {
-                        tmpobj += '<option value=' + goods[i].id + ' >' + goods[i].name + '</option>';
-                    }
-                }
-                $select.html(tmpobj);
-                $select.trigger("liszt:updated");
-            }
-        },
-        
-        searchResponse1: function (data) {
-            if (data.state == 'success' && data.content) {
-                var $selectbig = $('#selectbig');
-                $selectbig.show();
-                var goods = data.content;
-                var tmpobj = '';
-                var $select = $('form[name="theForm"] select[name="result1"]');
-                for (i = 0; i < goods.length; i++) {
-                    tmpobj += '<option value=' + goods[i].id + ' data-url=' + goods[i].url + '>' + goods[i].name + '</option>';
-                }
-                $select.html(tmpobj);
-                $select.trigger("liszt:updated");
-            }
-        },
- 
-        act_range: function (isInit) {
-            var act_range_id = $('#act_range_id').val();
-            var $actionDiv = $('#range_search');
-            var isok = $('#isok').val();
- 
-            if (isok == 0) {
-                $('#range-div').html('');
-                if (act_range_id <= 0) {
-                    $actionDiv.hide();
-                    $('#selectbig1').hide();
-                } else {
-                    $('#selectbig1').hide();
-                    $actionDiv.show();
+                });
+            	
+            },
+            
+            //进行返回的红包列表处理，放入页面中
+            searchResponse: function (data) {
+                if (data.state == 'success' && data.content) {
+                    var $selectbig = $('#selectbig');
+                    $selectbig.show();
+                    var bonus = data.content;
                     var tmpobj = '';
                     var $select = $('form[name="theForm"] select[name="result"]');
+                    for (i = 0; i < bonus.length; i++) {
+                        if (bonus[i].level) {
+                            tmpobj += '<option value=' + bonus[i].type_id + ' style=padding-left:' + bonus[i].level * 20 + 'px>' + bonus[i].type_name + '</option>';
+                        } else {
+                            tmpobj += '<option value=' + bonus[i].type_id + ' >' + bonus[i].type_name + '</option>';
+                        }
+                    }
                     $select.html(tmpobj);
                     $select.trigger("liszt:updated");
                 }
- 
-            } else {
-                //编辑
-                if (act_range_id <= 0) {
-                    $actionDiv.hide();
-                    $('#range-div').html('');
-                    $('#selectbig1').hide();
-                } else {
-                    if (!isInit) {
-                        $('#range-div').html('');
+            },
+            
+            //选择可以同时参加闪惠的红包（可多选）
+            bonus_plus: function () {
+                $("#result").on('click', function () {
+                    var selRange = document.forms['theForm'].elements['use_bonus_select'];
+                    if (selRange.value == 0) {
+                        var data = {
+                            message: "优惠范围是全部红包，不需要此操作",
+                            state: "error",
+                        }
+                        ecjia.admin.showmessage(data);
+                        return;
                     }
-                    $actionDiv.show();
-                    $('#selectbig1').hide();
-                    var tmpobj = '';
-                    var $select = $('form[name="theForm"] select[name="result"]');
-                    $select.html(tmpobj);
-                    $select.trigger("liszt:updated");
-                }
-            }
-        },
-        
-        act_type: function () {
-            var act_type_id = $('#act_type_id').val();
-            var $actionDivtwo = $('#type_search');
-            $actionDivtwo.css("border-top", '1px dashed #ccc');
-            if (act_type_id > 0) {
-                $actionDivtwo.hide();
-                $('#selectbig').hide();
-                $('#gift-table').html('');
-                var tmpobj = '';
-                var $select = $('form[name="theForm"] select[name="result1"]');
-                $select.html(tmpobj);
-                $select.trigger("liszt:updated");
-            } else {
-                $actionDivtwo.show();
-            }
-        },
-        
-        act_range_plus: function () {
-            $("#result").on('click', function () {
-                var selRange = document.forms['theForm'].elements['act_range'];
-                if (selRange.value == 0) {
-                    var data = {
-                        message: js_lang.all_need_not_search,
-                        state: "error",
+                    var selResult = document.getElementById('result');
+                    if (selResult.value == 0) {
+                        var data = {
+                            message: "请先搜索相应的数据",
+                            state: "error",
+                        }
+                        ecjia.admin.showmessage(data);
+                        return;
                     }
-                    ecjia.admin.showmessage(data);
-                    return;
-                }
-                var selResult = document.getElementById('result');
-                if (selResult.value == 0) {
-                    var data = {
-                        message: js_lang.pls_search,
-                        state: "error",
-                    }
-                    ecjia.admin.showmessage(data);
-                    return;
-                }
-                var id = selResult.options[selResult.selectedIndex].value;
-                var name = selResult.options[selResult.selectedIndex].text;
-                var exists = false;
-                var eles = document.forms['theForm'].elements;
-                for (var i = 0; i < eles.length; i++) {
-                    if (eles[i].type == "hidden" && eles[i].name.substr(0, 13) == 'act_range_ext') {
-                        if (eles[i].value == id) {
-                            exists = true;
-                            var data = {
-                                message: js_lang.range_exists,
-                                state: "error",
+                    var id = selResult.options[selResult.selectedIndex].value;
+                    var name = selResult.options[selResult.selectedIndex].text;
+                    var exists = false;
+                    var eles = document.forms['theForm'].elements;
+                    for (var i = 0; i < eles.length; i++) {
+                        if (eles[i].type == "hidden" && eles[i].name.substr(0, 13) == 'act_range_ext') {
+                            if (eles[i].value == id) {
+                                exists = true;
+                                var data = {
+                                    message: "该选项已存在",
+                                    state: "error",
+                                }
+                                ecjia.admin.showmessage(data);
+                                break;
                             }
-                            ecjia.admin.showmessage(data);
-                            break;
                         }
                     }
-                }
-                if (!exists) {
-                    var html = '<li>' + name + '<input name="act_range_ext[]" type="hidden" value="' + id + '"/>' +
-                        '<a href="javascript:;" class="delact1"><i class="fontello-icon-minus-circled ecjiafc-red"></i></a></li>';
-                    $("#range-div").show().append(html);
-                    app.favourable_info.remove1();
-                }
-            });
-        },
-        
-        act_type_plus: function () {
-            $("#result1").on('click', function () {
-                var selType = document.forms['theForm'].elements['act_type'];
-                if (selType.value == 1) {
-                    var data = {
-                        message: js_lang.price_need_not_search,
-                        state: "error",
+                    if (!exists) {
+                        var html = '<li>' + name + '<input name="act_range_ext[]" type="hidden" value="' + id + '"/>' +
+                            '&nbsp;<a href="javascript:;" class="delact"><i class="fontello-icon-minus-circled ecjiafc-red"></i></a></li>';
+                        $("#range-div").show().append(html);
+                        app.quickpay_info.bonus_remove();
                     }
-                    ecjia.admin.showmessage(data);
-                    return;
-                }
-                var selResult = document.getElementById('result1');
-                if (selResult.value == 0) {
-                    var data = {
-                        message: js_lang.pls_search,
-                        state: "error",
-                    }
-                    ecjia.admin.showmessage(data);
-                    return;
-                }
-                var id = selResult.options[selResult.selectedIndex].value;
-                var name = selResult.options[selResult.selectedIndex].text;
-                var url = $(this).children().eq(selResult.selectedIndex).attr('data-url');
-                // 检查是否已经存在
-                var exists = false;
-                var eles = document.forms['theForm'].elements;
-                for (var i = 0; i < eles.length; i++) {
-                    if (eles[i].type == "hidden" && eles[i].name.substr(0, 7) == 'gift_id') {
-                        if (eles[i].value == id) {
-                            exists = true;
-                            var data = {
-                                message: js_lang.range_exists,
-                                state: "error",
-                            }
-                            ecjia.admin.showmessage(data);
-                            break;
-                        }
-                    }
-                }
- 
-                if (!exists) {
-                    if ($("#gift-table").find("tr").length == 0) {
-                        $("#gift-div").addClass("m_b15");
-                        $("#gift-table").html("<tr align='center'><td><strong>" + js_lang.gift + "</strong></td><td><strong>" + js_lang.price + "</strong></td></tr>")
-                    }
-                    if (name.length > 13) {
-                        name = name.substr(0, 11) + "...";
-                    }
-                    var new_html = '<tr align="center"><td class="span7"><a href="' + url + '" target="_blank">' + name +
-                        '</a></td><td><input name="gift_price[]" type="text" value="0" class="w80" />' +
-                        '<input name="gift_id[]" type="hidden" value="' + id + '" />' +
-                        '<input name="gift_name[]" type="hidden" value="' + name + '" />' +
-                        '<a href="javascript:;" class="delact"><i class="fontello-icon-minus-circled ecjiafc-red"></i></a></td></tr>';
-                    $("#gift-table").append(new_html);
-                    app.favourable_info.remove();
-                }
-            });
-        },
-        
-        remove: function () {
-            $(".delact").on('click', function () {
-                $(this).parents("tr").remove();
-                var length = $("#gift-table").find("tr").length;
-                if (length == 1) {
-                    $('#gift-table').html('');
-                    $("#gift-div").removeClass("m_b15");
-                }
-            });
-        },
-        
-        remove1: function () {
-            $(".delact1").on('click', function () {
-                $(this).parents("li").remove();
-            });
-        }
-    }
+                });
+            },
+            
+            //移除所选择的红包
+            bonus_remove: function () {
+                $(".delact").on('click', function () {
+                    $(this).parents("li").remove();
+                });
+            },	
+            
+            
+            //开启和关闭是否使用积分抵现
+            use_integral_enabled_change: function () {
+            	 $("input[name='use_integral_enabled']").change(function () {
+            		 var use_integral_enabled = $("input[name='use_integral_enabled']:checked").val();
+                	 if(use_integral_enabled == 'on'){
+                		 $("#use_integral_select").attr("disabled",false); 
+                		 $("#use_integral_select").trigger("liszt:updated");
+                		 $("#integral_keyword").attr("disabled",false);
+                	 }else{
+                		 $("#use_integral_select").attr("disabled","disabled");
+                		 $("#use_integral_select").trigger("liszt:updated");
+                		 $("#integral_keyword").attr("disabled","disabled");
+                	 }
+            	 })
+            },
+            
+    	    submit_form: function (formobj) {
+    	        var $form = $("form[name='theForm']");
+    	        var option = {
+    	            rules: {
+    	            	title: {
+    	                    required: true
+    	                },
+    	                activity_discount_value: {
+    	                    required: true
+    	                }
+    	            },
+    	            messages: {
+    	                title: {
+    	                	required: "请输入闪惠名称"
+    	                },
+    	                activity_discount_value: {
+    	                    required: "请输入折扣价格"
+    	                }
+    	            },
+    	            submitHandler: function () {
+    	                $form.ajaxSubmit({
+    	                    dataType: "json",
+    	                    success: function (data) {
+    	                        ecjia.admin.showmessage(data);
+    	                    }
+    	                });
+    	            }
+    	        }
+    	        var options = $.extend(ecjia.admin.defaultOptions.validate, option);
+    	        $form.validate(options);
+    	    }
+      };
     
 })(ecjia.admin, jQuery);
  
