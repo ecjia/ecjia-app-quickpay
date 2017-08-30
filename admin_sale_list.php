@@ -144,11 +144,11 @@ class admin_sale_list extends ecjia_admin {
 		$db_quickpay_order = RC_DB::table('quickpay_orders');
 		
 		$format = '%Y-%m-%d';
-		if(empty($_GET['year_beginYear'])) {//当年当月的数据
+		if (empty($_GET['year_beginYear'])) {//当年当月的数据
 			$start = RC_Time::local_mktime(0, 0, 0, intval(date('m')), 1, intval(date('Y')));
 			$end   = RC_Time::local_mktime(23, 59, 59, intval(date('m')), 31, intval(date('Y')));
 		} else {
-			if($_GET['month_beginMonth'] == 'all') {//指定某年（一年数据）
+			if ($_GET['month_beginMonth'] == 'all') {//指定某年（一年数据）
 				$start = RC_Time::local_mktime(0, 0, 0, 1, 1, intval($_GET['year_beginYear']));
 				$end   = RC_Time::local_mktime(23, 59, 59, 12, 31, intval($_GET['year_beginYear']));
 				$select_value = 'select_all';

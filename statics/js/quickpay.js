@@ -236,6 +236,7 @@
                 		 $("#use_integral_select").attr("disabled","disabled");
                 		 $("#use_integral_select").trigger("liszt:updated");
                 		 $("#integral_keyword").attr("disabled","disabled");
+                		 $("#integral_keyword").val("");
                 	 }
             	 })
             },

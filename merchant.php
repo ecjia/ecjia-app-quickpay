@@ -185,7 +185,7 @@ class merchant extends ecjia_merchant {
 		} else {
 			if (is_array($_POST['activity_value'])) {
 				foreach($_POST['activity_value'] as $row){
-					if(empty($row)){
+					if (empty($row)){
 						return $this->showmessage('活动参数不能为空', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
 					}
 				}
@@ -196,9 +196,9 @@ class merchant extends ecjia_merchant {
 		//时间规则处理
 		$limit_time_type = trim($_POST['limit_time_type']);//限制时间类型类型
 		$limit_time_weekly = 0;
-		if($limit_time_type == 'customize') {
+		if ($limit_time_type == 'customize') {
 			//每周星期0x1111111代表7天
-			if(!empty($_POST['limit_time_weekly'])){
+			if (!empty($_POST['limit_time_weekly'])){
 				$limit_time_weekly = Ecjia\App\Quickpay\Weekly::weeklySelected($_POST['limit_time_weekly']);
 			}
 				
@@ -296,7 +296,7 @@ class merchant extends ecjia_merchant {
 		$data['end_time']     = RC_Time::local_date('Y-m-d', $data ['end_time']);
 		
 		//闪惠活动参数处理
-		if(strpos($data['activity_value'],',') !== false){
+		if (strpos($data['activity_value'],',') !== false){
 			$data['activity_value']  = explode(",",$data['activity_value']);
 		}
 
@@ -306,7 +306,7 @@ class merchant extends ecjia_merchant {
 		$data['limit_time_exclude'] = explode(",", $data['limit_time_exclude']);
 		
 		//红包处理
-		if($data['use_bonus'] != 'close' && $data['use_bonus'] != 'nolimit') {
+		if ($data['use_bonus'] != 'close' && $data['use_bonus'] != 'nolimit') {
 			$data['use_bonus'] = explode(',', $data['use_bonus']);
 			$use_bonus = RC_DB::table('bonus_type')
 			->whereIn('type_id', $data['use_bonus'])
@@ -350,7 +350,7 @@ class merchant extends ecjia_merchant {
 		} else {
 			if (is_array($_POST['activity_value'])) {
 				foreach($_POST['activity_value'] as $row){
-					if(empty($row)){
+					if (empty($row)){
 						return $this->showmessage('活动参数不能为空', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
 					}
 				}
@@ -361,9 +361,9 @@ class merchant extends ecjia_merchant {
 		//时间规则处理
 		$limit_time_type = trim($_POST['limit_time_type']);//限制时间类型类型
 		$limit_time_weekly = 0;
-		if($limit_time_type == 'customize') {
+		if ($limit_time_type == 'customize') {
 			//每周星期0x1111111代表7天
-			if(!empty($_POST['limit_time_weekly'])){
+			if (!empty($_POST['limit_time_weekly'])){
 				$limit_time_weekly = Ecjia\App\Quickpay\Weekly::weeklySelected($_POST['limit_time_weekly']);
 			}
 				

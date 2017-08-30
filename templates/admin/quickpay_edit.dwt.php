@@ -214,7 +214,7 @@ ecjia.admin.quickpay_info.init();
 								<div class="control-group-small">
 							    	<span class="f_l w180 t_l l_h30">是否允许同时使用红包抵现：</span>
 									<div class="info-toggle-button" style="margin-left:32px;">
-						                <input class="nouniform"  name="use_bonus_enabled" type="checkbox" {if $data.use_bonus neq 'close'}checked="checked"{/if}  />
+						                <input class="nouniform"  name="use_bonus_enabled" type="checkbox" {if $data.use_bonus neq 'close'}checked="checked"{/if} />
 						            </div>	
 				  					<div class="edit-page">
 										<select id="use_bonus_select" name="use_bonus_select" {if $data.use_bonus eq 'close'}disabled="disabled"{/if} class="w300" >
@@ -260,7 +260,7 @@ ecjia.admin.quickpay_info.init();
 								<div class="control-group-small">
 							    	<span class="f_l w180 t_l l_h30">是否允许同时使用积分抵现：</span>
 									<div class="info-toggle-button" style="margin-left:32px;">
-						                <input class="nouniform"  type="checkbox" name="use_integral_enabled" {if $data.use_integral neq 'close'}checked="checked"{/if}/>
+						                <input class="nouniform"  type="checkbox" name="use_integral_enabled"  {if $data.use_integral neq 'close'}checked="checked"{/if} />
 						            </div> 	
 				  					<div class="edit-page">
 										<select id="use_integral_select" name="use_integral_select" {if $data.use_integral eq 'close'}disabled="disabled"{/if} class="w300" >

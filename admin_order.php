@@ -160,7 +160,7 @@ class admin_order extends ecjia_admin {
 			'add_time'			=> RC_Time::gmtime(),
 		);
 		RC_DB::table('quickpay_order_action')->insertGetId($data);
-		if($type) {
+		if ($type) {
 			return $this->showmessage('核实成功', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('pjaxurl' => RC_Uri::url('quickpay/admin_order/order_info', array('order_id' => $order_id))));
 		} else {
 			return $this->showmessage('核实成功', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('pjaxurl' => RC_Uri::url('quickpay/admin_order/init')));

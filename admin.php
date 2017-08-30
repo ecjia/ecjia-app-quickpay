@@ -125,7 +125,7 @@ class admin extends ecjia_admin {
 		$data['end_time']    = RC_Time::local_date('Y-m-d', $data ['end_time']);
 		
 		//闪惠活动参数处理
-		if(strpos($data['activity_value'],',') !== false){
+		if (strpos($data['activity_value'],',') !== false) {
 			$data['activity_value']  = explode(",",$data['activity_value']);
 		}
 		
@@ -135,7 +135,7 @@ class admin extends ecjia_admin {
 		$data['limit_time_exclude'] = explode(",", $data['limit_time_exclude']);
 		
 		//红包处理
-		if($data['use_bonus'] != 'close' && $data['use_bonus'] != 'nolimit') {
+		if ($data['use_bonus'] != 'close' && $data['use_bonus'] != 'nolimit') {
 			$data['use_bonus'] = explode(',', $data['use_bonus']);
 			$use_bonus = RC_DB::table('bonus_type')
 			->whereIn('type_id', $data['use_bonus'])
@@ -160,7 +160,7 @@ class admin extends ecjia_admin {
 	public function update() {
 		$this->admin_priv('quickpay_update');
 	
-		$store_id = intval($_POST['id']);
+		$store_id = intval($_POST['store_id']);
 		$id       = intval($_POST['id']);
 		$title    = trim($_POST['title']);
 		$description = trim($_POST['description']);
@@ -183,7 +183,7 @@ class admin extends ecjia_admin {
 		} else {
 			if (is_array($_POST['activity_value'])) {
 				foreach($_POST['activity_value'] as $row){
-					if(empty($row)){
+					if (empty($row)){
 						return $this->showmessage('活动参数不能为空', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
 					}
 				}
@@ -194,9 +194,9 @@ class admin extends ecjia_admin {
 		//时间规则处理
 		$limit_time_type = trim($_POST['limit_time_type']);//限制时间类型类型
 		$limit_time_weekly = 0;
-		if($limit_time_type == 'customize') {
+		if ($limit_time_type == 'customize') {
 			//每周星期0x1111111代表7天
-			if(!empty($_POST['limit_time_weekly'])){
+			if (!empty($_POST['limit_time_weekly'])){
 				$limit_time_weekly = Ecjia\App\Quickpay\Weekly::weeklySelected($_POST['limit_time_weekly']);
 			}
 	
@@ -215,9 +215,7 @@ class admin extends ecjia_admin {
 	
 		//是否可参与红包抵现
 		$use_bonus_enabled = trim($_POST['use_bonus_enabled']);
-		if ($use_bonus_enabled == 'close') {
-			$use_bonus = $use_bonus_enabled;
-		} else{
+		if ($use_bonus_enabled == 'on') {
 			$use_bonus_select = trim($_POST['use_bonus_select']);
 			if ($use_bonus_select == 'nolimit') {
 				$use_bonus = $use_bonus_select;
@@ -228,14 +226,14 @@ class admin extends ecjia_admin {
 					return $this->showmessage('请选择您要指定的红包项', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
 				}
 			}
+		} else{
+			$use_bonus = 'close';
 		}
 	
 	
 		//是否可参与积分抵现
 		$use_integral_enabled = trim($_POST['use_integral_enabled']);
-		if ($use_integral_enabled == 'close') {
-			$use_integral = $use_integral_enabled;
-		} else{
+		if ($use_integral_enabled == 'on') {
 			$use_integral_select = trim($_POST['use_integral_select']);
 			if ($use_integral_select == 'nolimit') {
 				$use_integral = $use_integral_select;
@@ -246,6 +244,8 @@ class admin extends ecjia_admin {
 					return $this->showmessage('设置最大可用积分数', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
 				}
 			}
+		} else{
+			$use_integral = 'close';
 		}
 	
 		$data = array(
@@ -269,7 +269,7 @@ class admin extends ecjia_admin {
 		);
 	
 		RC_DB::table('quickpay_activity')->where('id', $id)->update($data);
-		return $this->showmessage('编辑闪惠规则成功', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('pjaxurl' => RC_Uri::url('quickpay/admin/edit', array('id' => $id))));
+		return $this->showmessage('编辑闪惠规则成功', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('pjaxurl' => RC_Uri::url('quickpay/admin/edit', array('id' => $id ,'store_id' => $store_id))));
 	}
 	
 	
@@ -295,7 +295,7 @@ class admin extends ecjia_admin {
 		$data['end_time']    = RC_Time::local_date('Y-m-d', $data ['end_time']);
 		
 		//闪惠活动参数处理
-		if(strpos($data['activity_value'],',') !== false){
+		if (strpos($data['activity_value'],',') !== false) {
 			$data['activity_value']  = explode(",",$data['activity_value']);
 		}
 
@@ -305,7 +305,7 @@ class admin extends ecjia_admin {
 		$data['limit_time_exclude'] = explode(",", $data['limit_time_exclude']);
 		
 		//红包处理
-		if($data['use_bonus'] != 'close' && $data['use_bonus'] != 'nolimit') {
+		if ($data['use_bonus'] != 'close' && $data['use_bonus'] != 'nolimit') {
 			$data['use_bonus'] = explode(',', $data['use_bonus']);
 			$use_bonus = RC_DB::table('bonus_type')
 			->whereIn('type_id', $data['use_bonus'])
