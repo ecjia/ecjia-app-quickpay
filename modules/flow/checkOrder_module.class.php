@@ -177,7 +177,9 @@ class checkOrder_module extends api_front implements api_interface {
 		
 		//支付方式列表
 		$payment_list = RC_Api::api('payment', 'available_payments');
-	
+		if (is_ecjia_error($payment_list)) {
+			return $payment_list;
+		}
 		/*返回数据*/
 		$data = array(
 				'activity_id' 		=> $quickpay_activity_info['id'],

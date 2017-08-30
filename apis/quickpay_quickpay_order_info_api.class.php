@@ -47,52 +47,38 @@
 defined('IN_ECJIA') or exit('No permission resources.');
 
 /**
- * 某一商家闪惠活动列表
- * @author zrl
+ * 闪惠订单详情
+ * @author will.chen
  */
-class list_module extends api_front implements api_interface {
-    public function handleRequest(\Royalcms\Component\HttpKernel\Request $request) {
-    
-		$store_id	 = $this->requestData('store_id', 0);
-		if ($store_id <= 0) {
-			return new ecjia_error('invalid_parameter', RC_Lang::get('system::system.invalid_parameter'));
+class quickpay_quickpay_order_info_api extends Component_Event_Api {
+	
+    /**
+     * @param  array $options	条件参数
+     * @return array
+     */
+	public function call(&$options) {
+		if (!is_array($options)
+		|| !isset($options['order_id'])) {
+			return new ecjia_error('invalid_parameter', '调取api文件,quickpay_order_info,参数错误');
 		}
-		/* 获取数量 */
-		$size = $this->requestData('pagination.count', 15);
-		$page = $this->requestData('pagination.page', 1);
+		return $this->order_info($options);
+	}
+	
+	/**
+	 * 取得闪惠订单信息
+	 * @param   array $options	条件参数
+	 * @return  array   闪惠订单信息
+	 */
+	
+	private function order_info($options) {
+		$order_id = intval($options['order_id']);
 		
-		$options = array(
-				'size'			=> $size,
-				'page'			=> $page,
-				'store_id'		=> $store_id,
-		);
+		$db = RC_DB::table('quickpay_orders');
 		
-		$quickpay_activity_data = RC_Api::api('quickpay', 'quickpay_activity_list', $options);
-		if (is_ecjia_error($quickpay_activity_data)) {
-			return $quickpay_activity_data;
-		}
-		$arr = array();
-		if(!empty($quickpay_activity_data['list'])) {
-			foreach ($quickpay_activity_data['list'] as $rows) {
-				$arr[] = array(
-						'store_id' 				=> intval($rows['store_id']),
-						'activity_id' 			=> intval($rows['id']),
-						'title'					=> $rows['title'],
-						'activity_type' 		=> $rows['activity_type'],
-						'label_activity_type' 	=> $rows['label_activity_type'],
-						'limit_time_type'		=> $rows['limit_time_type'],
-						'limit_time_weekly'		=> $rows['limit_time_weekly'],
-						'limit_time_daily'		=> $rows['limit_time_daily'],
-						'limit_time_exclude'	=> $rows['limit_time_exclude'],
-						'start_time'			=> $rows['start_time'],
-						'end_time'				=> $rows['end_time'],
-						'formated_start_time'	=> RC_Time::local_date(ecjia::config('date_format'), $rows['start_time']),
-						'formated_end_time'		=> RC_Time::local_date(ecjia::config('date_format'), $rows['end_time']),
-						'total_order_count'		=> $rows['total_order_count']
-				);
-			}
-		}
-		return array('data' => $arr, 'pager' => $quickpay_activity_data['page']);
+		$db->where('order_id', $order_id);
+		$info = $db->first();
+		return $info;
 	}
 }
+
 // end

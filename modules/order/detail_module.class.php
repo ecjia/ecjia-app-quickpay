@@ -47,52 +47,68 @@
 defined('IN_ECJIA') or exit('No permission resources.');
 
 /**
- * 某一商家闪惠活动列表
+ * 闪惠订单详情
  * @author zrl
  */
-class list_module extends api_front implements api_interface {
+class detail_module extends api_front implements api_interface {
     public function handleRequest(\Royalcms\Component\HttpKernel\Request $request) {
-    
-		$store_id	 = $this->requestData('store_id', 0);
-		if ($store_id <= 0) {
-			return new ecjia_error('invalid_parameter', RC_Lang::get('system::system.invalid_parameter'));
+    	
+    	$user_id = $_SESSION['user_id'];
+    	if ($user_id < 1 ) {
+    	    return new ecjia_error(100, 'Invalid session');
+    	}
+		$order_id = $this->requestData('order_id', 0);
+		if (empty($order_id)) {
+			return new ecjia_error('invalid_parameter', RC_Lang::get('orders::order.invalid_parameter'));
 		}
-		/* 获取数量 */
-		$size = $this->requestData('pagination.count', 15);
-		$page = $this->requestData('pagination.page', 1);
 		
-		$options = array(
-				'size'			=> $size,
-				'page'			=> $page,
-				'store_id'		=> $store_id,
-		);
+		$options = array('order_id' => $order_id, 'user_id' => $user_id);
 		
-		$quickpay_activity_data = RC_Api::api('quickpay', 'quickpay_activity_list', $options);
-		if (is_ecjia_error($quickpay_activity_data)) {
-			return $quickpay_activity_data;
+		/* 订单详情 */
+		$order = RC_Api::api('quickpay', 'quickpay_order_info', $options);
+		
+		if(is_ecjia_error($order)) {
+			return $order;
 		}
+		if (empty($order)) {
+			return new ecjia_error('no_exsist', '订单信息不存在');
+		}
+		// 检查订单是否属于该用户
+		if ($user_id > 0 && $user_id != $order['user_id']) {
+			return new ecjia_error('orders_error', '未找到相应订单！');
+		}
+		
+		/*优惠活动信息*/
+		$quickpay_activity_info = RC_DB::table('quickpay_activity')->where('id', $order['activity_id'])->first();
+		$order['title'] 				= $quickpay_activity_info['title'];
+		$order['formated_goods_amount'] = price_format($order['goods_amount']);
+		$order['total_discount'] 		= $order['discount'] + $order['integral_money'] + $order['bonus'];
+		$order['formated_total_discount'] = price_format($order['total_discount']);
+		$order['formated_order_amount'] = price_format($order['order_amount']);
+		$order['formated_add_time']		= RC_Time::local_date(ecjia::config('time_format'), $order['add_time']);
+		//$order['order_status'] = '';
+		//$order['label_order_status'] = '';
+		
 		$arr = array();
-		if(!empty($quickpay_activity_data['list'])) {
-			foreach ($quickpay_activity_data['list'] as $rows) {
-				$arr[] = array(
-						'store_id' 				=> intval($rows['store_id']),
-						'activity_id' 			=> intval($rows['id']),
-						'title'					=> $rows['title'],
-						'activity_type' 		=> $rows['activity_type'],
-						'label_activity_type' 	=> $rows['label_activity_type'],
-						'limit_time_type'		=> $rows['limit_time_type'],
-						'limit_time_weekly'		=> $rows['limit_time_weekly'],
-						'limit_time_daily'		=> $rows['limit_time_daily'],
-						'limit_time_exclude'	=> $rows['limit_time_exclude'],
-						'start_time'			=> $rows['start_time'],
-						'end_time'				=> $rows['end_time'],
-						'formated_start_time'	=> RC_Time::local_date(ecjia::config('date_format'), $rows['start_time']),
-						'formated_end_time'		=> RC_Time::local_date(ecjia::config('date_format'), $rows['end_time']),
-						'total_order_count'		=> $rows['total_order_count']
-				);
-			}
-		}
-		return array('data' => $arr, 'pager' => $quickpay_activity_data['page']);
+		$arr = array(
+				'order_id' 					=> intval($order['order_id']),
+				'order_sn' 					=> trim($order['order_sn']),
+				'order_status'				=> $order['order_status'],
+				'label_order_status'		=> $order['label_order_status'],
+				'activity_id'				=> intval($order['activity_id']),
+				'title'						=> $quickpay_activity_info['title'],
+				'goods_amount'				=> $order['goods_amount'],
+				'formated_goods_amount' 	=> price_format($order['goods_amount'], false),
+				'total_discount'			=> $order['total_discount'],
+				'formated_total_discount'	=> price_format($order['total_discount'], false),
+				'order_amount'				=> $order['order_amount'],
+				'formated_order_amount'		=> price_format($order['order_amount'], false),
+				'formated_add_time'			=> $order['formated_add_time'],
+				'pay_code'					=> $order['pay_code'],
+				'pay_name'					=> $order['pay_name']
+		);
+		return  $arr;
 	}
 }
+
 // end
