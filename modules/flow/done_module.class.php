@@ -141,17 +141,15 @@ class done_module extends api_front implements api_interface {
 			}
 				
 			/*每天限制时间段*/
-			// 			if (!empty($quickpay_activity_info['limit_time_daily'])) {
-			// 				$limit_time_daily = unserialize($quickpay_activity_info['limit_time_daily']);
-			// 				$time = RC_Time::local_date('H:i', $time);
-			// 				foreach ($limit_time_daily as $val) {
-			// 					if (($val['start'] < $time) && ($val['end'] > $time)) {
-		
-			// 					} else {
-			// 						return new ecjia_error('limit_time_daily_error', '此活动当前时间段不可用');
-			// 					}
-			// 				}
-			// 			}
+			if (!empty($quickpay_activity_info['limit_time_daily'])) {
+				$limit_time_daily = unserialize($quickpay_activity_info['limit_time_daily']);
+				foreach ($limit_time_daily as $val) {
+					$arr[] = quickpay_activity::is_in_timelimit(array('start' => $val['start'], 'end' => $val['end']));
+				}
+				if (!in_array(0, $arr)) {
+					return new ecjia_error('limit_time_daily_error', '此活动当前时间段不可用');
+				}
+			}
 			/*活动限制日期*/
 			if (!empty($quickpay_activity_info['limit_time_exclude'])) {
 				$limit_time_exclude = explode(',', $quickpay_activity_info['limit_time_exclude']);

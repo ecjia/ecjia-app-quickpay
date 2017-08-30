@@ -225,6 +225,27 @@ class quickpay_activity {
 		mt_srand((double) microtime() * 1000000);
 		return date('Ymd') . str_pad(mt_rand(1, 99999), 5, '0', STR_PAD_LEFT);
 	}
+	
+	
+	/**
+	 * 当前时间是否在活动限制时间段内
+	 */
+	public static function is_in_timelimit($options) {
+		$curr_time = RC_Time::gmtime();
+		$time = RC_Time::local_date('H:i', $curr_time);
+		
+		$timeBegin1 = RC_Time::local_strtotime($options['start']);
+		$timeEnd1 = RC_Time::local_strtotime($options['end']);
+		
+		$time = RC_Time::local_strtotime($time);
+		
+		if($curr_time >= $timeBegin1 && $curr_time <= $timeEnd1)
+		{
+			return 0;
+		}
+		
+		return -1;
+	}
 }	
 
 
