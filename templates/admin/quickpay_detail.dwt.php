@@ -193,7 +193,7 @@ $('.info-toggle-button').toggleButtons({
 						                <input class="nouniform"  type="checkbox" {if $data.use_bonus neq 'close'}checked="checked"{/if} disabled="disabled" />
 						            </div>	
 				  					<div class="edit-page">
-										<select name="act_range" id="act_range_id" class="w300" disabled="disabled">
+										<select name="use_bonus_select" id="use_bonus_select" class="w300" disabled="disabled">
 										 	<option value="nolimit" {if $data.use_bonus eq 'nolimit'}selected{/if}>全部红包</option>
 											<option value="bonus_id" {if $act_range_ext}selected{/if}>指定红包</option>
 								        </select>
@@ -233,12 +233,12 @@ $('.info-toggle-button').toggleButtons({
 								<div class="control-group-small">
 							    	<span class="f_l w180 t_l l_h30">是否允许同时使用积分抵现：</span>
 									<div class="info-toggle-button" style="margin-left:32px;">
-						                <input class="nouniform" type="checkbox" {if $data.use_integral neq 'close'}checked="checked"{/if}   disabled="disabled" />
+						                <input class="nouniform" type="checkbox" {if $data.use_integral neq 'close'}checked="checked"{/if} disabled="disabled" />
 						            </div> 	
 				  					<div class="edit-page">
-										<select name="act_range" id="act_range_id" class="w300" disabled="disabled">
-										 	<option value="nolimit" {if $data.use_bonus eq 'nolimit'}selected{/if}>全部红包</option>
-											<option value="bonus_id" {if $act_range_ext}selected{/if}>指定红包</option>
+										<select name="use_integral_select" id="use_integral_select" class="w300" disabled="disabled">
+											<option value="nolimit" {if $data.use_integral eq 'close' || $data.use_integral eq 'nolimit'}selected{/if}>不限制积分</option>
+										 	<option value="integral"{if $data.use_integral neq 'close' && $data.use_integral neq 'nolimit'}selected{/if}>限制积分</option>
 								        </select>
 									</div>
 									<div class="m_t10">
