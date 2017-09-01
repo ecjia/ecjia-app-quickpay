@@ -77,6 +77,7 @@ class quickpay_quickpay_order_info_api extends Component_Event_Api {
 		
 		$db->where('order_id', $order_id);
 		$info = $db->first();
+		$info['formated_add_time']		= RC_Time::local_date(ecjia::config('time_format'), $info['add_time']);
 		return $info;
 	}
 }
