@@ -24,6 +24,26 @@
                 }
                 ecjia.pjax(url);
             });
+            
+            
+            //列表快速审核触发
+           $("a[data-toggle='modal']").on('click', function (e) {
+                var $this = $(this);
+                var order_id = $this.attr('order-id');
+                $("#note_btn").on('click', function (e) {
+                    e.preventDefault();
+                    var url = $("form[name='actionForm']").attr('action');
+                    var action_note = $("textarea[name='action_note']").val();;
+                    var option = {
+                    	'action_note' : action_note,
+                    	'order_id' : order_id
+                    };
+                    $.post(url, option, function (data) {
+                         ecjia.merchant.showmessage(data);
+                         location.href = data.url;
+                    }, 'json');
+                });
+			})
         }
     };
     

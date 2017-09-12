@@ -147,7 +147,7 @@ class mh_order extends ecjia_merchant {
 		
 		$action_note = trim($_POST['action_note']);
 		$order_id    = intval($_POST['order_id']);
-		$type		 = trim($_GET['type']);
+		$type		 = trim($_POST['type']);
 		if (empty($action_note)) {
 			return $this->showmessage('操作备注不能为空', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
 		}
@@ -164,7 +164,7 @@ class mh_order extends ecjia_merchant {
 		if ($type) {
 			return $this->showmessage('核实成功', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('pjaxurl' => RC_Uri::url('quickpay/mh_order/order_info', array('order_id' => $order_id))));
 		} else {
-			return $this->showmessage('核实成功', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('pjaxurl' => RC_Uri::url('quickpay/mh_order/init')));
+			return $this->showmessage('核实成功', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('url' => RC_Uri::url('quickpay/mh_order/init')));
 		}
 		
 	}

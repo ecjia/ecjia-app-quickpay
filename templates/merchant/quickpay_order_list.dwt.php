@@ -73,13 +73,13 @@ ecjia.merchant.order_list.init();
 		                    <form class="form-horizontal" method="post" name="actionForm" id="actionForm" action='{url path="quickpay/mh_order/order_action"}'>
 		                       <div class="form-group">
 		                           <div class="col-lg-12">
-		                              <textarea id="action_note" class="form-control" name="action_note"></textarea>
+		                              <textarea id="action_note" class="form-control" id="action_note" name="action_note"></textarea>
 		                           </div>
 		                       </div>
 		                      
 		                       <div class="form-group">
 		                          <div class="col-lg-10">
-		                               <button type="submit" class="btn btn-primary">确认核实</button>
+		                               <button type="submit" id="note_btn" class="btn btn-primary">确认核实</button>
 		                          </div>
 		                       </div>
 		                    </form>
@@ -119,7 +119,7 @@ ecjia.merchant.order_list.init();
     						<td class="hide-edit-area">
     							{$order.order_sn}
     							<div class="edit-list">
-    								<a href="#actionmodal" data-toggle="modal">核实</a>&nbsp;|&nbsp;
+    								<a href="#actionmodal" data-toggle="modal" order-id="{$order.order_id}" >核实</a>&nbsp;|&nbsp;
     								<a target="_blank" href='{url path="quickpay/mh_order/order_info" args="order_id={$order.order_id}"}' title="查看详情">{t}查看详情{/t}</a>
     							</div>
     						</td>
