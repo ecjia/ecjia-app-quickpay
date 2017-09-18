@@ -65,7 +65,7 @@ class checkOrder_module extends api_front implements api_interface {
 		$goods_amount 		= $this->requestData('goods_amount', '0.00');
 		$exclude_amount  	= $this->requestData('exclude_amount', '0.00');
 		
-		if (empty($store_id) || empty($activity_id) || empty($goods_amount)) {
+		if (empty($store_id) || empty($activity_id)) {
 			return new ecjia_error('invalid_parameter', RC_Lang::get('system::system.invalid_parameter'));
 		}
 		
