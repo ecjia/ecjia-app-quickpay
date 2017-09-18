@@ -108,7 +108,7 @@ ecjia.admin.quickpay_info.init();
 				
 				 <div id="limit_time_type_customize" {if $data.limit_time_type neq 'customize'}style="display:none"{/if}>
                  	<div class="control-group formSep">
-						<label class="control-label">每天限天：</label>
+						<label class="control-label">每周限天：</label>
 						<div class="controls" style="width:330px;">
 							 <!-- {foreach from=$week_list key=key item=val} -->
 								<input type="checkbox" name="limit_time_weekly[]" value="{$val}"  id="{$val}" {if in_array($val, $data.limit_time_weekly)}checked="true"{/if} />{$key}
