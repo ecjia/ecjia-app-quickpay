@@ -79,6 +79,7 @@ class admin_config extends ecjia_admin {
 	    
 		$this->assign('form_action', RC_Uri::url('quickpay/admin_config/update'));
 		
+		$this->assign('current_code', 'quickpay');
 		$this->display('quickpay_config.dwt');
 	}
 		
