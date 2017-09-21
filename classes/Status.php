@@ -57,14 +57,14 @@ class Status
     
     const CONFIRMED   = 0x001;//已确认
     
-    const UNPAYED     = 0x000;//未支付
+    const UNPAYED     = 0x010;//未支付
     
-    const PAYED       = 0x010;//已支付
+    const PAYED       = 0x020;//已支付
     
-    const UNCHECKED   = 0x000;//未核实
+    const UNCHECKED   = 0x100;//未核实
     
-    const CHECKED     = 0x100;//已核实（成功）
+    const CHECKED     = 0x200;//已核实（成功）
     
-    const INVALID     = 0x200;//无效（失败）
+    const INVALID     = 0x300;//无效（失败）
     
 }
