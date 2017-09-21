@@ -67,7 +67,7 @@ class pay_module extends api_front implements api_interface {
 		}
 		
 		/* 订单详情 */
-		$order = RC_Api::api('orders', 'quickpay_order_info', array('order_id' => $order_id));
+		$order = RC_Api::api('quickpay', 'quickpay_order_info', array('order_id' => $order_id));
 		
 		if (is_ecjia_error($order)) {
 			return $order;
