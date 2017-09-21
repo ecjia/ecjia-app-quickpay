@@ -278,7 +278,7 @@ class done_module extends api_front implements api_interface {
     	}
     	
     	/* 插入支付日志 */
-    	$order['log_id'] = $payment_method->insert_pay_log($new_order_id, $order['order_amount'], PAY_ORDER);
+    	//$order['log_id'] = $payment_method->insert_pay_log($new_order_id, $order['order_amount'], PAY_ORDER);
     	
     	$payment_info = $payment_method->payment_info_by_id($pay_id);
     	

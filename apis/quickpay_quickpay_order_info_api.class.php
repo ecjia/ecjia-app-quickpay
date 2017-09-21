@@ -48,7 +48,7 @@ defined('IN_ECJIA') or exit('No permission resources.');
 
 /**
  * 闪惠订单详情
- * @author will.chen
+ * @author 
  */
 class quickpay_quickpay_order_info_api extends Component_Event_Api {
 	

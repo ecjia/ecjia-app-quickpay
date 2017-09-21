@@ -246,6 +246,83 @@ class quickpay_activity {
 		
 		return -1;
 	}
+	
+	
+	/**
+	 * 记录闪惠订单操作记录
+	 *
+	 */
+	public static function quickpay_order_action($options) {
+		$order_id 			= empty($options['order_id']) ? 0 : $options['order_id'];
+		$action_user_id 	= $options['action_user_id'];
+		$username 			= $options['username'];
+		$action_user_type 	= $options['action_user_type'];
+		$order_status 		= $options['order_status'];
+		$action_note		= $options['action_note'];
+		
+		if (empty($username)) {
+			$username = empty($_SESSION['admin_name']) ? $_SESSION['staff_name'] : $_SESSION['admin_name'];
+			$username = empty($username) ? '' : $username;
+		}
+		
+		$data = array(
+				'order_id' 			=> $order_id,
+				'action_user_id' 	=> $action_user_id,
+				'action_user_name' 	=> $username,
+				'action_user_type' 	=> $action_user_type,
+				'order_status' 		=> $order_status,
+				'action_note' 		=> $action_note,
+				'add_time' 			=> RC_Time::gmtime()
+		);
+		RC_DB::table('quickpay_order_action')->insert($data);
+	}
+	
+	/**
+	 * 获取订单状态
+	 */
+	public static function get_label_order_status($order_status){
+		$label_order_status = '';
+		$status_list = array(
+				'未确认'	=> Ecjia\App\Quickpay\Status::UNCONFIRMED,
+				'已确认'	=> Ecjia\App\Quickpay\Status::CONFIRMED,
+				'未支付'	=> Ecjia\App\Quickpay\Status::UNPAYED,
+				'已支付'  => Ecjia\App\Quickpay\Status::PAYED,
+				'未核实'  => Ecjia\App\Quickpay\Status::UNCHECKED,
+				'已核实'  => Ecjia\App\Quickpay\Status::CHECKED,
+				'无效'   => Ecjia\App\Quickpay\Status::INVALID,
+		);
+		
+		foreach ($status_list as $k => $v) {
+			if ($order_status == $v) {
+				$label_order_status = $k;
+			}
+		}
+		return $label_order_status;
+	}
+	
+	/**
+	 * 获取订单状态
+	 */
+	public static function get_order_status_str($order_status){
+		$order_status_str = '';
+		if ($order_status == Ecjia\App\Quickpay\Status::UNCONFIRMED) {
+			$order_status_str = 'UNCONFIRMED';
+		} elseif ($order_status == Ecjia\App\Quickpay\Status::CONFIRMED) {
+			$order_status_str = 'CONFIRMED';
+		} elseif ($order_status == Ecjia\App\Quickpay\Status::UNPAYED) {
+			$order_status_str = 'UNPAYED';
+		} elseif ($order_status == Ecjia\App\Quickpay\Status::PAYED) {
+			$order_status_str = 'PAYED';
+		} elseif ($order_status == Ecjia\App\Quickpay\Status::UNCHECKED) {
+			$order_status_str = 'UNCHECKED';
+		} elseif ($order_status == Ecjia\App\Quickpay\Status::CHECKED) {
+			$order_status_str = 'CHECKED';
+		} elseif ($order_status == Ecjia\App\Quickpay\Status::INVALID) {
+			$order_status_str = 'INVALID';
+		}
+		
+		return $order_status_str;
+	}
 }	
 
 

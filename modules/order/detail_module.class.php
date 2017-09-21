@@ -57,6 +57,8 @@ class detail_module extends api_front implements api_interface {
     	if ($user_id < 1 ) {
     	    return new ecjia_error(100, 'Invalid session');
     	}
+    	
+    	RC_Loader::load_app_class('quickpay_activity', 'quickpay', false);
 		$order_id = $this->requestData('order_id', 0);
 		if (empty($order_id)) {
 			return new ecjia_error('invalid_parameter', RC_Lang::get('orders::order.invalid_parameter'));
@@ -85,14 +87,18 @@ class detail_module extends api_front implements api_interface {
 		$order['total_discount'] 		= $order['discount'] + $order['integral_money'] + $order['bonus'];
 		$order['formated_total_discount'] = price_format($order['total_discount']);
 		$order['formated_order_amount'] = price_format($order['order_amount']);
-		//$order['order_status'] = '';
-		//$order['label_order_status'] = '';
+		
+		/*订单状态处理*/
+		$label_order_status = quickpay_activity::get_label_order_status($order['order_status']);
+		$order['order_status_str'] = quickpay_activity::get_order_status_str($order['order_status']);
+		$order['label_order_status'] = $label_order_status;
 		
 		$arr = array();
 		$arr = array(
 				'order_id' 					=> intval($order['order_id']),
 				'order_sn' 					=> trim($order['order_sn']),
 				'order_status'				=> $order['order_status'],
+				'order_status_str'			=> $order['order_status_str'],
 				'label_order_status'		=> $order['label_order_status'],
 				'activity_id'				=> intval($order['activity_id']),
 				'title'						=> $quickpay_activity_info['title'],
