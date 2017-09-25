@@ -291,22 +291,6 @@ class admin_order extends ecjia_admin {
 		return $type_list;
 	}
 	
-	/**
-	 * 获取订单状态
-	 */
-	private function get_status_list(){
-		$status_list = array(
-// 				'未确认'	=> Ecjia\App\Quickpay\Status::UNCONFIRMED,
-// 				'已确认'	=> Ecjia\App\Quickpay\Status::CONFIRMED,
-// 				'未支付'	=> Ecjia\App\Quickpay\Status::UNPAYED,
-// 				'已支付' => Ecjia\App\Quickpay\Status::PAYED,
-				'未核实' => Ecjia\App\Quickpay\Status::UNCHECKED,
-				'已核实' => Ecjia\App\Quickpay\Status::CHECKED,
-				'无效' => Ecjia\App\Quickpay\Status::INVALID,
-		);
-		return $status_list;
-	}
-
 }
 
 //end
