@@ -70,7 +70,7 @@ ecjia.merchant.order_list.init();
 	                    <div class="modal-body">
 	                     <div class="success-msg"></div>
 	                     <div class="error-msg"></div>
-		                    <form class="form-horizontal" method="post" name="actionForm" id="actionForm" action='{url path="quickpay/mh_order/order_action"}'>
+		                    <form class="form-horizontal" method="post" name="actionForm" id="actionForm" action='{url path="quickpay/mh_order/order_action_pass"}'>
 		                       <div class="form-group">
 		                           <div class="col-lg-12">
 		                              <textarea id="action_note" class="form-control" id="action_note" name="action_note"></textarea>

@@ -49,20 +49,21 @@
     
     app.order_info = {
 	    init: function () {
-	        var $form = $("form[name='theForm']");
-	        var option = {
-	            submitHandler: function () {
-	                $form.ajaxSubmit({
-	                    dataType: "json",
-	                    success: function (data) {
-	                        ecjia.merchant.showmessage(data);
-	                    }
-	                });
-	            }
-	        }
-	        var options = $.extend(ecjia.merchant.defaultOptions.validate, option);
-	        $form.validate(options);
-	    
+	    	 $(".change_status").on('click', function (e) {
+	             e.preventDefault();
+	             var url = $(this).attr('data-href');
+	             var action_note = $("textarea[name='action_note']").val();
+	             var order_id = $("input[name='order_id']").val();
+	             var type_info = $("input[name='type_info']").val();
+	             var option = {
+	             	'action_note' : action_note,
+	             	'order_id'    : order_id,
+	             	'type_info'	  : type_info
+	             };
+	             $.post(url, option, function (data) {
+	                  ecjia.merchant.showmessage(data);
+	             }, 'json');
+	         });
 	    }
 	};
     
