@@ -110,10 +110,13 @@ class admin_order extends ecjia_admin {
 
 		$this->assign('action_link', array('text' => '闪惠订单列表', 'href' => RC_Uri::url('quickpay/admin_order/init')));
 		
+		//订单详细信息
 		$order_id = intval($_GET['order_id']);
 		$order_info = RC_DB::table('quickpay_orders')->where('order_id', $order_id)->first();
 		$order_info['pay_time'] = RC_Time::local_date(ecjia::config('time_format'), $order_info['pay_time']);
 		$order_info['add_time'] = RC_Time::local_date(ecjia::config('time_format'), $order_info['add_time']);
+		$order_info['verification_time'] = RC_Time::local_date(ecjia::config('time_format'), $order_info['verification_time']);
+		
 		if ($order_info['activity_type'] == 'normal') {
 			$order_info['activity_name'] = '无优惠';
 		} elseif ($order_info['activity_type'] == 'discount') { 
@@ -125,49 +128,25 @@ class admin_order extends ecjia_admin {
 		}
 		$this->assign('order_info', $order_info);
 		
+		//订单状态
+		$status_list = $this->get_status_list();
+		$order_status = array_search($order_info['order_status'], $status_list);
+		$this->assign('order_status', $order_status);
+		
+		//操作记录
 		$act_list = array();
 		$data = RC_DB::table('quickpay_order_action')->where('order_id', $order_id)->orderby('order_id', 'asc')->get();
 		foreach ($data as $key => $row) {
 			$row['add_time']	= RC_Time::local_date(ecjia::config('time_format'), $row['add_time']);
+			$row['order_status_name'] = array_search($row['order_status'], $status_list);
 			$act_list[]			= $row;
 		}
 		$this->assign('action_list', $act_list);
 		
-		$this->assign('form_action', RC_Uri::url('quickpay/admin_order/order_action', array('type' => 'order_info')));
 		
 		$this->display('quickpay_order_info.dwt');
 	}
 	
-	/**
-	 * 审核处理
-	 */
-	public function order_action() {
-		$this->admin_priv('quickpay_order_update');
-		
-		$action_note = trim($_POST['action_note']);
-		$order_id    = intval($_POST['order_id']);
-		$type		 = trim($_GET['type']);
-		if (empty($action_note)) {
-			return $this->showmessage('操作备注不能为空', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
-		}
-		$data = array(
-			'order_id'			=> $order_id,
-			'action_user_id'	=> $_SESSION['staff_id'],
-			'action_user_name'	=> $_SESSION['staff_name'],
-			'action_user_type'	=> 'merchant',
-			'order_status'		=> 0,
-			'action_note'		=> $action_note,
-			'add_time'			=> RC_Time::gmtime(),
-		);
-		RC_DB::table('quickpay_order_action')->insertGetId($data);
-		if ($type) {
-			return $this->showmessage('核实成功', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('pjaxurl' => RC_Uri::url('quickpay/admin_order/order_info', array('order_id' => $order_id))));
-		} else {
-			return $this->showmessage('核实成功', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('pjaxurl' => RC_Uri::url('quickpay/admin_order/init')));
-		}
-		
-	}
-
 	/**
 	 * 批量操作闪惠订单
 	 */
@@ -291,6 +270,21 @@ class admin_order extends ecjia_admin {
 		return $type_list;
 	}
 	
+	/**
+	 * 获取订单状态
+	 */
+	private function get_status_list(){
+		$status_list = array(
+			'UNCONFIRMED'=> Ecjia\App\Quickpay\Status::UNCONFIRMED,
+			'CONFIRMED'	 => Ecjia\App\Quickpay\Status::CONFIRMED,
+			'UNPAYED'	 => Ecjia\App\Quickpay\Status::UNPAYED,
+			'PAYED' 	 => Ecjia\App\Quickpay\Status::PAYED,
+			'UNCHECKED'  => Ecjia\App\Quickpay\Status::UNCHECKED,
+			'CHECKED' 	 => Ecjia\App\Quickpay\Status::CHECKED,
+			'INVALID' 	 => Ecjia\App\Quickpay\Status::INVALID,
+		);
+		return $status_list;
+	}
 }
 
 //end

@@ -5,6 +5,8 @@
 <!-- {/block} -->
 
 <!-- {block name="main_content"} -->
+
+
 <div>
 	<h3 class="heading">
 		<!-- {if $ur_here}{$ur_here}{/if} -->
@@ -13,6 +15,8 @@
 		<!-- {/if} -->
 	</h3>
 </div>
+
+<!-- #BeginLibraryItem "/library/quickpay_order_step.lbi" --><!-- #EndLibraryItem -->
 
 <div class="row-fluid">
 	<div class="span12">
@@ -31,7 +35,23 @@
 										{$order_info.order_sn}
 									</td>
 									<td><div align="right"><strong>订单状态：</strong></div></td>
-									<td>{$order_info.status}</td>
+									<td>	
+										{if $order_status eq 'UNCONFIRMED'}
+											未确认
+										{elseif $order_status eq 'CONFIRMED'}
+											已确认
+										{elseif $order_status eq 'UNPAYED' }
+											未支付
+										{elseif $order_status eq 'PAYED' }
+											已支付
+										{elseif $order_status eq 'UNCHECKED' }
+											未核实
+										{elseif $order_status eq 'CHECKED' }
+											已核实
+										{else}
+											无效
+										{/if}
+									</td>
 								</tr>
 								<tr>
 									<td><div align="right"><strong>购买人姓名：</strong></div></td>
@@ -109,7 +129,23 @@
 								<tr>
 									<td>{$action.action_user_name}</td>
 									<td>{$action.add_time}</td>
-									<td>{$action.order_status}</td>
+									<td>
+										{if $action.order_status_name eq 'UNCONFIRMED'}
+											未确认
+										{elseif $action.order_status_name eq 'CONFIRMED'}
+											已确认
+										{elseif $action.order_status_name eq 'UNPAYED' }
+											未支付
+										{elseif $action.order_status_name eq 'PAYED' }
+											已支付
+										{elseif $action.order_status_name eq 'UNCHECKED' }
+											未核实
+										{elseif $action.order_status_name eq 'CHECKED' }
+											已核实
+										{else}
+											无效
+										{/if}
+									</td>
 									<td>{$action.action_note}</td>
 								</tr>
 								<!-- {foreachelse} -->

@@ -1,40 +1,103 @@
 <?php defined('IN_ECJIA') or exit('No permission resources.');?> 
 
-<div class="panel panel-body">
-	<div class="quickpay-time-base">
-		<ul>
-			<li class="step-first">
-				<div class="{if $check_status eq '-1'}step-cur{else}step-done{/if}">
-					<div class="step-no">{if $check_status lt '1'}1{/if}</div>
-					<div class="m_t5">提交订单<br>{$appeal.appeal_time}</div>	
-				</div>
-			</li>
-			
-			<li>
-				<div class="{if $check_status eq '1'}step-cur{elseif $check_status gt '1'}step-done{/if}">
-					<div class="step-no">2</div>
-					<div class="m_t5">代付款<br>{$appeal.appeal_time}</div>
-				</div>
-			</li>
+<div class="quickpay-time-base m_b20">
+	{if $order_status eq 'UNCONFIRMED' or $order_status eq 'CONFIRMED' or $order_status eq 'UNPAYED'}
+	<ul>
+		<li class="step-first">
+			<div class="step-cur">
+				<div class="step-no">1</div>
+				<div class="m_t5">提交订单</div>
+				<div class="m_t5 ecjiafc-blue">{$order_info.add_time}</div>
+			</div>
+		</li>
+		<li>
+			<div class="step-cut">
+				<div class="step-no">2</div>
+				<div class="m_t5">待付款</div>
+			</div>
+		</li>
 
-			<li class="step-last">
-				{if $check_status eq '2'}
-					<div class="{if $check_status eq '2'}step-cur{/if}">
-						<div class="step-no">{if $check_status lt '3'}3{/if}</div>
-						<div class="m_t5">申诉成功<br>{$appeal.process_time}</div>
-					</div>
-				{elseif $check_status eq '3' }
-					<div class="{if $check_status eq '3'}step-cur{/if}">
-						<div class="step-failed">{if $check_status lt '4'}3{/if}</div>
-						<div class="m_t5">申诉失败<br>{$appeal.process_time}</div>
-					</div>
-				{else}
-					<div class="{if $check_status eq '2'}step-cur{/if}">
-						<div class="step-no">{if $check_status lt '3'}3{/if}</div>
-						<div class="m_t5">申诉成功<br>{$appeal.process_time}</div>
-					</div>
-				{/if}
-			</li>
-		</ul>
-	</div>
+		<li class="step-last">
+			<div class="step-done">
+				<div class="step-no">3</div>
+				<div class="m_t5">待核实</div>
+			</div>
+		</li>
+	</ul>
+	{elseif $order_status eq 'PAYED' or $order_status eq 'UNCHECKED'}
+	<ul>
+		<li class="step-first">
+			<div class="step-done">
+				<div class="step-no"></div>
+				<div class="m_t5">提交订单</div>
+				<div class="m_t5 ecjiafc-blue">{$order_info.add_time}</div>
+			</div>
+		</li>
+		<li>
+			<div class="step-cur">
+				<div class="step-no">2</div>
+				<div class="m_t5">已付款</div>
+				<div class="m_t5 ecjiafc-blue">{$order_info.pay_time}</div>
+			</div>
+		</li>
+
+		<li class="step-last">
+			<div class="step-done">
+				<div class="step-no">3</div>
+				<div class="m_t5">待核实</div>
+			</div>
+		</li>
+	</ul>
+	{elseif $order_status eq 'CHECKED'}
+	<ul>
+		<li class="step-first">
+			<div class="step-done">
+				<div class="step-no"></div>
+				<div class="m_t5">提交订单</div>
+				<div class="m_t5 ecjiafc-blue">{$order_info.add_time}</div>
+			</div>
+		</li>
+		<li>
+			<div class="step-done">
+				<div class="step-no"></div>
+				<div class="m_t5">已付款</div>
+				<div class="m_t5 ecjiafc-blue">{$order_info.pay_time}</div>
+			</div>
+		</li>
+
+		<li class="step-last">
+			<div class="step-cur">
+				<div class="step-no">3</div>
+				<div class="m_t5">已核实</div>
+				<div class="m_t5 ecjiafc-blue">{$order_info.verification_time}</div>
+			</div>
+		</li>
+	</ul>
+	{else}
+	<ul>
+		<li class="step-first">
+			<div class="step-done">
+				<div class="step-no"></div>
+				<div class="m_t5">提交订单</div>
+				<div class="m_t5 ecjiafc-blue">{$order_info.add_time}</div>
+			</div>
+		</li>
+		<li>
+			<div class="step-done">
+				<div class="step-no"></div>
+				<div class="m_t5">已付款</div>
+				<div class="m_t5 ecjiafc-blue">{$order_info.pay_time}</div>
+			</div>
+		</li>
+
+		<li class="step-last">
+			<div class="step-cur">
+				<div class="step-failed">3</div>
+				<div class="m_t5">核实失败</div>
+				<div class="m_t5 ecjiafc-blue">{$order_info.verification_time}</div>
+			</div>
+		</li>
+	</ul>
+	{/if}
+	
 </div>

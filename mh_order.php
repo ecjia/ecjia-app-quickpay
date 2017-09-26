@@ -86,10 +86,7 @@ class mh_order extends ecjia_merchant {
 	    	    
 	    $type_list = $this->get_quickpay_type();
 	    $this->assign('type_list', $type_list);
-	    
-	    $status_list = $this->get_status_list();
-	    $this->assign('status_list', $status_list);
-	    
+	    	    
 	    $order_list = $this->order_list($_SESSION['store_id']);
 	    $this->assign('order_list', $order_list);
 	    $this->assign('filter', $order_list['filter']);
@@ -115,6 +112,7 @@ class mh_order extends ecjia_merchant {
 		$order_info['pay_time'] = RC_Time::local_date(ecjia::config('time_format'), $order_info['pay_time']);
 		$order_info['add_time'] = RC_Time::local_date(ecjia::config('time_format'), $order_info['add_time']);
 		$order_info['verification_time'] = RC_Time::local_date(ecjia::config('time_format'), $order_info['verification_time']);
+		
 		if ($order_info['activity_type'] == 'normal') {
 			$order_info['activity_name'] = '无优惠';
 		} elseif ($order_info['activity_type'] == 'discount') { 
@@ -360,7 +358,6 @@ class mh_order extends ecjia_merchant {
 		);
 		return $status_list;
 	}
-
 }
 
 //end
