@@ -51,8 +51,8 @@ class quickpay_admin_hooks {
    public static function append_admin_setting_group($menus) {
        $setting = ecjia_admin_setting::singleton();
        
-       $menus[] = ecjia_admin::make_admin_menu('nav-header', '闪惠设置', '', 22)->add_purview(array('push_config_manage'));
-       $menus[] = ecjia_admin::make_admin_menu('quickpay', '规则描述', RC_Uri::url('quickpay/admin_config/init'), 23)->add_purview('quickpay_config_manage');
+       $menus[] = ecjia_admin::make_admin_menu('nav-header', '闪惠', '', 22)->add_purview(array('push_config_manage'));
+       $menus[] = ecjia_admin::make_admin_menu('quickpay', '闪惠设置', RC_Uri::url('quickpay/admin_config/init'), 23)->add_purview('quickpay_config_manage');
        
        return $menus;
    }
