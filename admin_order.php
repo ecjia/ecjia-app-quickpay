@@ -85,10 +85,7 @@ class admin_order extends ecjia_admin {
 	    	    
 	    $type_list = $this->get_quickpay_type();
 	    $this->assign('type_list', $type_list);
-	    
-	    $status_list = $this->get_status_list();
-	    $this->assign('status_list', $status_list);
-	    
+
 	    $order_list = $this->order_list();
 	    $this->assign('order_list', $order_list);
 	    
@@ -126,19 +123,27 @@ class admin_order extends ecjia_admin {
 		} elseif ($order_info['activity_type'] == 'reduced') { 
 			$order_info['activity_name'] = '满多少减多少';
 		}
+		$order_info['status'] = RC_Lang::get('quickpay::order.os.'.$order_info['order_status']) . ',' . RC_Lang::get('quickpay::order.ps.'.$order_info['pay_status']) . ',' . RC_Lang::get('quickpay::order.vs.'.$order_info['verification_status']);
 		$this->assign('order_info', $order_info);
 		
-		//订单状态
-		$status_list = $this->get_status_list();
-		$order_status = array_search($order_info['order_status'], $status_list);
-		$this->assign('order_status', $order_status);
+		//订单流程状态
+		if ($order_info['order_status']){
+			$step = 1;
+		}
+		if ($order_info['pay_status']){
+			$step = 2;
+		}
+		if ($order_info['verification_status']){
+			$step = 3;
+		}
+		$this->assign('step', $step);
 		
 		//操作记录
 		$act_list = array();
 		$data = RC_DB::table('quickpay_order_action')->where('order_id', $order_id)->orderby('order_id', 'asc')->get();
 		foreach ($data as $key => $row) {
 			$row['add_time']	= RC_Time::local_date(ecjia::config('time_format'), $row['add_time']);
-			$row['order_status_name'] = array_search($row['order_status'], $status_list);
+			$row['order_status_name'] = RC_Lang::get('quickpay::order.os.'.$row['order_status']) . ',' . RC_Lang::get('quickpay::order.ps.'.$row['pay_status']) . ',' . RC_Lang::get('quickpay::order.vs.'.$row['verification_status']);
 			$act_list[]			= $row;
 		}
 		$this->assign('action_list', $act_list);
@@ -223,18 +228,18 @@ class admin_order extends ecjia_admin {
 		}
 
 		
-// 		$check_type = trim($_GET['check_type']);
-// 		$order_count = $db_quickpay_order->select(RC_DB::raw('count(*) as count'),
-// 				RC_DB::raw('SUM(IF(check_status != 0, 1, 0)) as check_ok'),
-// 				RC_DB::raw('SUM(IF(check_status = 0, 1, 0)) as check_no'))->first();
+		$check_type = trim($_GET['check_type']);
+		$order_count = $db_quickpay_order->select(RC_DB::raw('count(*) as count'),
+				RC_DB::raw('SUM(IF(verification_status = 1, 1, 0)) as verification'),
+				RC_DB::raw('SUM(IF(verification_status = 0, 1, 0)) as unverification'))->first();
 		
-// 		if ($check_type == 'check_ok') {
-// 			$db_quickpay_order->where('check_status', '>', 0);
-// 		}
+		if ($check_type == 'verification') {
+			$db_quickpay_order->where('verification_status', 1);
+		}
 		
-// 		if ($check_type == 'check_no') {
-// 			$db_quickpay_order->where('check_status', 0);
-// 		}
+		if ($check_type == 'unverification') {
+			$db_quickpay_order->where('verification_status', 0);
+		}
 
 		$count = $db_quickpay_order->count();
 		$page = new ecjia_page($count,10, 5);
@@ -254,8 +259,6 @@ class admin_order extends ecjia_admin {
 
 		return array('list' => $res, 'filter' => $filter, 'page' => $page->show(2), 'desc' => $page->page_desc(), 'count' => $order_count);
 	}
-	
-
 
 	/**
 	 * 获取闪惠类型
@@ -268,22 +271,6 @@ class admin_order extends ecjia_admin {
 			'everyreduced' 	 => '每满多少减多少,最高减多少'
 		);
 		return $type_list;
-	}
-	
-	/**
-	 * 获取订单状态
-	 */
-	private function get_status_list(){
-		$status_list = array(
-			'UNCONFIRMED'=> Ecjia\App\Quickpay\Status::UNCONFIRMED,
-			'CONFIRMED'	 => Ecjia\App\Quickpay\Status::CONFIRMED,
-			'UNPAYED'	 => Ecjia\App\Quickpay\Status::UNPAYED,
-			'PAYED' 	 => Ecjia\App\Quickpay\Status::PAYED,
-			'UNCHECKED'  => Ecjia\App\Quickpay\Status::UNCHECKED,
-			'CHECKED' 	 => Ecjia\App\Quickpay\Status::CHECKED,
-			'INVALID' 	 => Ecjia\App\Quickpay\Status::INVALID,
-		);
-		return $status_list;
 	}
 }
 

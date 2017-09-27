@@ -42,23 +42,7 @@ ecjia.merchant.order_info.init();
 								{$order_info.order_sn}
 							</td>
 							<td><div align="right"><strong>订单状态：</strong></div></td>
-							<td>
-							{if $order_status eq 'UNCONFIRMED'}
-								未确认
-							{elseif $order_status eq 'CONFIRMED'}
-								已确认
-							{elseif $order_status eq 'UNPAYED' }
-								未支付
-							{elseif $order_status eq 'PAYED' }
-								已支付
-							{elseif $order_status eq 'UNCHECKED' }
-								未核实
-							{elseif $order_status eq 'CHECKED' }
-								已核实
-							{else}
-								无效
-							{/if}
-							</td>
+							<td>{$order_info.status}</td>
 						</tr>
 						<tr>
 							<td><div align="right"><strong>购买人姓名：</strong></div></td>
@@ -135,7 +119,7 @@ ecjia.merchant.order_info.init();
 						<tr>
 							<th class="w150"><strong>操作者</strong></th>
 							<th class="w180"><strong>操作时间</strong></th>
-							<th class="w130"><strong>订单状态</strong></th>
+							<th class="w180"><strong>订单状态</strong></th>
 							<th class="ecjiafc-pre t_c"><strong>操作备注</strong></th>
 						</tr>
 					</thead>
@@ -144,23 +128,7 @@ ecjia.merchant.order_info.init();
 						<tr>
 							<td>{$action.action_user_name}</td>
 							<td>{$action.add_time}</td>
-							<td>
-								{if $action.order_status_name eq 'UNCONFIRMED'}
-									未确认
-								{elseif $action.order_status_name eq 'CONFIRMED'}
-									已确认
-								{elseif $action.order_status_name eq 'UNPAYED' }
-									未支付
-								{elseif $action.order_status_name eq 'PAYED' }
-									已支付
-								{elseif $action.order_status_name eq 'UNCHECKED' }
-									未核实
-								{elseif $action.order_status_name eq 'CHECKED' }
-									已核实
-								{else}
-									无效
-								{/if}
-							</td>
+							<td>{$action.order_status_name}</td>
 							<td class="t_c">{$action.action_note|nl2br}</td>
 						</tr>
 						<!-- {foreachelse} -->

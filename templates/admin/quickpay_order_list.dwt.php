@@ -18,21 +18,9 @@
 </div>
 
 <ul class="nav nav-pills">
-	<li class="{if $filter.type eq ''}active{/if}">
-		<a class="data-pjax" href='{url path="orders/admin/init" args="{if $filter.composite_status !== '' && $filter.composite_status != -1}&composite_status={$filter.composite_status}{/if}{if $filter.keywords}&keywords={$filter.keywords}{/if}{if $filter.merchant_keywords}&merchant_keywords={$filter.merchant_keywords}{/if}"}'>全部
-			<span class="badge badge-info">{if $count.count}{$count.count}{else}0{/if}</span> 
-		</a>
-	</li>
-	<li class="">
-		<a class="data-pjax" href='{url path="orders/admin/init" args="{if $filter.composite_status !== '' && $filter.composite_status != -1}&composite_status={$filter.composite_status}{/if}{if $filter.keywords}&keywords={$filter.keywords}{/if}{if $filter.merchant_keywords}&merchant_keywords={$filter.merchant_keywords}{/if}"}'>已核实
-			<span class="badge badge-info">{if $count.count}{$count.count}{else}0{/if}</span> 
-		</a>
-	</li>
-	<li class="{if $filter.type eq 'self'}active{/if}">
-		<a class="data-pjax" href='{url path="orders/admin/init" args="type=self{if $filter.composite_status !== '' && $filter.composite_status != -1}&composite_status={$filter.composite_status}{/if}{if $filter.keywords}&keywords={$filter.keywords}{/if}{if $filter.merchant_keywords}&merchant_keywords={$filter.merchant_keywords}{/if}"}'>待核实
-			<span class="badge badge-info">{if $count.self}{$count.self}{else}0{/if}</span> 
-		</a>
-	</li>
+		<li class="{if $smarty.get.check_type eq ''}active{/if}"><a class="data-pjax" href='{url path="quickpay/admin_order/init" args="{if $filter.keywords}&keywords={$filter.keywords}{/if}"}'>全部 <span class="badge badge-info">{if $order_list.count.count}{$order_list.count.count}{else}0{/if}</span> </a></li>
+        <li class="{if $smarty.get.check_type eq 'verification'}active{/if}"><a class="data-pjax" href='{url path="quickpay/admin_order/init" args="check_type=verification{if $filter.keywords}&keywords={$filter.keywords}{/if}"}'>已核销<span class="badge badge-info">{if $order_list.count.verification}{$order_list.count.verification}{else}0{/if}</span> </a></li>
+        <li class="{if $smarty.get.check_type eq 'unverification'}active{/if}"><a class="data-pjax" href='{url path="quickpay/admin_order/init" args="check_type=unverification{if $filter.keywords}&keywords={$filter.keywords}{/if}"}'>待核销<span class="badge badge-info">{if $order_list.count.unverification}{$order_list.count.unverification}{else}0{/if}</span> </a></li>
 </ul>
 
 <div class="row-fluid batch" >
@@ -73,7 +61,7 @@
 						<th class="w120">商家名称</th>
 						<th>购买者信息</th>
 						<th class="w150">闪惠类型</th>
-						<th class="w120">下单时间</th>
+						<th class="w150">下单时间</th>
 						<th class="w100">消费金额</th>
 						<th class="w100">实付金额</th>
 					</tr>

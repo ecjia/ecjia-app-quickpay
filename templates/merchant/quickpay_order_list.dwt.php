@@ -27,8 +27,8 @@ ecjia.merchant.order_list.init();
 	     	<div class="panel-body panel-body-small">
         		<ul class="nav nav-pills pull-left">
         			<li class="{if $smarty.get.check_type eq ''}active{/if}"><a class="data-pjax" href='{url path="quickpay/mh_order/init" args="{if $filter.keywords}&keywords={$filter.keywords}{/if}"}'>全部 <span class="badge badge-info">{if $order_list.count.count}{$order_list.count.count}{else}0{/if}</span> </a></li>
-        			<li class="{if $smarty.get.check_type eq 'check_ok'}active{/if}"><a class="data-pjax" href='{url path="quickpay/mh_order/init" args="check_type=check_ok{if $filter.keywords}&keywords={$filter.keywords}{/if}"}'>已审核<span class="badge badge-info">{if $order_list.count.check_ok}{$order_list.count.check_ok}{else}0{/if}</span> </a></li>
-        			<li class="{if $smarty.get.check_type eq 'check_no'}active{/if}"><a class="data-pjax" href='{url path="quickpay/mh_order/init" args="check_type=check_no{if $filter.keywords}&keywords={$filter.keywords}{/if}"}'>未审核<span class="badge badge-info">{if $order_list.count.check_no}{$order_list.count.check_no}{else}0{/if}</span> </a></li>
+        			<li class="{if $smarty.get.check_type eq 'verification'}active{/if}"><a class="data-pjax" href='{url path="quickpay/mh_order/init" args="check_type=verification{if $filter.keywords}&keywords={$filter.keywords}{/if}"}'>已核销<span class="badge badge-info">{if $order_list.count.verification}{$order_list.count.verification}{else}0{/if}</span> </a></li>
+        			<li class="{if $smarty.get.check_type eq 'unverification'}active{/if}"><a class="data-pjax" href='{url path="quickpay/mh_order/init" args="check_type=unverification{if $filter.keywords}&keywords={$filter.keywords}{/if}"}'>待核销<span class="badge badge-info">{if $order_list.count.unverification}{$order_list.count.unverification}{else}0{/if}</span> </a></li>
         		</ul>
             </div>
             
