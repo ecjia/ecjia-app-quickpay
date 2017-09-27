@@ -10,6 +10,13 @@
 
 <!-- {block name="home-content"} -->
 
+{if $quickpay_enabled}
+<div class="alert alert-info">
+	<button type="button" class="close" data-dismiss="alert" aria-hidden="true"><i class="fa fa-times" ></i></button>
+	<strong>温馨提示：</strong>您已开启了闪惠活动，目前正在使用中。
+</div>
+{/if}
+
 <div class="row">
 	<div class="col-lg-12">
 		<h2 class="page-header">

@@ -123,7 +123,7 @@ class merchant extends ecjia_merchant {
 		$this->admin_priv('mh_quickpay_update');
 		
 		RC_DB::table('merchants_config')->where('store_id', $_SESSION['store_id'])->where('code', 'quickpay_enabled')->update(array('value' => 0));
-		return $this->showmessage('关闭闪惠成功', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS,array('pjaxurl' => RC_Uri::url('quickpay/merchant/init')));
+		return $this->showmessage('关闭闪惠成功', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('pjaxurl' => RC_Uri::url('quickpay/merchant/init')));
 	}
 	
 	/**
