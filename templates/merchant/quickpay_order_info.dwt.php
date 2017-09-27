@@ -190,13 +190,13 @@ ecjia.merchant.order_info.init();
 						<tr>
 							<td><div align="right"><strong>当前可执行操作：</strong></div></td>
 							<td colspan="3">
-								<a class="change_status" data-href='{url path="quickpay/mh_order/order_action_pass"}'>
-									<button class="btn operatesubmit btn-info" type="button" >确认核实</button>
-								</a>
-								
-								<a class="change_status" data-href='{url path="quickpay/mh_order/order_action_invalid"}'>
-									<button class="btn operatesubmit btn-info" type="button" >无效</button>
-								</a>
+								{if $order_info.pay_status}
+									<a class="change_status" data-href='{url path="quickpay/mh_order/order_action"}'>
+										<button class="btn operatesubmit btn-info" type="button">确认核销</button>
+									</a>
+								{else}
+									<button class="btn operatesubmit btn-info" type="button" disabled="disabled">确认核销</button>
+								{/if}
 								<input type="hidden" value="{$order_info.order_id}" name="order_id">
 								<input type="hidden" value="type_info" name="type_info">
 							</td>

@@ -70,7 +70,7 @@ ecjia.merchant.order_list.init();
 	                    <div class="modal-body">
 	                     <div class="success-msg"></div>
 	                     <div class="error-msg"></div>
-		                    <form class="form-horizontal" method="post" name="actionForm" id="actionForm" action='{url path="quickpay/mh_order/order_action_pass"}'>
+		                    <form class="form-horizontal" method="post" name="actionForm" id="actionForm" action='{url path="quickpay/mh_order/order_action"}'>
 		                       <div class="form-group">
 		                           <div class="col-lg-12">
 		                              <textarea id="action_note" class="form-control" id="action_note" name="action_note"></textarea>
@@ -79,7 +79,7 @@ ecjia.merchant.order_list.init();
 		                      
 		                       <div class="form-group">
 		                          <div class="col-lg-10">
-		                               <button type="submit" id="note_btn" class="btn btn-primary">确认核实</button>
+		                               <button type="submit" id="note_btn" class="btn btn-primary">确认核销</button>
 		                          </div>
 		                       </div>
 		                    </form>
@@ -101,7 +101,7 @@ ecjia.merchant.order_list.init();
 						        </th>
         						<th class="w150">订单号</th>
         						<th>购买者信息</th>
-        						<th class="w150">闪惠类型</th>
+        						<th class="w200">闪惠类型</th>
         						<th class="w200">下单时间</th>
         						<th class="w100">消费金额</th>
         						<th class="w100">实付金额</th>
@@ -119,7 +119,9 @@ ecjia.merchant.order_list.init();
     						<td class="hide-edit-area">
     							{$order.order_sn}
     							<div class="edit-list">
-    								<a href="#actionmodal" data-toggle="modal" order-id="{$order.order_id}" >核实</a>&nbsp;|&nbsp;
+    								{if $order.pay_status}	
+    									<a href="#actionmodal" data-toggle="modal" order-id="{$order.order_id}" >核销</a>&nbsp;|&nbsp;
+    								{/if}
     								<a target="_blank" href='{url path="quickpay/mh_order/order_info" args="order_id={$order.order_id}"}' title="查看详情">{t}查看详情{/t}</a>
     							</div>
     						</td>

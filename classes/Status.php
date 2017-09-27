@@ -48,23 +48,20 @@ namespace Ecjia\App\Quickpay;
 
 /**
  * 闪惠订单状态处理（订单状态、支付状态、审核状态）
- *
  */
 class Status
 {
 	
-    const UNCONFIRMED = 0x000;//未确认
+    const UNCONFIRMED 	 = 0;//未确认
     
-    const CONFIRMED   = 0x001;//已确认
+    const CONFIRMED   	 = 1;//已确认
     
-    const UNPAYED     = 0x010;//未支付
+    const UNPAID     	 = 0;//未支付
     
-    const PAYED       = 0x020;//已支付
+    const PAID       	 = 1;//已支付
     
-    const UNCHECKED   = 0x100;//未核实
+    const UNVERIFICATION = 0;//未核销
     
-    const CHECKED     = 0x200;//已核实（成功）
-    
-    const INVALID     = 0x300;//无效（失败）
+    const VERIFICATION   = 1;//已核销
     
 }
