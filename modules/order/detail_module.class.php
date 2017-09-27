@@ -89,9 +89,9 @@ class detail_module extends api_front implements api_interface {
 		$order['formated_order_amount'] = price_format($order['order_amount']);
 		
 		/*订单状态处理*/
-		$label_order_status = quickpay_activity::get_label_order_status($order['order_status']);
-		$order['order_status_str'] = quickpay_activity::get_order_status_str($order['order_status']);
-		$order['label_order_status'] = $label_order_status;
+		$status = quickpay_activity::get_label_order_status($order['order_status'], $order['pay_status'], $order['verification_status']);
+		$order['order_status_str'] = $status['order_status_str'];
+		$order['label_order_status'] = $status['label_order_status'];
 		
 		$arr = array();
 		$arr = array(

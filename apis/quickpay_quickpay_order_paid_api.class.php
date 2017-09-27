@@ -87,7 +87,8 @@ class quickpay_quickpay_order_paid_api extends Component_Event_Api {
 	    
 	    /* 修改订单状态为已付款 */
 	    $data = array(
-	        'order_status' => Ecjia\App\Quickpay\Status::PAYED,
+	        'order_status' => Ecjia\App\Quickpay\Status::CONFIRMED,
+	    	'pay_status'   => Ecjia\App\Quickpay\Status::PAID,
 	        'pay_time'     => RC_Time::gmtime(),
 	        'order_amount' => $order['order_amount'],
 	    );
@@ -100,7 +101,8 @@ class quickpay_quickpay_order_paid_api extends Component_Event_Api {
 	    		'action_user_id' 	=> $_SESSION['user_id'],
 	    		'action_user_name'	=> RC_Lang::get('orders::order.buyers'),
 	    		'action_user_type'	=> 'user',
-	    		'order_status'		=> Ecjia\App\Quickpay\Status::PAYED,
+	    		'order_status'		=> Ecjia\App\Quickpay\Status::CONFIRMED,
+	    		'pay_status'		=> Ecjia\App\Quickpay\Status::PAID,
 	    		'action_note'		=> ''
 	    		
 	    );

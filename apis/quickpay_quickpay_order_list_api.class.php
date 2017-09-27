@@ -57,9 +57,9 @@ class quickpay_quickpay_order_list_api extends Component_Event_Api {
 			foreach ($list as $key => $val) {
 				$list[$key]['store_name'] = $val['store_id'] > 0 ? RC_DB::table('store_franchisee')->where('store_id', $val['store_id'])->pluck('merchants_name') : '';
 				$list[$key]['store_logo'] = $val['store_id'] > 0 ? RC_DB::table('merchants_config')->where('store_id', $val['store_id'])->where('code', 'shop_logo')->pluck('value') : '';
-				$list[$key]['order_status']	 = $val['order_status'];
-				$list[$key]['order_status_str']	 = quickpay_activity::get_order_status_str($val['order_status']);
-				$list[$key]['label_order_status'] = quickpay_activity::get_label_order_status($val['order_status']);
+				$status = quickpay_activity::get_label_order_status($val['order_status'], $val['pay_status'], $val['verification_status']);
+				$list[$key]['order_status_str'] = $status['order_status_str'];
+				$list[$key]['label_order_status'] = $status['label_order_status'];
 				$total_discount = $val['integral_money'] + $val['bonus'] + $val['discount'];
 				$list[$key]['total_discount'] = $total_discount;
 				$list[$key]['formated_total_discount'] = price_format($total_discount);

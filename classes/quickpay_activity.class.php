@@ -280,48 +280,21 @@ class quickpay_activity {
 	/**
 	 * 获取订单状态
 	 */
-	public static function get_label_order_status($order_status){
-		$label_order_status = '';
-		$status_list = array(
-				'未确认'	=> Ecjia\App\Quickpay\Status::UNCONFIRMED,
-				'已确认'	=> Ecjia\App\Quickpay\Status::CONFIRMED,
-				'未支付'	=> Ecjia\App\Quickpay\Status::UNPAYED,
-				'已支付'  => Ecjia\App\Quickpay\Status::PAYED,
-				'未核实'  => Ecjia\App\Quickpay\Status::UNCHECKED,
-				'已核实'  => Ecjia\App\Quickpay\Status::CHECKED,
-				'无效'   => Ecjia\App\Quickpay\Status::INVALID,
-		);
-		
-		foreach ($status_list as $k => $v) {
-			if ($order_status == $v) {
-				$label_order_status = $k;
-			}
-		}
-		return $label_order_status;
-	}
-	
-	/**
-	 * 获取订单状态
-	 */
-	public static function get_order_status_str($order_status){
+	public static function get_label_order_status($order_status, $pay_status, $verification_status){
 		$order_status_str = '';
-		if ($order_status == Ecjia\App\Quickpay\Status::UNCONFIRMED) {
-			$order_status_str = 'UNCONFIRMED';
-		} elseif ($order_status == Ecjia\App\Quickpay\Status::CONFIRMED) {
-			$order_status_str = 'CONFIRMED';
-		} elseif ($order_status == Ecjia\App\Quickpay\Status::UNPAYED) {
-			$order_status_str = 'UNPAYED';
-		} elseif ($order_status == Ecjia\App\Quickpay\Status::PAYED) {
-			$order_status_str = 'PAYED';
-		} elseif ($order_status == Ecjia\App\Quickpay\Status::UNCHECKED) {
-			$order_status_str = 'UNCHECKED';
-		} elseif ($order_status == Ecjia\App\Quickpay\Status::CHECKED) {
-			$order_status_str = 'CHECKED';
-		} elseif ($order_status == Ecjia\App\Quickpay\Status::INVALID) {
-			$order_status_str = 'INVALID';
-		}
+		$label_order_status = '';
 		
-		return $order_status_str;
+		if (($order_status == Ecjia\App\Quickpay\Status::UNCONFIRMED) && ($pay_status == Ecjia\App\Quickpay\Status::UNPAID) && ($verification_status == Ecjia\App\Quickpay\Status::UNVERIFICATION)) {
+			$order_status_str = 'unpaid';
+			$label_order_status = '未付款';
+		} elseif (($order_status == Ecjia\App\Quickpay\Status::CONFIRMED) && ($pay_status == Ecjia\App\Quickpay\Status::PAID)) {
+			$order_status_str = 'paid';
+			$label_order_status = '已付款';
+		} elseif (($order_status == Ecjia\App\Quickpay\Status::CONFIRMED) && ($pay_status == Ecjia\App\Quickpay\Status::PAID) && ($verification_status == Ecjia\App\Quickpay\Status::VERIFICATION)) {
+			$order_status_str = 'succeed';
+			$label_order_status = '买单成功';
+		}
+		return array('order_status_str' => $order_status_str, 'label_order_status' => $label_order_status);
 	}
 }	
 
