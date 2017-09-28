@@ -114,9 +114,9 @@ class quickpay_quickpay_activity_list_api extends Component_Event_Api {
 		}
 		if (!empty($week)) {
 			if ($limit_time_weekly == array(1,2,4,8,16)) {
-				$str = '周一至周五全天可用';
+				$str = '周一至周五可用';
 			} elseif ($limit_time_weekly == array(1,2,4,8,16,32,64)) {
-				$str = '周一至周日全天可用';
+				$str = '周一至周日可用';
 			} else {
 				$str = implode(',', $week);
 			}
