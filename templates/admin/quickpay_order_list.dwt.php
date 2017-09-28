@@ -27,10 +27,11 @@
 	<form action="{$search_action}{if $filter.type}&type={$filter.type}{/if}" name="searchForm" method="post" >
 		<div class="btn-group f_l m_r5">
 			<a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-				<i class="fontello-icon-cog"></i>批量操作<span class="caret"></span>
+				<i class="fontello-icon-cog"></i>批量操作
+				<span class="caret"></span>
 			</a>
-			<ul class="dropdown-menu operate_note" data-url='{url path="orders/admin/operate_note"}'>
-				<li><a class="batch-del-btn" data-toggle="ecjiabatch" data-name="order_id" data-idClass=".checkbox:checked" data-url="{$form_action}&operation=remove" data-msg="{lang key='orders::order.remove_confirm'}" href="javascript:;"><i class="fontello-icon-trash"></i>{lang key='system::system.remove'}</a></li>
+			<ul class="dropdown-menu">
+				<li><a class="button_remove" data-toggle="ecjiabatch" data-idClass=".checkbox:checked" data-url="{url path='quickpay/admin_order/batch'}" data-msg="您确实要删除选中的订单吗？" data-noSelectMsg="请先选中要删除的订单！" data-name="id" href="javascript:;"><i class="fontello-icon-trash"></i>删除</a></li>
 			</ul>
 		</div>
 		

@@ -158,7 +158,7 @@ class admin_order extends ecjia_admin {
 	public function batch() {
 		$this->admin_priv('quickpay_order_update');
 	
-		$ids  = explode(',', $_POST['order_id']);
+		$ids  = explode(',', $_POST['id']);
 		RC_DB::table('quickpay_orders')->whereIn('order_id', $ids)->delete();
 	
 		return $this->showmessage('批量删除成功', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('pjaxurl' => RC_Uri::url('quickpay/admin_order/init')));
@@ -192,7 +192,6 @@ class admin_order extends ecjia_admin {
 		->leftJoin('store_franchisee as sf', RC_DB::raw('sf.store_id'), '=', RC_DB::raw('qo.store_id'));
 		
 		$filter = $_GET;
-		
 		if ($filter['merchant_keywords']) {
 			$db_quickpay_order->where(RC_DB::raw('sf.merchants_name'), 'like', '%'.mysql_like_quote($filter['merchant_keywords']).'%');
 		}

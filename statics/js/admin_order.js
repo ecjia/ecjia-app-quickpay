@@ -2,22 +2,28 @@
 ;(function (app, $) {
     app.order_list = {
         init: function () {
-        	//筛选功能
-        	$(".screen-btn").on('click', function(e){
+			app.order_list.screen();
+			app.order_list.searchform();
+        },
+        
+        //筛选功能
+		screen : function() {
+			$(".screen-btn").on('click', function(e){
 				e.preventDefault();
 				var activity_type = $("select[name='activity_type']").val();
 				var url = $("form[name='searchForm']").attr('action');
 				if (activity_type != '') {
 	                 url += '&activity_type=' + activity_type;
 	            }
-                ecjia.pjax(url);
+				ecjia.pjax(url);
 			});
-        	
-        
-            //搜索功能
-            $("form[name='searchForm'] .btn").on('click', function (e) {
+		},
+		
+		//搜索功能
+    	searchform : function() {
+			$("form[name='searchForm']").on('submit', function(e){
 				e.preventDefault();
-				var url = $("form[name='searchForm']").attr('action');
+				var url = $(this).attr('action');
 				var keywords = $("input[name='keywords']").val();
 				var merchant_keywords = $("input[name='merchant_keywords']").val();
 				
@@ -27,10 +33,9 @@
 				if (merchant_keywords != '') {
 					url += '&merchant_keywords=' + merchant_keywords;
 				}
-				alert(url);
 				ecjia.pjax(url);
 			});
-        }
+		}
     };
     
     app.order_info = {
@@ -48,7 +53,6 @@
 	        }
 	        var options = $.extend(ecjia.admin.defaultOptions.validate, option);
 	        $form.validate(options);
-	    
 	    }
 	};
     
@@ -65,7 +69,6 @@
 				app.order_search.search();
 			});
 		},
-		
 		search : function() {
 			var $this	= $("form[name='theForm']");
 			var url		= $this.attr('action');
@@ -79,7 +82,6 @@
 			$this.find("select").each(function(i){
 				url += "&" + $(this).attr("name") + "=" + $(this).val();
 			});
-			
 			ecjia.pjax(url);
 		},
 	};
