@@ -184,7 +184,7 @@ class mh_order extends ecjia_merchant {
 		$brokerage_amount = $order_amount * $percent_value / 100;
 		$data_bill = array(
 			'store_id'			=> $_SESSION['store_id'],
-			'order_type'		=> 3,
+			'order_type'		=> 11,
 			'order_id'			=> $order_id,
 			'percent_value'		=> $percent_value,//佣金比例
 			'brokerage_amount'	=> $brokerage_amount,//佣金金额
