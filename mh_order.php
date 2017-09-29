@@ -142,7 +142,8 @@ class mh_order extends ecjia_merchant {
 		$data = RC_DB::table('quickpay_order_action')->where('order_id', $order_id)->orderby('order_id', 'asc')->get();
 		foreach ($data as $key => $row) {
 			$row['add_time']	= RC_Time::local_date(ecjia::config('time_format'), $row['add_time']);
-			$row['order_status_name'] = RC_Lang::get('quickpay::order.os.'.$row['order_status']) . ',' . RC_Lang::get('quickpay::order.ps.'.$row['pay_status']) . ',' . RC_Lang::get('quickpay::order.vs.'.$row['verification_status']);			$act_list[]			= $row;
+			$row['order_status_name'] = RC_Lang::get('quickpay::order.os.'.$row['order_status']) . ',' . RC_Lang::get('quickpay::order.ps.'.$row['pay_status']) . ',' . RC_Lang::get('quickpay::order.vs.'.$row['verification_status']);			
+			$act_list[] = $row;
 		}
 		$this->assign('action_list', $act_list);
 		
