@@ -76,6 +76,7 @@ class admin_config extends ecjia_admin {
 		$this->assign('ur_here', '闪惠设置');
 		
 	    $this->assign('quickpay_rule', ecjia::config('quickpay_rule'));
+	    $this->assign('quickpay_fee', ecjia::config('quickpay_fee'));
 	    
 		$this->assign('form_action', RC_Uri::url('quickpay/admin_config/update'));
 		
@@ -91,6 +92,8 @@ class admin_config extends ecjia_admin {
 		
 		$quickpay_rule = $_POST['quickpay_rule'];
 		ecjia_config::instance()->write_config('quickpay_rule', $quickpay_rule);
+		$quickpay_fee = $_POST['quickpay_fee'];
+		ecjia_config::instance()->write_config('quickpay_fee', $quickpay_fee);
 		
 		return $this->showmessage('闪惠活动规则配置成功', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('pjaxurl' => RC_Uri::url('quickpay/admin_config/init')));
 	}
