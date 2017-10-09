@@ -37,7 +37,7 @@ class quickpay_quickpay_activity_list_api extends Component_Event_Api {
 		$time = RC_Time::gmtime();
 		$db->where('start_time', '<=', $time);
 		$db->where('end_time', '>=', $time);
-		
+		$db->where('enabled', 1);
 		
 		
 		$count = $db->select('id')->count();
