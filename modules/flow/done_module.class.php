@@ -59,6 +59,7 @@ class done_module extends api_front implements api_interface {
          * inv_type       //integral_money
          * order_amount   //实付金额
          * pay_id    	  //支付方式id
+         * surplus		  //余额
          */
     	
     	$this->authSession();
@@ -79,7 +80,7 @@ class done_module extends api_front implements api_interface {
     	$pay_id			= $this->requestData('pay_id', 0);
     	$store_id		= $this->requestData('store_id', 0);
     	
-		if (empty($goods_amount)) {
+		if (empty($goods_amount) || empty($store_id)) {
 			return new ecjia_error( 'invalid_parameter', RC_Lang::get ('system::system.invalid_parameter'));
 		}
     	
