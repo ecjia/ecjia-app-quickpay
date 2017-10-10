@@ -77,8 +77,9 @@ class done_module extends api_front implements api_interface {
     	$bonus_id		= $this->requestData('bonus_id', 0);
     	$integral		= $this->requestData('integral', 0);
     	$pay_id			= $this->requestData('pay_id', 0);
+    	$store_id		= $this->requestData('store_id', 0);
     	
-		if (empty($goods_amount) || empty($activity_id)) {
+		if (empty($goods_amount)) {
 			return new ecjia_error( 'invalid_parameter', RC_Lang::get ('system::system.invalid_parameter'));
 		}
     	
@@ -98,29 +99,119 @@ class done_module extends api_front implements api_interface {
 				'order_status'  	=> Ecjia\App\Quickpay\Status::UNCONFIRMED,
 		);
 
-		/*获取闪惠活动信息*/
-		$quickpay_activity_info = RC_DB::table('quickpay_activity')->where('id', $activity_id)->first();
-		if (empty($quickpay_activity_info)) {
-			return new ecjia_error('activity_not_exists', '活动信息不存在');
+		if (!empty($activity_id) && $activity_id > 0) {
+			/*获取闪惠活动信息*/
+			$quickpay_activity_info = RC_DB::table('quickpay_activity')->where('id', $activity_id)->first();
+			if (empty($quickpay_activity_info)) {
+				return new ecjia_error('activity_not_exists', '活动信息不存在');
+			}
+			
+			if ($quickpay_activity_info['enabled'] == '0') {
+				return new ecjia_error('activity_closed', '此活动已关闭！');
+			}
+			$order['activity_type'] = $quickpay_activity_info['activity_type'];
+			$order['activity_id'] = $quickpay_activity_info['id'];
+			$order['store_id'] = $quickpay_activity_info['store_id'];
+			
+			/*活动时间限制处理*/
+			$time = RC_Time::gmtime();
+			if (($time > $quickpay_activity_info['end_time']) || ($quickpay_activity_info['start_time'] > $time)) {
+				return new ecjia_error('activity_error', '活动还未开始或已结束');
+			}
+			
+			/*红包是否可用*/
+			if ($bonus_id > 0) {
+				$bonus_info = RC_Api::api('bonus', 'bonus_info', array('bonus_id' => $bonus_id));
+				if (is_ecjia_error($bonus_info)) {
+					return $bonus_info;
+				}
+				if (empty($bonus_info)){
+					return new ecjia_error('bonus_error', '红包信息不存在！');
+				}
+				$time = RC_Time::gmtime();
+				if (($time < $bonus_info['use_start_date']) || ($bonus_info['use_end_date'] < $time) || ($bonus_info['store_id'] != 0 && $bonus_info['store_id'] != $quickpay_activity_info['store_id']) || $bonus_info['user_id'] != $user_id || $bonus_info['order_id'] > 0) {
+					$order['bonus_id'] = 0;
+					$order['bonus'] = 0.00;
+				} else{
+					$order['bonus_id'] = $bonus_id;
+					$order['bonus'] = $bonus_info['type_money'];
+				}
+					
+			}
+			
+			if ($integral > 0) {
+				/*会员可用积分数*/
+				$user_integral = RC_DB::table('users')->where('user_id', $_SESSION['user_id'])->pluck('pay_points');
+				if ($integral > $user_integral) {
+					return new ecjia_error('integral_error', '使用积分不可超过会员总积分数！');
+				}
+				$order['integral_money'] = quickpay_activity::integral_of_value($integral);
+			}
+			
+			/*活动可优惠金额获取*/
+			$discount = quickpay_activity::get_quickpay_discount(array('activity_type' => $quickpay_activity_info['activity_type'], 'activity_value' => $quickpay_activity_info['activity_value'], 'goods_amount' => $goods_amount, 'exclude_amount' => $exclude_amount));
+			
+			/*自定义时间限制处理，当前时间不可用时，订单可正常提交,只是优惠金额是0；红包和积分也为0*/
+			if ($quickpay_activity_info['limit_time_type'] == 'customize') {
+				/*每周限制时间*/
+				if (!empty($quickpay_activity_info['limit_time_weekly'])){
+					$w = date('w');
+					$current_week = quickpay_activity::current_week($w);
+					$limit_time_weekly = Ecjia\App\Quickpay\Weekly::weeks($quickpay_activity_info['limit_time_weekly']);
+					$weeks_str = quickpay_activity::get_weeks_str($limit_time_weekly);
+						
+					if (!in_array($current_week, $limit_time_weekly)){
+						//return new ecjia_error('limit_time_weekly_error', '此活动只限'.$weeks_str.'可使用');
+						$discount = 0.00;
+						$order['integral_money'] = 0.00;
+						$order['bonus'] = 0.00;
+					}
+				}
+			
+				/*每天限制时间段*/
+				if (!empty($quickpay_activity_info['limit_time_daily'])) {
+					$limit_time_daily = unserialize($quickpay_activity_info['limit_time_daily']);
+					foreach ($limit_time_daily as $val) {
+						$arr[] = quickpay_activity::is_in_timelimit(array('start' => $val['start'], 'end' => $val['end']));
+					}
+					if (!in_array(0, $arr)) {
+						//return new ecjia_error('limit_time_daily_error', '此活动当前时间段不可用');
+						$discount = 0.00;
+						$order['integral_money'] = 0.00;
+						$order['bonus'] = 0.00;
+					}
+				}
+				/*活动限制日期*/
+				if (!empty($quickpay_activity_info['limit_time_exclude'])) {
+					$limit_time_exclude = explode(',', $quickpay_activity_info['limit_time_exclude']);
+					$current_date = RC_Time::local_date(ecjia::config('date_format'), time);
+					$current_date = array($current_date);
+					if (in_array($current_date, $limit_time_exclude)) {
+						//return new ecjia_error('limit_time_daily_error', '此活动当前日期不可用！');
+						$discount = 0.00;
+						$order['integral_money'] = 0.00;
+						$order['bonus'] = 0.00;
+					}
+				}
+			
+			}
+		} else {
+			$order['activity_type'] = '';
+			$order['activity_id'] = 0;
+			$order['bonus_id'] = 0;
+			$order['bonus'] = 0.00;
+			$order['integral_money'] = 0.00;
+			$discount = 0.00;
 		}
 		
-		if ($quickpay_activity_info['enabled'] == '0') {
-			return new ecjia_error('activity_closed', '此活动已关闭！');
-		}
+		/*活动可优惠金额处理*/
+		$order['discount'] = sprintf("%.2f", $discount);
+		$formated_discount = price_format($order['discount'], false);
 		
-		$order['store_id'] = $quickpay_activity_info['store_id'];
-		$order['activity_type'] = $quickpay_activity_info['activity_type'];
-		$order['activity_id'] = $quickpay_activity_info['id'];
-		
+		$order['store_id'] = $store_id;
 		/*订单编号*/
 		$order['order_sn'] = quickpay_activity::get_order_sn();
 		$order['order_type'] = 'quickpay';
-		
-		/*活动时间限制处理*/
-		$time = RC_Time::gmtime();
-		if (($time > $quickpay_activity_info['end_time']) || ($quickpay_activity_info['start_time'] > $time)) {
-			return new ecjia_error('activity_error', '活动还未开始或已结束');
-		}
 		
 		/*支付方式信息*/
 		if ($pay_id > 0) {
@@ -129,86 +220,6 @@ class done_module extends api_front implements api_interface {
 			$order['pay_code'] = $payment_info['pay_code'];
 			$order['pay_name'] = $payment_info['pay_name'];
 		}
-		
-		/*红包是否可用*/
-		if ($bonus_id > 0) {
-			$bonus_info = RC_Api::api('bonus', 'bonus_info', array('bonus_id' => $bonus_id));
-			if (is_ecjia_error($bonus_info)) {
-				return $bonus_info;
-			}
-			if (empty($bonus_info)){
-				return new ecjia_error('bonus_error', '红包信息不存在！');
-			}
-			$time = RC_Time::gmtime();
-			if (($time < $bonus_info['use_start_date']) || ($bonus_info['use_end_date'] < $time) || ($bonus_info['store_id'] != 0 && $bonus_info['store_id'] != $quickpay_activity_info['store_id']) || $bonus_info['user_id'] != $user_id || $bonus_info['order_id'] > 0) {
-				$order['bonus_id'] = 0;
-				$order['bonus'] = 0.00;
-			} else{
-				$order['bonus'] = $bonus_info['type_money'];
-			}
-			
-		}
-		
-		if ($integral > 0) {
-			/*会员可用积分数*/
-			$user_integral = RC_DB::table('users')->where('user_id', $_SESSION['user_id'])->pluck('pay_points');
-			if ($integral > $user_integral) {
-				return new ecjia_error('integral_error', '使用积分不可超过会员总积分数！');
-			}
-			$order['integral_money'] = quickpay_activity::integral_of_value($integral); 
-		}
-		
-		/*活动可优惠金额获取*/
-		$discount = quickpay_activity::get_quickpay_discount(array('activity_type' => $quickpay_activity_info['activity_type'], 'activity_value' => $quickpay_activity_info['activity_value'], 'goods_amount' => $goods_amount, 'exclude_amount' => $exclude_amount)); 
-		
-		/*自定义时间限制处理，当前时间不可用时，订单可正常提交,只是优惠金额是0；红包和积分也为0*/
-		if ($quickpay_activity_info['limit_time_type'] == 'customize') {
-			/*每周限制时间*/
-			if (!empty($quickpay_activity_info['limit_time_weekly'])){
-				$w = date('w');
-				$current_week = quickpay_activity::current_week($w);
-				$limit_time_weekly = Ecjia\App\Quickpay\Weekly::weeks($quickpay_activity_info['limit_time_weekly']);
-				$weeks_str = quickpay_activity::get_weeks_str($limit_time_weekly);
-					
-				if (!in_array($current_week, $limit_time_weekly)){
-					//return new ecjia_error('limit_time_weekly_error', '此活动只限'.$weeks_str.'可使用');
-					$discount = 0.00;
-					$order['integral_money'] = 0.00;
-					$order['bonus'] = 0.00;
-				}
-			}
-		
-			/*每天限制时间段*/
-			if (!empty($quickpay_activity_info['limit_time_daily'])) {
-				$limit_time_daily = unserialize($quickpay_activity_info['limit_time_daily']);
-				foreach ($limit_time_daily as $val) {
-					$arr[] = quickpay_activity::is_in_timelimit(array('start' => $val['start'], 'end' => $val['end']));
-				}
-				if (!in_array(0, $arr)) {
-					//return new ecjia_error('limit_time_daily_error', '此活动当前时间段不可用');
-					$discount = 0.00;
-					$order['integral_money'] = 0.00;
-					$order['bonus'] = 0.00;
-				}
-			}
-			/*活动限制日期*/
-			if (!empty($quickpay_activity_info['limit_time_exclude'])) {
-				$limit_time_exclude = explode(',', $quickpay_activity_info['limit_time_exclude']);
-				$current_date = RC_Time::local_date(ecjia::config('date_format'), time);
-				$current_date = array($current_date);
-				if (in_array($current_date, $limit_time_exclude)) {
-					//return new ecjia_error('limit_time_daily_error', '此活动当前日期不可用！');
-					$discount = 0.00;
-					$order['integral_money'] = 0.00;
-					$order['bonus'] = 0.00;
-				}
-			}
-		
-		}
-		
-		/*活动可优惠金额处理*/
-		$order['discount'] = sprintf("%.2f", $discount);
-		$formated_discount = price_format($order['discount'], false);
 		
 		/*会员信息*/
 		$user_id = $_SESSION['user_id'];
