@@ -243,7 +243,7 @@ class done_module extends api_front implements api_interface {
     	
     	/* 如果订单金额为0（使用余额或积分或红包支付），修改订单状态为已确认、已付款 */
     	if ($order['order_amount'] <= 0) {
-    		$order['order_status']	= Ecjia\App\Quickpay\Status::PAYED;
+    		$order['order_status']	= Ecjia\App\Quickpay\Status::PAID;
     		$order['pay_time']		= RC_Time::gmtime();
     		$order['order_amount']	= 0;
     	}
