@@ -62,9 +62,9 @@ class list_module extends api_front implements api_interface {
 		$page = $this->requestData('pagination.page', 1);
 		
 		$options = array(
-				'size'			=> $size,
-				'page'			=> $page,
-				'user_id'		=> $_SESSION['user_id']
+			'size'			=> $size,
+			'page'			=> $page,
+			'user_id'		=> $_SESSION['user_id']
 		);
 		
 		$quickpay_order_data = RC_Api::api('quickpay', 'quickpay_order_list', $options);
@@ -76,19 +76,19 @@ class list_module extends api_front implements api_interface {
 		if(!empty($quickpay_order_data['list'])) {
 			foreach ($quickpay_order_data['list'] as $rows) {
 				$arr[] = array(
-						'store_id' 					=> intval($rows['store_id']),
-						'store_name' 				=> $rows['store_name'],
-						'store_logo'				=> empty($rows['store_logo']) ? '' : RC_Upload::upload_url($rows['store_logo']),
-						'order_id' 					=> $rows['order_id'],
-						'order_sn' 					=> $rows['order_sn'],
-						'order_status'				=> $rows['order_status'],
-						'order_status_str'			=> $rows['order_status_str'],
-						'label_order_status'		=> empty($rows['label_order_status']) ? '' : $rows['label_order_status'],
-						'total_discount'			=> $rows['total_discount'],
-						'formated_total_discount'	=> $rows['formated_total_discount'],
-						'order_amount'				=> $rows['order_amount'],
-						'formated_order_amount '	=> price_format($rows['order_amount']),
-						'formated_add_time'			=> RC_Time::local_date(ecjia::config('time_format'), $rows['add_time']),
+					'store_id' 					=> intval($rows['store_id']),
+					'store_name' 				=> $rows['store_name'],
+					'store_logo'				=> empty($rows['store_logo']) ? '' : RC_Upload::upload_url($rows['store_logo']),
+					'order_id' 					=> $rows['order_id'],
+					'order_sn' 					=> $rows['order_sn'],
+					'order_status'				=> $rows['order_status'],
+					'order_status_str'			=> $rows['order_status_str'],
+					'label_order_status'		=> empty($rows['label_order_status']) ? '' : $rows['label_order_status'],
+					'total_discount'			=> $rows['total_discount'],
+					'formated_total_discount'	=> $rows['formated_total_discount'],
+					'order_amount'				=> $rows['order_amount'],
+					'formated_order_amount'	=> price_format($rows['order_amount']),
+					'formated_add_time'			=> RC_Time::local_date(ecjia::config('time_format'), $rows['add_time']),
 				);
 			}
 		}

@@ -45,12 +45,12 @@ class quickpay_quickpay_order_list_api extends Component_Event_Api {
 		$count = $db->select('order_id')->count();
 		$page_row = new ecjia_page($count, $size, 6, '', $page);
 		
-		$list = $db->take($size)->skip($page_row->start_id - 1)->select('*')->get();
+		$list = $db->take($size)->skip($page_row->start_id - 1)->select('*')->orderBy('add_time', 'desc')->get();
 		
 		$pager = array(
-				'total' => $page_row->total_records,
-				'count' => $page_row->total_records,
-				'more'	=> $page_row->total_pages <= $page ? 0 : 1,
+			'total' => $page_row->total_records,
+			'count' => $page_row->total_records,
+			'more'	=> $page_row->total_pages <= $page ? 0 : 1,
 		);
 		
 		if (!empty($list)) {
