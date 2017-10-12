@@ -93,6 +93,9 @@ class detail_module extends api_front implements api_interface {
 		$order['order_status_str'] = $status['order_status_str'];
 		$order['label_order_status'] = $status['label_order_status'];
 		
+		/*商家电话*/
+		$shop_kf_mobile = RC_DB::table('merchants_config')->where('store_id', $order['store_id'])->where('code', 'shop_kf_mobile')->pluck('value');
+		
 		$arr = array();
 		$arr = array(
 				'order_id' 					=> intval($order['order_id']),
@@ -110,7 +113,8 @@ class detail_module extends api_front implements api_interface {
 				'formated_order_amount'		=> price_format($order['order_amount'], false),
 				'formated_add_time'			=> $order['formated_add_time'],
 				'pay_code'					=> $order['pay_code'],
-				'pay_name'					=> $order['pay_name']
+				'pay_name'					=> $order['pay_name'],
+				'service_phone'				=> empty($shop_kf_mobile) ? '' : $shop_kf_mobile
 		);
 		return  $arr;
 	}
