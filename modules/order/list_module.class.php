@@ -80,6 +80,7 @@ class list_module extends api_front implements api_interface {
 						'store_name' 				=> $rows['store_name'],
 						'store_logo'				=> empty($rows['store_logo']) ? '' : RC_Upload::upload_url($rows['store_logo']),
 						'order_id' 					=> $rows['order_id'],
+						'order_sn' 					=> $rows['order_sn'],
 						'order_status'				=> $rows['order_status'],
 						'order_status_str'			=> $rows['order_status_str'],
 						'label_order_status'		=> empty($rows['label_order_status']) ? '' : $rows['label_order_status'],
