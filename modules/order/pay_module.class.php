@@ -97,16 +97,12 @@ class pay_module extends api_front implements api_interface {
     		'pay_name'		 => $handler->getName(),
     		'trade_type'	 => 'buy',
 		]);
-		
+
 		$handler->set_orderinfo($order);
 		$handler->set_mobile($is_mobile);
 		$handler->setPaymentRecord(new Ecjia\App\Payment\Repositories\PaymentRecordRepository());
-		
+		$handler->setOrderType(Ecjia\App\Payment\PayConstant::PAY_QUICKYPAY);
 		$result = $handler->get_code(Ecjia\App\Payment\PayConstant::PAYCODE_PARAM);
-		
-		RC_Logger::getLogger('error')->info('测试quickpay111');
-		RC_Logger::getLogger('error')->info($result);
-		RC_Logger::getLogger('error')->info('测试quickpay222');
 		
         if (is_ecjia_error($result)) {
             return $result;
