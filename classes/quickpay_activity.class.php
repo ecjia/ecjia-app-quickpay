@@ -286,7 +286,7 @@ class quickpay_activity {
 		
 		if (($order_status == Ecjia\App\Quickpay\Status::UNCONFIRMED) && ($pay_status == Ecjia\App\Quickpay\Status::UNPAID) && ($verification_status == Ecjia\App\Quickpay\Status::UNVERIFICATION)) {
 			$order_status_str = 'unpaid';
-			$label_order_status = '未付款';
+			$label_order_status = '待付款';
 		} elseif (($order_status == Ecjia\App\Quickpay\Status::CONFIRMED) && ($pay_status == Ecjia\App\Quickpay\Status::PAID)) {
 			$order_status_str = 'paid';
 			$label_order_status = '已付款';
