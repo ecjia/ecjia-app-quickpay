@@ -103,6 +103,11 @@ class pay_module extends api_front implements api_interface {
 		$handler->setPaymentRecord(new Ecjia\App\Payment\Repositories\PaymentRecordRepository());
 		
 		$result = $handler->get_code(Ecjia\App\Payment\PayConstant::PAYCODE_PARAM);
+		
+		RC_Logger::getLogger('error')->info('测试quickpay111');
+		RC_Logger::getLogger('error')->info($result);
+		RC_Logger::getLogger('error')->info('测试quickpay222');
+		
         if (is_ecjia_error($result)) {
             return $result;
         } else {
