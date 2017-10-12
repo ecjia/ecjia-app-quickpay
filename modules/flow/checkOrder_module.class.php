@@ -203,6 +203,11 @@ class checkOrder_module extends api_front implements api_interface {
 			/*活动可优惠金额处理*/
 			$discount = sprintf("%.2f", $discount);
 			$formated_discount = price_format($discount, false);
+			if ($discount == '0.00'){
+				$quickpay_activity_info['id'] = 0;
+				$quickpay_activity_info['activity_type'] = '';
+				$quickpay_activity_info['title'] = '';
+			}
 		} else {
 			$discount = '0.00';
 			$allow_use_bonus = 0;
