@@ -81,9 +81,10 @@ class pay_module extends api_front implements api_interface {
 		if ($_SESSION['admin_id'] > 0) {
 			$_SESSION['user_id'] = $order['user_id'];
 		}
-		
+		$order['pay_id'] = RC_DB::table('payment')->where('pay_code', $order['pay_code'])->pluck('pay_id');
 		//支付方式信息
-		$handler = with(new Ecjia\App\Payment\PaymentPlugin)->channel(trim($order['pay_code']));
+		$handler = with(new Ecjia\App\Payment\PaymentPlugin)->channel(intval($order['pay_id']));
+		
 		if (is_ecjia_error($handler)) {
 		    return $handler;
 		}
