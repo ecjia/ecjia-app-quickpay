@@ -75,6 +75,9 @@ class list_module extends api_front implements api_interface {
 		$arr = array();
 		if(!empty($quickpay_order_data['list'])) {
 			foreach ($quickpay_order_data['list'] as $rows) {
+				if ($rows['pay_code'] == 'pay_balance') {
+					$rows['order_amount'] = $rows['order_amount'] + $rows['surplus'];
+				}
 				$arr[] = array(
 					'store_id' 					=> intval($rows['store_id']),
 					'store_name' 				=> $rows['store_name'],
