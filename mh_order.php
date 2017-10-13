@@ -292,7 +292,7 @@ class mh_order extends ecjia_merchant {
 		$page = new ecjia_merchant_page($count,10, 5);
 		$data = $db_quickpay_order
 		->selectRaw('order_id,order_sn,activity_type,user_mobile,user_name,add_time,goods_amount,order_amount,pay_status')
-		->orderby('order_id', 'asc')
+		->orderby('order_id', 'desc')
 		->take(10)
 		->skip($page->start_id-1)
 		->get();

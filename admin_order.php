@@ -230,7 +230,7 @@ class admin_order extends ecjia_admin {
 		$check_type = trim($_GET['check_type']);
 		$order_count = $db_quickpay_order->select(RC_DB::raw('count(*) as count'),
 				RC_DB::raw('SUM(IF(verification_status = 1, 1, 0)) as verification'),
-				RC_DB::raw('SUM(IF(verification_status = 0, 1, 0)) as unverification'))->first();
+				RC_DB::raw('SUM(IF(verification_status = 0, 1, 0)) as unverification'))->orderBy(RC_DB::raw('order_id'), 'desc')->first();
 		
 		if ($check_type == 'verification') {
 			$db_quickpay_order->where('verification_status', 1);
