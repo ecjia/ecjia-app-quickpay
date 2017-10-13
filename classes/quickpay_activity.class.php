@@ -302,133 +302,109 @@ class quickpay_activity {
 	 */
 	public static function max_discount_activitys ($options) {
 		$quickpay_activity_list  = RC_Api::api('quickpay', 'quickpay_activity_list', $options);
+		$list = $quickpay_activity_list['list'];
 		
-		if (!empty($quickpay_activity_list['list'])) {
-			$list = $quickpay_activity_list['list'];
-			foreach ($list as $k => $v) {
-				$list[$k]['discount'] = self::get_quickpay_discount(array('activity_type' => $v['activity_type'],'goods_amount' => $options['goods_amount'], 'exclude_amount' => $options['exclude_amount'], 'activity_value' => $v['activity_value']));
+		if (!empty($list)) {
+			foreach ($list as $key => $val) {
+				$list[$key]['total_act_discount'] = self::get_quickpay_discount(array('activity_type' => $val['activity_type'],'goods_amount' => $options['goods_amount'], 'exclude_amount' => $options['exclude_amount'], 'activity_value' => $val['activity_value']));
 				
 				/*活动是否允许使用积分处理*/
-				if ($v['use_integral'] == 'nolimit') {
+				if ($val['use_integral'] == 'nolimit') {
 					//无积分限制；最多可用积分按商品价格兑换
 					$scale = floatval(ecjia::config('integral_scale'));
 					$integral = (($options['goods_amount'] - $options['exclude_amount'])/$scale)*100;
 					$order_max_integral = intval($integral);
 					$integral_money = self::integral_of_value($integral);
-				} elseif (($v['use_integral'] != 'nolimit') && ($v['use_integral'] != 'close')) {
+				} elseif (($val['use_integral'] != 'nolimit') && ($val['use_integral'] != 'close')) {
 					//有积分限制
-					$order_max_integral = intval($v['use_integral']);
+					$order_max_integral = intval($val['use_integral']);
 					$integral_money = self::integral_of_value($integral);
 				} else {
 					//不可用积分
 					$integral_money = 0.00;
 				}
-				$list[$k]['integral_money'] = $integral_money;
+				$list[$key]['act_integral_money'] = $integral_money;
 				
 				/*活动是否允许使用红包*/
 				$bonus_list = array();
 				$allow_use_bonus =0;
+				
 				if (ecjia::config('use_bonus') == '1') {
-					if ($v['use_bonus'] == 'nolimit') {
+					if ($val['use_bonus'] == 'nolimit') {
 						//无限制红包；获取用户可用红包
 						// 取得用户可用红包
 						$real_amount = $options['goods_amount'] - $options['exclude_amount'];
 						$user_bonus = self::user_bonus($_SESSION['user_id'], $real_amount, $options['store_id']);
 						if (!empty($user_bonus)) {
-							foreach ($user_bonus AS $key => $val) {
-								$user_bonus[$key]['bonus_money_formated'] = price_format($val['type_money'], false);
+							foreach ($user_bonus AS $arr1 => $res1) {
+								$user_bonus[$arr1]['bonus_money_formated'] = price_format($res1['type_money'], false);
 							}
 							$bonus_list = $user_bonus;
 						}
 						// 能使用红包
-					} elseif (($v['use_bonus'] != 'nolimit') && $v['use_bonus'] != 'close') {
+					} elseif (($val['use_bonus'] != 'nolimit') && $val['use_bonus'] != 'close') {
+					
 						//活动指定红包类型
-						$bonus_type_ids = explode(',', $v['use_bonus']);
+						$bonus_type_ids = explode(',', $val['use_bonus']);
 						$bonus_list = self::get_acyivity_bonus(array('user_id' => $options['user_id'], 'bonus_type_ids' => $bonus_type_ids, 'store_id' => $options['store_id']));
 				
 						if (!empty($bonus_list)) {
-							foreach ($bonus_list AS $key => $val) {
-								$bonus_list[$key]['bonus_money_formated'] = price_format($val['type_money'], false);
+							foreach ($bonus_list AS $arr2 => $res2) {
+								$bonus_list[$arr2]['bonus_money_formated'] = price_format($res2['type_money'], false);
 							}
 						}
 					} else{
 						$bonus_list = array();
 					}
 				}
-				$list[$k]['bonus_list'] = $bonus_list;
+				$list[$key]['act_bonus_list'] = $bonus_list;
 				
 				/*自定义时间的活动，当前时间段不可用的过滤掉*/
-				if ($v['limit_time_type'] == 'customize') {
+				if ($val['limit_time_type'] == 'customize') {
 					/*每周限制时间*/
-					if (!empty($v['limit_time_weekly'])){
+					if (!empty($val['limit_time_weekly'])){
 						$w = date('w');
 						$current_week = quickpay_activity::current_week($w);
-						$limit_time_weekly = Ecjia\App\Quickpay\Weekly::weeks($v['limit_time_weekly']);
+						$limit_time_weekly = Ecjia\App\Quickpay\Weekly::weeks($val['limit_time_weekly']);
 						$weeks_str = self::get_weeks_str($limit_time_weekly);
 				
 						if (!in_array($current_week, $limit_time_weekly)){
-							unset($list[$k]);
+							unset($list[$key]);
 						}
 					}
 					/*每天限制时间段*/
-					if (!empty($v['limit_time_daily'])) {
-						$limit_time_daily = unserialize($v['limit_time_daily']);
-						foreach ($limit_time_daily as $val) {
-							$arr[] = self::is_in_timelimit(array('start' => $val['start'], 'end' => $val['end']));
+					if (!empty($val['limit_time_daily'])) {
+						$limit_time_daily = unserialize($val['limit_time_daily']);
+						foreach ($limit_time_daily as $val1) {
+							$arr[] = self::is_in_timelimit(array('start' => $val1['start'], 'end' => $val1['end']));
 						}
 						if (!in_array(0, $arr)) {
-							unset($list[$k]);
+							unset($list[$key]);
 						}
 					}
 					/*活动限制日期*/
-					if (!empty($v['limit_time_exclude'])) {
-						$limit_time_exclude = explode(',', $v['limit_time_exclude']);
+					if (!empty($val['limit_time_exclude'])) {
+						$limit_time_exclude = explode(',', $val['limit_time_exclude']);
 						$current_date = RC_Time::local_date(ecjia::config('date_format'), RC_Time::gmtime());
 						$current_date = array($current_date);
 						if (in_array($current_date, $limit_time_exclude)) {
-							unset($list[$k]);
+							unset($list[$key]);
 						}
 					}
 				}
 			}
 		}
-		$result = array();
-		
+
 		if (!empty($list)) {
-			foreach ($list as $val) {
-				$result[] = array(
-						'id' 				=> $val['id'],
-						'discount'			=> $val['discount'],
-						'integral_money' 	=> $val['integral_money'],
-						'bonus_list' 		=> $bonus_list
-				);
-			}
-		}
-		/*活动优惠信息处理*/
-		if (!empty($result)) {
-			foreach ($result as $key => $val) {
-				if (!empty($val['bonus_list'])) {
-					foreach ($val['bonus_list'] as $row) {
-						$result[$key]['bonus'][] = $row['type_money'];
+			foreach ($list as $a => $b) {
+				if (!empty($b['act_bonus_list'])) {
+					foreach ($b['act_bonus_list'] as $b2) {
+						$list[$a]['bonus'][] = $b2['type_money'];
 					}
 				}
 			}
 		}
-		
-		if (!empty($result)) {
-			$final = array();
-			foreach ($result as $a => $b) {
-				$final[$b['id']] = array(
-						'id'	=> $b['id'],
-						'final_discount' => $b['discount'] + $b['integral_money'] + max($b['bonus']),
-				);
-			}
-			$final_discounts = array();
-			foreach ($final as $kk => $vv) {
-				$final_discounts[$vv['id']] = $vv['final_discount'];
-			}
-		}
-		return $final_discounts;
+		return $list;
 	}
 }	
 

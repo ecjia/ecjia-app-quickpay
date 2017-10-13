@@ -73,16 +73,53 @@ class checkOrder_module extends api_front implements api_interface {
 		$user_integral = RC_DB::table('users')->where('user_id', $_SESSION['user_id'])->pluck('pay_points');
 		
 		/*获取商家所有活动优惠信息，数组*/
-		$activitys = quickpay_activity::max_discount_activitys(array('goods_amount' => $goods_amount, 'store_id' => $store_id, 'exclude_amount' => $exclude_amount, 'user_id' => $_SESSION['user_id']));
+		$activitys = quickpay_activity::max_discount_activitys(array('goods_amount' => $goods_amount, 'store_id' => $store_id, 'exclude_amount' => $exclude_amount, 'user_id' => $_SESSION['user_id']));		
 		$activity_id = 0;
 		if (!empty($activitys)) {
-			/*获取最优惠的活动id*/
-			$activity_id = array_keys($activitys, max($activitys));
+			
+			foreach ($activitys as $k1 => $v1) {
+				/*无优惠过滤*/
+				if ($v1['activity_type'] == 'normal') {
+					unset($activitys[$k1]);
+				}
+				if ($v1['total_act_discount'] == '0') {
+					unset($activitys[$k1]);
+				}
+			}
 		}
 		
-		if (!empty($activity_id) && ($activity_id['0'] > 0)) {
+		if (!empty($activitys)) {
+			$final = array();
+			foreach ($activitys as $k2 => $v2) {
+				$final[$v2['id']] = array(
+						'id'	=> $v2['id'],
+						'final_discount' => $v2['total_act_discount'] + $v2['act_integral_money'] + max($v2['bonus']),
+				);
+			}
+			
+			$final_discounts = array();
+			foreach ($final as $kk => $vv) {
+				$final_discounts[$vv['id']] = $vv['final_discount'];
+			}
+			
+			if (!empty($final_discounts)) {
+				/*获取最优惠的活动id*/
+				if (count($final_discounts) > 1) {
+					$activity_id = array_keys($final_discounts, max($final_discounts));
+					$activity_id = $activity_id['0'];
+				} else {
+					foreach ($final_discounts as $a2 => $b2) {
+						$activity_id = $a2;
+					}
+				}
+				
+			}
+		}
+		//==== 获取商家所有活动优惠信息end  === 
+		
+		if (!empty($activity_id) && ($activity_id > 0)) {
 			/*获取闪惠活动信息*/
-			$quickpay_activity_info = RC_DB::table('quickpay_activity')->where('store_id', $store_id)->where('id', $activity_id['0'])->first();
+			$quickpay_activity_info = RC_DB::table('quickpay_activity')->where('store_id', $store_id)->where('id', $activity_id)->first();
 			
 			if (empty($quickpay_activity_info)) {
 				return new ecjia_error('activity_not_exists', '活动信息不存在！');
