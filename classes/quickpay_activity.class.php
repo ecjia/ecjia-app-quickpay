@@ -200,12 +200,14 @@ class quickpay_activity {
 				$activity_value = explode(',', $options['activity_value']);
 				$every_min_amount = $activity_value['0'];
 				$every_reduce_amount = $activity_value['1'];
+				
 				$max_amount = $activity_value['2'];
 				if (($options['goods_amount'] - $options['exclude_amount']) >= $every_reduce_amount) {
 					//可减次数
-					$reduce_times = ($options['goods_amount'] - $options['exclude_amount'])/$every_reduce_amount;
+					$reduce_times = ($options['goods_amount'] - $options['exclude_amount'])/$every_min_amount;
 					$reduce_times = intval($reduce_times);
 					$reduce_amount = $reduce_times*$every_reduce_amount;
+					
 					if ($reduce_amount > $max_amount) {
 						$reduce_amount = $max_amount;
 					}
