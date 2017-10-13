@@ -110,7 +110,7 @@ class quickpay_quickpay_user_account_paid_api extends Component_Event_Api {
 		/* 更新订单表支付后信息 */
 		$data = array(
 			'order_status'    => OS_CONFIRMED,
-			'confirm_time'    => RC_Time::gmtime(),
+			//'confirm_time'    => RC_Time::gmtime(),
 			'pay_status'      => Ecjia\App\Quickpay\Status::PAID,
 			'pay_time'        => RC_Time::gmtime(),
 			'order_amount'    => 0,
