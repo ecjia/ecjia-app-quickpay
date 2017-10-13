@@ -70,11 +70,11 @@ class quickpay_quickpay_activity_list_api extends Component_Event_Api {
 				
 				/*每周可用星期处理*/
 				if (!empty($val['limit_time_weekly'])) {
-					$list[$key]['limit_time_weekly'] = $this->get_format_limit_weekly($val['limit_time_weekly']);
+					$list[$key]['limit_time_weekly_str'] = $this->get_format_limit_weekly($val['limit_time_weekly']);
 				}
 				/*每天限时时间段处理*/
 				if (!empty($val['limit_time_daily'])) {
-					$list[$key]['limit_time_daily'] = $this->get_format_limit_daily($val['limit_time_daily']);
+					$list[$key]['limit_time_daily_str'] = $this->get_format_limit_daily($val['limit_time_daily']);
 				}
 				/*开始和结束时间处理*/
 				$list[$key]['formated_start_time'] = RC_Time::local_date(ecjia::config('date_format'), $val['start_time']);

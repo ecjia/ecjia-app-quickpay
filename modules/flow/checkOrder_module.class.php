@@ -74,6 +74,7 @@ class checkOrder_module extends api_front implements api_interface {
 		
 		/*获取商家所有活动优惠信息，数组*/
 		$activitys = quickpay_activity::max_discount_activitys(array('goods_amount' => $goods_amount, 'store_id' => $store_id, 'exclude_amount' => $exclude_amount, 'user_id' => $_SESSION['user_id']));		
+		
 		$activity_id = 0;
 		if (!empty($activitys)) {
 			
@@ -85,6 +86,41 @@ class checkOrder_module extends api_front implements api_interface {
 				if ($v1['total_act_discount'] == '0') {
 					unset($activitys[$k1]);
 				}
+				
+				/*自定义时间的活动，当前时间段不可用的过滤掉*/
+				if ($v1['limit_time_type'] == 'customize') {
+					/*每周限制时间*/
+					if (!empty($v1['limit_time_weekly'])){
+						$w = date('w');
+						$current_week = quickpay_activity::current_week($w);
+						$limit_time_weekly = Ecjia\App\Quickpay\Weekly::weeks($v1['limit_time_weekly']);
+						$weeks_str = quickpay_activity::get_weeks_str($limit_time_weekly);
+
+						if (!in_array($current_week, $limit_time_weekly)){
+							unset($activitys[$k1]);
+						}
+					}
+					/*每天限制时间段*/
+					if (!empty($v1['limit_time_daily'])) {
+						$limit_time_daily = unserialize($v1['limit_time_daily']);
+						foreach ($limit_time_daily as $val1) {
+							$arr[] = quickpay_activity::is_in_timelimit(array('start' => $val1['start'], 'end' => $val1['end']));
+						}
+						if (!in_array(0, $arr)) {
+							unset($activitys[$k1]);
+						}
+					}
+					/*活动限制日期*/
+					if (!empty($v1['limit_time_exclude'])) {
+						$limit_time_exclude = explode(',', $v1['limit_time_exclude']);
+						$current_date = RC_Time::local_date(ecjia::config('date_format'), RC_Time::gmtime());
+						$current_date = array($current_date);
+						if (in_array($current_date, $limit_time_exclude)) {
+							unset($activitys[$k1]);
+						}
+					}
+				}
+				
 			}
 		}
 		
