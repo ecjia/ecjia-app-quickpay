@@ -52,7 +52,7 @@ defined('IN_ECJIA') or exit('No permission resources.');
  * 余额支付后处理订单的接口
  * @author royalwang
  */
-class quickpay_user_account_paid_api extends Component_Event_Api {
+class quickpay_quickpay_user_account_paid_api extends Component_Event_Api {
 	
     /**
      * @param  $options['user_id'] 会员id
@@ -96,7 +96,7 @@ class quickpay_user_account_paid_api extends Component_Event_Api {
 		}
 		/* 会员详情*/
 		$user_info = RC_Api::api('user', 'user_info', array('user_id' => $user_id));
-
+		
 		/* 检查订单是否已经付款 */
 		if ($order_info['pay_status'] == Ecjia\App\Quickpay\Status::PAID && $order_info['pay_time']) {
 			return new ecjia_error('order_paid', RC_Lang::get('orders::order.pay_repeat_message'));
