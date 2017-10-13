@@ -95,7 +95,9 @@ class detail_module extends api_front implements api_interface {
 		
 		/*商家电话*/
 		$shop_kf_mobile = RC_DB::table('merchants_config')->where('store_id', $order['store_id'])->where('code', 'shop_kf_mobile')->pluck('value');
-		
+		if ($order['pay_code'] == 'pay_balance') {
+			$formated_surplus = price_format(($order['order_amount'] + $order['surplus']),false);
+		}
 		$arr = array();
 		$arr = array(
 				'order_id' 					=> intval($order['order_id']),
@@ -111,7 +113,7 @@ class detail_module extends api_front implements api_interface {
 				'formated_total_discount'	=> price_format($order['total_discount'], false),
 				'order_amount'				=> $order['order_amount'],
 				'surplus'					=> $order['surplus'],
-				'formated_order_amount'		=> price_format($order['order_amount'], false),
+				'formated_order_amount'		=> ($order['pay_code'] == 'pay_balance') ? $formated_surplus : price_format($order['order_amount'], false),
 				'formated_add_time'			=> $order['formated_add_time'],
 				'pay_code'					=> $order['pay_code'],
 				'pay_name'					=> $order['pay_name'],
