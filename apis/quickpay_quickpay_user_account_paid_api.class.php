@@ -109,7 +109,7 @@ class quickpay_quickpay_user_account_paid_api extends Component_Event_Api {
 		
 		/* 更新订单表支付后信息 */
 		$data = array(
-			'order_status'    => OS_CONFIRMED,
+			'order_status'    => Ecjia\App\Quickpay\Status::CONFIRMED,
 			//'confirm_time'    => RC_Time::gmtime(),
 			'pay_status'      => Ecjia\App\Quickpay\Status::PAID,
 			'pay_time'        => RC_Time::gmtime(),
@@ -119,7 +119,7 @@ class quickpay_quickpay_user_account_paid_api extends Component_Event_Api {
 		
 		/*更新订单状态及信息*/
 		//update_order($order_info['order_id'], $data);
-		RC_DB::table('quickpay_orders')->where('order_id', order_id)->update($data);
+		RC_DB::table('quickpay_orders')->where('order_id', $order_id)->update($data);
 		
 		/* 处理余额变动信息 */
 		if ($order_info['user_id'] > 0 && $data['surplus'] > 0) {
