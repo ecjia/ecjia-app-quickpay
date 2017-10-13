@@ -110,6 +110,7 @@ class detail_module extends api_front implements api_interface {
 				'total_discount'			=> $order['total_discount'],
 				'formated_total_discount'	=> price_format($order['total_discount'], false),
 				'order_amount'				=> $order['order_amount'],
+				'surplus'					=> $order['surplus'],
 				'formated_order_amount'		=> price_format($order['order_amount'], false),
 				'formated_add_time'			=> $order['formated_add_time'],
 				'pay_code'					=> $order['pay_code'],
