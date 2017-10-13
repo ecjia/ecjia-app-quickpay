@@ -60,7 +60,8 @@ class pay_module extends api_front implements api_interface {
     	}
     	
 		$order_id	= $this->requestData('order_id', 0);
-		$is_mobile	= $this->requestData('is_mobile', true);
+		$is_mobile	= true;
+		
 		
 		if (!$order_id) {
 			return new ecjia_error('invalid_parameter', RC_Lang::get('orders::order.invalid_parameter'));
@@ -68,7 +69,7 @@ class pay_module extends api_front implements api_interface {
 		
 		/* 订单详情 */
 		$order = RC_Api::api('quickpay', 'quickpay_order_info', array('order_id' => $order_id));
-		
+		$order['consignee'] = $order['user_name'];
 		if (is_ecjia_error($order)) {
 			return $order;
 		}
