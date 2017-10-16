@@ -124,7 +124,6 @@ class mh_order extends ecjia_merchant {
 		}
 		$order_info['status'] = RC_Lang::get('quickpay::order.os.'.$order_info['order_status']) . ',' . RC_Lang::get('quickpay::order.ps.'.$order_info['pay_status']) . ',' . RC_Lang::get('quickpay::order.vs.'.$order_info['verification_status']);
 		$this->assign('order_info', $order_info);
-		
 		//订单流程状态
 		if ($order_info['order_status']){
 			$step = 1;
@@ -291,7 +290,7 @@ class mh_order extends ecjia_merchant {
 		$count = $db_quickpay_order->count();
 		$page = new ecjia_merchant_page($count,10, 5);
 		$data = $db_quickpay_order
-		->selectRaw('order_id,order_sn,activity_type,user_mobile,user_name,add_time,goods_amount,order_amount,pay_status')
+		->selectRaw('order_id,order_sn,activity_type,user_mobile,user_name,add_time,goods_amount,order_amount,pay_status,verification_status')
 		->orderby('order_id', 'desc')
 		->take(10)
 		->skip($page->start_id-1)
