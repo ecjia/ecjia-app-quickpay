@@ -96,7 +96,7 @@ class pay_module extends api_front implements api_interface {
     		'total_fee'      => $order['order_amount'],
     		'pay_code'       => $handler->getCode(),
     		'pay_name'		 => $handler->getName(),
-    		'trade_type'	 => 'buy',
+    		'trade_type'	 => Ecjia\App\Payment\PayConstant::PAY_QUICKYPAY,
 		]);
 
 		$handler->set_orderinfo($order);
