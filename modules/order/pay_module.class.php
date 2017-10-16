@@ -61,7 +61,7 @@ class pay_module extends api_front implements api_interface {
     	
 		$order_id	= $this->requestData('order_id', 0);
 		$is_mobile	= true;
-		
+		$wxpay_open_id = $this->requestData('wxpay_open_id', 0);
 		
 		if (!$order_id) {
 			return new ecjia_error('invalid_parameter', RC_Lang::get('orders::order.invalid_parameter'));
@@ -85,6 +85,7 @@ class pay_module extends api_front implements api_interface {
 		$order['pay_id'] = RC_DB::table('payment')->where('pay_code', $order['pay_code'])->pluck('pay_id');
 		//支付方式信息
 		$handler = with(new Ecjia\App\Payment\PaymentPlugin)->channel(intval($order['pay_id']));
+		$order['open_id']	     = $wxpay_open_id;
 		
 		if (is_ecjia_error($handler)) {
 		    return $handler;
