@@ -119,7 +119,7 @@ ecjia.merchant.order_list.init();
     						<td class="hide-edit-area">
     							{$order.order_sn}
     							<div class="edit-list">
-    								{if !$order.verification_status}	
+    								{if $order.pay_status and !$order.verification_status}	
     									<a href="#actionmodal" data-toggle="modal" order-id="{$order.order_id}" >核销</a>&nbsp;|&nbsp;
     								{/if}
     								<a target="_blank" href='{url path="quickpay/mh_order/order_info" args="order_id={$order.order_id}"}' title="查看详情">{t}查看详情{/t}</a>
