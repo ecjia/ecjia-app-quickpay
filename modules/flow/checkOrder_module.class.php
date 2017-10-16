@@ -115,7 +115,7 @@ class checkOrder_module extends api_front implements api_interface {
 						$limit_time_exclude = explode(',', $v1['limit_time_exclude']);
 						$current_date = RC_Time::local_date(ecjia::config('date_format'), RC_Time::gmtime());
 						$current_date = array($current_date);
-						if (in_array($current_date, $limit_time_exclude)) {
+						if (in_array($current_date, $limit_time_exclude) || $current_date == $limit_time_exclude) {
 							unset($activitys[$k1]);
 						}
 					}
