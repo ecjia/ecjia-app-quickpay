@@ -77,7 +77,7 @@
 		    	  	</div>
 		      	</td>
 		      	<td class="ecjiafc-red">{$quickpay.merchants_name}</td>
-		      	<td>{if $quickpay.activity_type eq 'normal'}无优惠{elseif $quickpay.activity_type eq 'discount'}价格折扣{elseif $quickpay.activity_type eq 'everyreduced'}每满多少减多少，最高减多少{else $quickpay.activity_type eq 'reduced'}满多少减多少{/if}</td>
+		      	<td>{if $quickpay.activity_type eq 'discount'}价格折扣{elseif $quickpay.activity_type eq 'everyreduced'}每满多少减多少，最高减多少{else $quickpay.activity_type eq 'reduced'}满多少减多少{/if}</td>
 		      
 		      	<td>{$quickpay.start_time}</td>
 		      	<td>{$quickpay.end_time}</td>

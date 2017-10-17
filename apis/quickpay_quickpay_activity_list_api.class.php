@@ -58,9 +58,7 @@ class quickpay_quickpay_activity_list_api extends Component_Event_Api {
 				$list[$key]['total_order_count'] = RC_DB::table('quickpay_orders')->where('activity_id', $val['id'])->count('order_id');
 				
 				/*活动类型处理*/
-				if ($val['activity_type'] == 'normal') {
-					$list[$key]['label_activity_type'] = '无优惠';
-				} elseif ($val['activity_type'] == 'discount') {
+				if ($val['activity_type'] == 'discount') {
 					$list[$key]['label_activity_type'] = '价格折扣';
 				} elseif ($val['activity_type'] == 'everyreduced') {
 					$list[$key]['label_activity_type'] = '每满多少减多少,最高减多少';

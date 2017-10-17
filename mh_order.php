@@ -113,9 +113,7 @@ class mh_order extends ecjia_merchant {
 		$order_info['add_time'] = RC_Time::local_date(ecjia::config('time_format'), $order_info['add_time']);
 		$order_info['verification_time'] = RC_Time::local_date(ecjia::config('time_format'), $order_info['verification_time']);
 		
-		if ($order_info['activity_type'] == 'normal') {
-			$order_info['activity_name'] = '无优惠';
-		} elseif ($order_info['activity_type'] == 'discount') { 
+		if ($order_info['activity_type'] == 'discount') { 
 			$order_info['activity_name'] = '价格折扣';
 		} elseif ($order_info['activity_type'] == 'everyreduced') { 
 			$order_info['activity_name'] = '每满多少减多少,最高减多少';
@@ -313,7 +311,6 @@ class mh_order extends ecjia_merchant {
 	 */
 	private function get_quickpay_type(){
 		$type_list = array(
-			'normal' 	=> '无优惠',
 			'discount'	=> '价格折扣',
 			'reduced'   => '满多少减多少',
 			'everyreduced' 	 => '每满多少减多少,最高减多少'

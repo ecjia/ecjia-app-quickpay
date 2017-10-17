@@ -517,7 +517,6 @@ class merchant extends ecjia_merchant {
 	 */
 	private function get_quickpay_type(){
 		$type_list = array(
-			'normal' 	=> '无优惠',
 			'discount'	=> '价格折扣',
 			'reduced'   => '满多少减多少',
 			'everyreduced' 	 => '每满多少减多少,最高减多少'

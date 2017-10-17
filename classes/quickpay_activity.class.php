@@ -178,10 +178,7 @@ class quickpay_activity {
 	public static function get_quickpay_discount($options){
 		$discount = 0.00;
 		if (!empty($options['activity_type']) && !empty($options['goods_amount']) && !empty($options['activity_value'])) {
-			if ($options['activity_type'] == 'normal') {
-				//无优惠
-				$discount = 0.00;
-			} elseif ($options['activity_type'] == 'discount') {
+			if ($options['activity_type'] == 'discount') {
 				//打折
 				$discount_price = ($options['goods_amount'] - $options['exclude_amount'])*$options['activity_value']/100;
 				$discount = ($options['goods_amount'] - $options['exclude_amount']) - $discount_price;
