@@ -1,7 +1,7 @@
 <?php
 defined('IN_ECJIA') or exit('No permission resources.');
 /**
- * 闪惠活动列表
+ * 买单活动列表
  * @author zrl
  *
  */
@@ -19,9 +19,9 @@ class quickpay_quickpay_activity_list_api extends Component_Event_Api {
 	
 	
 	/**
-	 * 闪惠活动列表
+	 * 买单活动列表
 	 * @param   array $options	条件参数
-	 * @return  array   闪惠活动列表
+	 * @return  array   买单活动列表
 	 */
 	
 	private function quickpay_activity_list($options) {

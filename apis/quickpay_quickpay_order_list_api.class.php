@@ -1,7 +1,7 @@
 <?php
 defined('IN_ECJIA') or exit('No permission resources.');
 /**
- * 闪惠订单列表
+ * 买单订单列表
  * @author zrl
  *
  */
@@ -19,9 +19,9 @@ class quickpay_quickpay_order_list_api extends Component_Event_Api {
 	
 	
 	/**
-	 * 闪惠订单列表
+	 * 买单订单列表
 	 * @param   array $options	条件参数
-	 * @return  array   闪惠订单列表
+	 * @return  array   买单订单列表
 	 */
 	
 	private function quickpay_order_list($options) {

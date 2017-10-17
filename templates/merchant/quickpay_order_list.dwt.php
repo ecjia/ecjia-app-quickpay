@@ -42,7 +42,7 @@ ecjia.merchant.order_list.init();
         		
         		<div class="form-group">
         			<select class="w200" name='activity_type'>
-						<option value="0">{t}闪惠类型{/t}</option>
+						<option value="0">{t}优惠买单类型{/t}</option>
 						<!-- {foreach from=$type_list item=list key=key} -->
 						<option value="{$key}" {if $key eq $smarty.get.activity_type}selected="selected"{/if}>{$list}</option>
 						<!-- {/foreach} -->
@@ -101,7 +101,7 @@ ecjia.merchant.order_list.init();
 						        </th>
         						<th class="w150">订单号</th>
         						<th>购买者信息</th>
-        						<th class="w200">闪惠类型</th>
+        						<th class="w200">优惠买单类型</th>
         						<th class="w200">下单时间</th>
         						<th class="w100">消费金额</th>
         						<th class="w100">实付金额</th>

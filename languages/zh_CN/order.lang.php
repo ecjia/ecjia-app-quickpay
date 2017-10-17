@@ -47,7 +47,7 @@
 defined('IN_ECJIA') or exit('No permission resources.');
 
 /**
- * ECJIA 闪惠订单管理语言文件
+ * ECJIA 买单订单管理语言文件
  */
 return array(
 	/* 订单状态 */

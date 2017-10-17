@@ -47,7 +47,7 @@
 namespace Ecjia\App\Quickpay;
 
 /**
- * 闪惠订单状态处理（订单状态、支付状态、审核状态）
+ * 买单订单状态处理（订单状态、支付状态、审核状态）
  */
 class Status
 {

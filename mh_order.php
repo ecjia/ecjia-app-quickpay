@@ -47,7 +47,7 @@
 defined('IN_ECJIA') or exit('No permission resources.');
 
 /**
- * 闪惠订单管理
+ * 买单订单管理
  */
 class mh_order extends ecjia_merchant {
 	public function __construct() {
@@ -69,18 +69,18 @@ class mh_order extends ecjia_merchant {
 		RC_Script::enqueue_script('mh_order', RC_App::apps_url('statics/js/mh_order.js', __FILE__));
 		RC_Style::enqueue_style('mh_orders', RC_App::apps_url('statics/css/mh_orders.css', __FILE__), array(), false, false);
 		
-		ecjia_merchant_screen::get_current_screen()->add_nav_here(new admin_nav_here('闪惠管理', RC_Uri::url('quickpay/mh_order/init')));
+		ecjia_merchant_screen::get_current_screen()->add_nav_here(new admin_nav_here('买单管理', RC_Uri::url('quickpay/mh_order/init')));
 		ecjia_merchant_screen::get_current_screen()->set_parentage('quickpay', 'quickpay/mh_order.php');
 	}
 
 	/**
-	 * 闪惠订单列表页面
+	 * 买单订单列表页面
 	 */
 	public function init() {
 	    $this->admin_priv('mh_quickpay_order_manage');
 	    
-	    ecjia_merchant_screen::get_current_screen()->add_nav_here(new admin_nav_here('闪惠订单'));
-	    $this->assign('ur_here', '闪惠订单列表');
+	    ecjia_merchant_screen::get_current_screen()->add_nav_here(new admin_nav_here('买单订单'));
+	    $this->assign('ur_here', '买单订单列表');
 	    
 	    $this->assign('action_link', array('text' => '订单查询', 'href' => RC_Uri::url('quickpay/mh_order/search_order')));
 	    	    
@@ -97,15 +97,15 @@ class mh_order extends ecjia_merchant {
 	}
 	
 	/**
-	 * 闪惠订单详情页面
+	 * 买单订单详情页面
 	 */
 	public function order_info() {
 		$this->admin_priv('mh_quickpay_order_manage');
 		 
-		ecjia_merchant_screen::get_current_screen()->add_nav_here(new admin_nav_here('闪惠订单信息'));
-		$this->assign('ur_here', '闪惠订单信息');
+		ecjia_merchant_screen::get_current_screen()->add_nav_here(new admin_nav_here('买单订单信息'));
+		$this->assign('ur_here', '买单订单信息');
 		
-		$this->assign('action_link', array('text' => '闪惠订单列表', 'href' => RC_Uri::url('quickpay/mh_order/init')));
+		$this->assign('action_link', array('text' => '买单订单列表', 'href' => RC_Uri::url('quickpay/mh_order/init')));
 		
 		$order_id = intval($_GET['order_id']);
 		$order_info = RC_DB::table('quickpay_orders')->where('order_id', $order_id)->first();
@@ -199,7 +199,7 @@ class mh_order extends ecjia_merchant {
 	}
 	
 	/**
-	 * 批量操作闪惠订单
+	 * 批量操作买单订单
 	 */
 	public function batch() {
 		$this->admin_priv('mh_quickpay_order_delete');
@@ -211,15 +211,15 @@ class mh_order extends ecjia_merchant {
 	}
 	
 	/**
-	 * 闪惠订单查询
+	 * 买单订单查询
 	 */
 	public function search_order() {
 		$this->admin_priv('mh_quickpay_order_search');
 		 
-		ecjia_merchant_screen::get_current_screen()->add_nav_here(new admin_nav_here('闪惠订单查询'));
-		$this->assign('ur_here', '闪惠订单查询');
+		ecjia_merchant_screen::get_current_screen()->add_nav_here(new admin_nav_here('买单订单查询'));
+		$this->assign('ur_here', '买单订单查询');
 		 
-		$this->assign('action_link', array('text' => '闪惠订单列表', 'href' => RC_Uri::url('quickpay/mh_order/init')));
+		$this->assign('action_link', array('text' => '买单订单列表', 'href' => RC_Uri::url('quickpay/mh_order/init')));
 	
 		$type_list = $this->get_quickpay_type();
 		$this->assign('type_list', $type_list);
@@ -309,7 +309,7 @@ class mh_order extends ecjia_merchant {
 
 
 	/**
-	 * 获取闪惠类型
+	 * 获取优惠买单类型
 	 */
 	private function get_quickpay_type(){
 		$type_list = array(

@@ -47,7 +47,7 @@
 defined('IN_ECJIA') or exit('No permission resources.');
 
 /**
- * 闪惠购物流检查订单
+ * 买单购物流检查订单
  * @author 
  */
 class checkOrder_module extends api_front implements api_interface {
@@ -154,7 +154,7 @@ class checkOrder_module extends api_front implements api_interface {
 		//==== 获取商家所有活动优惠信息end  === 
 		
 		if (!empty($activity_id) && ($activity_id > 0)) {
-			/*获取闪惠活动信息*/
+			/*获取买单活动信息*/
 			$quickpay_activity_info = RC_DB::table('quickpay_activity')->where('store_id', $store_id)->where('id', $activity_id)->first();
 			
 			if (empty($quickpay_activity_info)) {

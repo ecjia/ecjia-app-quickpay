@@ -20,7 +20,7 @@ ecjia.admin.quickpay_info.init();
 		<div class="row-fluid editpage-rightbar edit-page">
 			<div class="left-bar">
 				<div class="control-group formSep">
-					<label class="control-label">闪惠名称：</label>
+					<label class="control-label">买单名称：</label>
 					<div class="controls">
 						<input type="text" name="title" id="title" value="{$data.title}" class="w350" />
 						<span class="input-must">{lang key='system::system.require_field'}</span>
@@ -28,14 +28,14 @@ ecjia.admin.quickpay_info.init();
 				</div>
 				
 				<div class="control-group formSep">
-					<label class="control-label">闪惠描述：</label>
+					<label class="control-label">买单描述：</label>
 					<div class="controls">
 						<textarea name="description" id="description" class="w350">{$data.description}</textarea>
 					</div>
 				</div>
 				
 				<div class="control-group formSep">
-					<label class="control-label">闪惠类型：</label>
+					<label class="control-label">优惠买单类型：</label>
 					<div class="controls">
 						<select name='activity_type' id="activity_type" class="w350">
 							<!-- {foreach from=$type_list item=list key=key} -->

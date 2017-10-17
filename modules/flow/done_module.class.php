@@ -101,7 +101,7 @@ class done_module extends api_front implements api_interface {
 		);
 
 		if (!empty($activity_id) && $activity_id > 0) {
-			/*获取闪惠活动信息*/
+			/*获取买单活动信息*/
 			$quickpay_activity_info = RC_DB::table('quickpay_activity')->where('id', $activity_id)->first();
 			if (empty($quickpay_activity_info)) {
 				return new ecjia_error('activity_not_exists', '活动信息不存在');

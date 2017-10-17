@@ -78,7 +78,7 @@
 								<td>
 									<div align="right">
 										<strong>买单消费总金额：</strong>¥{if $order_info.goods_amount}{$order_info.goods_amount}{else}0{/if}
-										- <strong>闪惠：</strong>¥{if $order_info.discount}{$order_info.discount}{else}0{/if}
+										- <strong>买单：</strong>¥{if $order_info.discount}{$order_info.discount}{else}0{/if}
 										- <strong>使用积分抵扣：</strong>¥{if $order_info.integral_money}{$order_info.integral_money}{else}0{/if}
 										- <strong>使用红包抵扣：</strong>¥{if $order_info.bonus}{$order_info.bonus}{else}0{/if}
 									</div>

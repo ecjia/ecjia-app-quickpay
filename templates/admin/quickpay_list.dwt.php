@@ -29,12 +29,12 @@
 				<span class="caret"></span>
 			</a>
 			<ul class="dropdown-menu">
-				<li><a class="button_remove" data-toggle="ecjiabatch" data-idClass=".checkbox:checked" data-url="{url path='quickpay/admin/batch'}" data-msg="您确实要删除选中的闪惠规则吗？" data-noSelectMsg="请先选中要删除的闪惠规则！" data-name="id" href="javascript:;"><i class="fontello-icon-trash"></i>删除闪惠规则</a></li>
+				<li><a class="button_remove" data-toggle="ecjiabatch" data-idClass=".checkbox:checked" data-url="{url path='quickpay/admin/batch'}" data-msg="您确实要删除选中的买单规则吗？" data-noSelectMsg="请先选中要删除的买单规则！" data-name="id" href="javascript:;"><i class="fontello-icon-trash"></i>删除买单规则</a></li>
 			</ul>
 		</div>
 		<div class="choose_list f_r">
 			<input type="text" name="merchant_name" value="{$smarty.get.merchant_name}" placeholder="请输入商家名称"/>
-			<input type="text" name="keyword" value="{$smarty.get.keyword}" placeholder="请输入闪惠规则名称"/> 
+			<input type="text" name="keyword" value="{$smarty.get.keyword}" placeholder="请输入买单规则名称"/> 
 			<button class="btn search_quickpay" type="button">搜索</button>
 		</div>
 	</form>
@@ -46,9 +46,9 @@
 			<thead>
 				<tr>
 				    <th class="table_checkbox"><input type="checkbox" name="select_rows" data-toggle="selectall" data-children=".checkbox"/></th>
-				    <th class="w150">闪惠标题</th>
+				    <th class="w150">买单标题</th>
 				    <th class="w150">商家名称</th>
-				    <th class="w150">闪惠类型</th>
+				    <th class="w150">优惠买单类型</th>
 				    <th class="w100">开始时间</th>
 				    <th class="w100">结束时间</th>
 			  	</tr>
@@ -70,7 +70,7 @@
 		     	  	<div class="edit-list">
 			     	  	{if $quickpay.manage_mode eq 'self'}
 						  	<a class="data-pjax" href='{url path="quickpay/admin/edit" args="id={$quickpay.id}&store_id={$quickpay.store_id}"}' title="编辑">编辑</a>&nbsp;|&nbsp;
-				          	<a class="ajaxremove ecjiafc-red" data-toggle="ajaxremove" data-msg="你确定要删除该闪惠规则吗？" href='{url path="quickpay/admin/remove" args="id={$quickpay.id}"}' title="删除">删除</a>
+				          	<a class="ajaxremove ecjiafc-red" data-toggle="ajaxremove" data-msg="你确定要删除该买单规则吗？" href='{url path="quickpay/admin/remove" args="id={$quickpay.id}"}' title="删除">删除</a>
 				        {else}
 				        	<a target="_blank" href='{url path="quickpay/admin/detail" args="id={$quickpay.id}"}' title="查看详情">查看详情</a>
 				        {/if}	

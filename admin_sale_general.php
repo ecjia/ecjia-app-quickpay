@@ -46,7 +46,7 @@
 //
 defined('IN_ECJIA') or exit('No permission resources.');
 /**
- * 闪惠订单统计
+ * 买单订单统计
  * songqianqian
 */
 class admin_sale_general extends ecjia_admin {
@@ -90,7 +90,7 @@ class admin_sale_general extends ecjia_admin {
         		->first();
 
         $this->assign('data_count', $data_count);
-        ecjia_screen::get_current_screen()->add_nav_here(new admin_nav_here('闪惠管理', RC_Uri::url('quickpay/admin_order/init')));
+        ecjia_screen::get_current_screen()->add_nav_here(new admin_nav_here('买单管理', RC_Uri::url('quickpay/admin_order/init')));
     }
     
     /**
@@ -99,10 +99,10 @@ class admin_sale_general extends ecjia_admin {
     public function init() {
         $this->admin_priv('quickpay_sale_general_stats');
         
-        ecjia_screen::get_current_screen()->add_nav_here(new admin_nav_here('闪惠订单统计'));
+        ecjia_screen::get_current_screen()->add_nav_here(new admin_nav_here('买单订单统计'));
         
-        $this->assign('ur_here', '闪惠订单统计');
-        $this->assign('action_link', array('text' => '闪惠订单统计报表下载', 'href' => RC_Uri::url('quickpay/admin_sale_general/download')));
+        $this->assign('ur_here', '买单订单统计');
+        $this->assign('action_link', array('text' => '买单订单统计报表下载', 'href' => RC_Uri::url('quickpay/admin_sale_general/download')));
         
         $this->assign('page', 'init');
         $this->assign('form_action', RC_Uri::url('quickpay/admin_sale_general/init'));
@@ -163,12 +163,12 @@ class admin_sale_general extends ecjia_admin {
         
         $start_time = RC_Time::local_date('Y-m-d', $start_time);
         $end_time = RC_Time::local_date('Y-m-d', $end_time);
-        $filename = mb_convert_encoding('平台闪惠订单统计概况报表' . '_' . $start_time . '至' . $end_time, "GBK", "UTF-8");
+        $filename = mb_convert_encoding('平台买单订单统计概况报表' . '_' . $start_time . '至' . $end_time, "GBK", "UTF-8");
         
         header("Content-type: application/vnd.ms-excel; charset=utf-8");
         header("Content-Disposition: attachment; filename={$filename}.xls");
         
-        echo mb_convert_encoding('平台闪惠订单统计', "GBK", "UTF-8") . "\t\n";
+        echo mb_convert_encoding('平台买单订单统计', "GBK", "UTF-8") . "\t\n";
         echo mb_convert_encoding('时间段', "GBK", "UTF-8") . "\t";
         echo mb_convert_encoding('订单数(单位:个)', "GBK", "UTF-8") . "\t";
         echo mb_convert_encoding('营业额(单位:元)', "GBK", "UTF-8") . "\t\n";

@@ -47,7 +47,7 @@
 defined('IN_ECJIA') or exit('No permission resources.');
 
 /**
- * 闪惠销售明细列表
+ * 买单销售明细列表
 */
 class mh_sale_list extends ecjia_merchant {
 	public function __construct() {
@@ -66,7 +66,7 @@ class mh_sale_list extends ecjia_merchant {
         RC_Style::enqueue_style('mh_stats', RC_App::apps_url('statics/css/mh_stats.css', __FILE__));
         
         ecjia_merchant_screen::get_current_screen()->set_parentage('quickpay', 'quickpay/mh_sale_list.php');
-        ecjia_merchant_screen::get_current_screen()->add_nav_here(new admin_nav_here('闪惠管理', RC_Uri::url('quickpay/mh_order/init')));
+        ecjia_merchant_screen::get_current_screen()->add_nav_here(new admin_nav_here('买单管理', RC_Uri::url('quickpay/mh_order/init')));
 	}
 	
 	/**
@@ -75,9 +75,9 @@ class mh_sale_list extends ecjia_merchant {
 	public function init() {
 		$this->admin_priv('mh_sale_list_stats');
 		
-		ecjia_merchant_screen::get_current_screen()->add_nav_here(new admin_nav_here('闪惠销售明细'));
+		ecjia_merchant_screen::get_current_screen()->add_nav_here(new admin_nav_here('买单销售明细'));
 		
-		$this->assign('ur_here', '闪惠销售明细');
+		$this->assign('ur_here', '买单销售明细');
 		$this->assign('action_link', array('text' => '销售明细报表下载', 'href' => RC_Uri::url('quickpay/mh_sale_list/download')));
 		
 		$sale_list_data = $this->get_sale_list();
@@ -116,11 +116,11 @@ class mh_sale_list extends ecjia_merchant {
 		->groupby('period')
 		->get();
 
-		$filename = mb_convert_encoding('商家闪惠销售明细报表' . '_' . $_GET['start_date'] . '至' . $_GET['end_date'], "GBK", "UTF-8");
+		$filename = mb_convert_encoding('商家买单销售明细报表' . '_' . $_GET['start_date'] . '至' . $_GET['end_date'], "GBK", "UTF-8");
 		header("Content-type: application/vnd.ms-excel; charset=utf-8");
 		header("Content-Disposition: attachment; filename=$filename.xls");
 
-		echo mb_convert_encoding('商家闪惠销售明细','UTF-8', 'UTF-8') . "\t\n";
+		echo mb_convert_encoding('商家买单销售明细','UTF-8', 'UTF-8') . "\t\n";
 		echo mb_convert_encoding('日期','UTF-8', 'UTF-8') . "\t";
 		echo mb_convert_encoding('订单数量（单）','UTF-8', 'UTF-8') . "\t";
 		echo mb_convert_encoding('消费总金额（元）','UTF-8', 'UTF-8') . "\t";

@@ -47,7 +47,7 @@
 defined('IN_ECJIA') or exit('No permission resources.');
 
 /**
- * 某一商家闪惠活动列表
+ * 某一商家买单活动列表
  * @author zrl
  */
 class list_module extends api_front implements api_interface {
