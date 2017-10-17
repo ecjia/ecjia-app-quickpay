@@ -77,15 +77,17 @@ class done_module extends api_front implements api_interface {
     	$exclude_amount = $this->requestData('exclude_amount', '0.00');
     	$bonus_id		= $this->requestData('bonus_id', 0);
     	$integral		= $this->requestData('integral', 0);
-    	$pay_id			= $this->requestData('pay_id', 0);
+    	//$pay_id			= $this->requestData('pay_id', 0);
     	$store_id		= $this->requestData('store_id', 0);
     	
 		if (empty($goods_amount) || empty($store_id)) {
 			return new ecjia_error( 'invalid_parameter', RC_Lang::get ('system::system.invalid_parameter'));
 		}
     	
-		if (empty($pay_id)) {
-			return new ecjia_error( 'payment_error', '请选择支付方式');
+    	/*商家闪惠功能是否开启*/
+		$quickpay_enabled = RC_DB::table('merchants_config')->where('store_id', $store_id)->where('code', 'quickpay_enabled')->pluck('value');
+		if (empty($quickpay_enabled)) {
+			return new ecjia_error('quickpay_enabled_error', '此商家未开启优惠买单功能！');
 		}
 		
 		/*初始化订单信息*/
@@ -187,7 +189,7 @@ class done_module extends api_front implements api_interface {
 					$limit_time_exclude = explode(',', $quickpay_activity_info['limit_time_exclude']);
 					$current_date = RC_Time::local_date(ecjia::config('date_format'), time);
 					$current_date = array($current_date);
-					if (in_array($current_date, $limit_time_exclude)) {
+					if (in_array($current_date, $limit_time_exclude) || $current_date == $limit_time_exclude) {
 						//return new ecjia_error('limit_time_daily_error', '此活动当前日期不可用！');
 						$discount = 0.00;
 						$order['integral_money'] = 0.00;
@@ -215,12 +217,12 @@ class done_module extends api_front implements api_interface {
 		$order['order_type'] = 'quickpay';
 		
 		/*支付方式信息*/
-		if ($pay_id > 0) {
-			$payment_method = RC_Loader::load_app_class('payment_method','payment');
-			$payment_info = $payment_method->payment_info_by_id($pay_id);
-			$order['pay_code'] = $payment_info['pay_code'];
-			$order['pay_name'] = $payment_info['pay_name'];
-		}
+		//if ($pay_id > 0) {
+		//	$payment_method = RC_Loader::load_app_class('payment_method','payment');
+		//	$payment_info = $payment_method->payment_info_by_id($pay_id);
+		//	$order['pay_code'] = $payment_info['pay_code'];
+		//	$order['pay_name'] = $payment_info['pay_name'];
+		//}
 		
 		/*会员信息*/
 		$user_id = $_SESSION['user_id'];
@@ -307,13 +309,19 @@ class done_module extends api_front implements api_interface {
     	/* 插入支付日志 */
     	//$order['log_id'] = $payment_method->insert_pay_log($new_order_id, $order['order_amount'], PAY_ORDER);
     	
-    	$payment_info = $payment_method->payment_info_by_id($pay_id);
+    	//$payment_info = $payment_method->payment_info_by_id($pay_id);
+    	//支付方式列表
+    	//$payment_list = RC_Api::api('payment', 'available_payments');
+    	//if (is_ecjia_error($payment_list)) {
+    	//	return $payment_list;
+    	//}
     	
     	$order_info = array(
     			'order_sn'   => $order['order_sn'],
     			'order_id'   => $order['order_id'],
+    			'store_id'   => $store_id,
     			'order_info' => array(
-    					'pay_code'               => $payment_info['pay_code'],
+    					//'pay_code'               => $payment_info['pay_code'],
     					'order_amount'           => $order['order_amount'],
     					'formatted_order_amount' => price_format($order['order_amount']),
     					'order_id'               => $order['order_id'],

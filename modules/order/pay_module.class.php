@@ -62,6 +62,11 @@ class pay_module extends api_front implements api_interface {
 		$order_id	= $this->requestData('order_id', 0);
 		$is_mobile	= true;
 		$wxpay_open_id = $this->requestData('wxpay_open_id', 0);
+		$pay_code = $this->requestData('pay_code', '');
+		
+		if (empty($pay_code)) {
+			return new ecjia_error( 'payment_error', '请选择支付方式');
+		}
 		
 		if (!$order_id) {
 			return new ecjia_error('invalid_parameter', RC_Lang::get('orders::order.invalid_parameter'));
@@ -82,7 +87,10 @@ class pay_module extends api_front implements api_interface {
 		if ($_SESSION['admin_id'] > 0) {
 			$_SESSION['user_id'] = $order['user_id'];
 		}
-		$order['pay_id'] = RC_DB::table('payment')->where('pay_code', $order['pay_code'])->pluck('pay_id');
+		
+		$payment_info = RC_DB::table('payment')->where('pay_code', $pay_code)->first();
+		$order['pay_id'] = $payment_info['pay_id'];
+		
 		//支付方式信息
 		$handler = with(new Ecjia\App\Payment\PaymentPlugin)->channel(intval($order['pay_id']));
 		$order['open_id']	     = $wxpay_open_id;
@@ -90,6 +98,9 @@ class pay_module extends api_front implements api_interface {
 		if (is_ecjia_error($handler)) {
 		    return $handler;
 		}
+		
+		/*更新订单支付方式*/
+		RC_DB::table('quickpay_orders')->where('order_id', $order_id)->update(array('pay_code' => $pay_code, 'pay_name' => $payment_info['pay_name']));
 		
 		/* 插入支付流水记录*/
 		RC_Api::api('payment', 'save_payment_record', [

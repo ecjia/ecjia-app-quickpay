@@ -305,7 +305,7 @@ class quickpay_activity {
 	public static function max_discount_activitys ($options) {
 		$quickpay_activity_list  = RC_Api::api('quickpay', 'quickpay_activity_list', $options);
 		$list = $quickpay_activity_list['list'];
-	
+		
 		if (!empty($list)) {
 			foreach ($list as $key => $val) {
 				$list[$key]['total_act_discount'] = self::get_quickpay_discount(array('activity_type' => $val['activity_type'],'goods_amount' => $options['goods_amount'], 'exclude_amount' => $options['exclude_amount'], 'activity_value' => $val['activity_value']));
@@ -317,16 +317,21 @@ class quickpay_activity {
 					$integral = (($options['goods_amount'] - $options['exclude_amount'])/$scale)*100;
 					$order_max_integral = intval($integral);
 					$integral_money = self::integral_of_value($integral);
+					$allow_use_integral = 1;
 				} elseif (($val['use_integral'] != 'nolimit') && ($val['use_integral'] != 'close')) {
 					//有积分限制
+					$allow_use_integral = 1;
 					$order_max_integral = intval($val['use_integral']);
 					$integral_money = self::integral_of_value($integral);
 				} else {
 					//不可用积分
+					$allow_use_integral = 0;
 					$integral_money = 0.00;
+					$order_max_integral = 0;
 				}
 				$list[$key]['act_integral_money'] = $integral_money;
-				
+				$list[$key]['allow_use_integral'] = $allow_use_integral;
+				$list[$key]['order_max_integral'] = $order_max_integral;
 				/*活动是否允许使用红包*/
 				$bonus_list = array();
 				$allow_use_bonus =0;
@@ -343,9 +348,9 @@ class quickpay_activity {
 							}
 							$bonus_list = $user_bonus;
 						}
+						$allow_use_bonus = 1;
 						// 能使用红包
 					} elseif (($val['use_bonus'] != 'nolimit') && $val['use_bonus'] != 'close') {
-					
 						//活动指定红包类型
 						$bonus_type_ids = explode(',', $val['use_bonus']);
 						$bonus_list = self::get_acyivity_bonus(array('user_id' => $options['user_id'], 'bonus_type_ids' => $bonus_type_ids, 'store_id' => $options['store_id']));
@@ -355,10 +360,13 @@ class quickpay_activity {
 								$bonus_list[$arr2]['bonus_money_formated'] = price_format($res2['type_money'], false);
 							}
 						}
+						$allow_use_bonus = 1;
 					} else{
+						$allow_use_bonus = 0;
 						$bonus_list = array();
 					}
 				}
+				$list[$key]['allow_use_bonus'] = $allow_use_bonus;
 				$list[$key]['act_bonus_list'] = $bonus_list;
 				
 				/*自定义时间的活动，当前时间段不可用的过滤掉*/
@@ -397,15 +405,15 @@ class quickpay_activity {
 			}
 		}
 
-		if (!empty($list)) {
-			foreach ($list as $a => $b) {
-				if (!empty($b['act_bonus_list'])) {
-					foreach ($b['act_bonus_list'] as $b2) {
-						$list[$a]['bonus'][] = $b2['type_money'];
-					}
-				}
-			}
-		}
+// 		if (!empty($list)) {
+// 			foreach ($list as $a => $b) {
+// 				if (!empty($b['act_bonus_list'])) {
+// 					foreach ($b['act_bonus_list'] as $b2) {
+// 						$list[$a]['bonus'][] = $b2['type_money'];
+// 					}
+// 				}
+// 			}
+// 		}
 		return $list;
 	}
 }	
