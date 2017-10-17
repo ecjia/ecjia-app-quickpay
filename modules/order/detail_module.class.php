@@ -98,8 +98,15 @@ class detail_module extends api_front implements api_interface {
 		if ($order['pay_code'] == 'pay_balance') {
 			$order['order_amount'] = $order['order_amount'] + $order['surplus'];
 		}
+		
+		$store_name = RC_DB::table('store_franchisee')->where('store_id', $order['store_id'])->pluck('merchants_name');
+		$shop_logo = RC_DB::table('merchants_config')->where('store_id', $order['store_id'])->where('code', 'shop_logo')->pluck('value');
+		
 		$arr = array();
 		$arr = array(
+				'store_id' 					=> intval($order['store_id']),
+				'store_name' 				=> $store_name,
+				'store_logo'					=> !empty($shop_logo) ? RC_Upload::upload_url($shop_logo) : '',
 				'order_id' 					=> intval($order['order_id']),
 				'order_sn' 					=> trim($order['order_sn']),
 				'order_status'				=> $order['order_status'],

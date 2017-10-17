@@ -199,7 +199,7 @@ class done_module extends api_front implements api_interface {
 			
 			}
 		} else {
-			$order['activity_type'] = '';
+			$order['activity_type'] = 'normal';
 			$order['activity_id'] = 0;
 			$order['bonus_id'] = 0;
 			$order['bonus'] = 0.00;
@@ -315,11 +315,15 @@ class done_module extends api_front implements api_interface {
     	//if (is_ecjia_error($payment_list)) {
     	//	return $payment_list;
     	//}
+    	$store_name = RC_DB::table('store_franchisee')->where('store_id', $store_id)->pluck('merchants_name');
+    	$shop_logo = RC_DB::table('merchants_config')->where('store_id', $store_id)->where('code', 'shop_logo')->pluck('value');
     	
     	$order_info = array(
     			'order_sn'   => $order['order_sn'],
     			'order_id'   => $order['order_id'],
     			'store_id'   => $store_id,
+    			'store_name' => $store_name,
+    			'store_logo' =>  !empty($shop_logo) ? RC_Upload::upload_url($shop_logo) : '',
     			'order_info' => array(
     					//'pay_code'               => $payment_info['pay_code'],
     					'order_amount'           => $order['order_amount'],
