@@ -88,10 +88,12 @@ class checkOrder_module extends api_front implements api_interface {
 			foreach ($activitys as $k1 => $v1) {
 				/*无优惠过滤*/
 				if ($v1['activity_type'] == 'normal') {
-					unset($activitys[$k1]);
+					//unset($activitys[$k1]);
+					$activitys[$k1]['is_allow_use'] = 0;
 				}
 				if ($v1['total_act_discount'] == '0') {
-					unset($activitys[$k1]);
+					//unset($activitys[$k1]);
+					$activitys[$k1]['is_allow_use'] = 0;
 				}
 					
 				/*自定义时间的活动，当前时间段不可用的过滤掉*/
@@ -103,7 +105,8 @@ class checkOrder_module extends api_front implements api_interface {
 						$limit_time_weekly = Ecjia\App\Quickpay\Weekly::weeks($v1['limit_time_weekly']);
 						$weeks_str = quickpay_activity::get_weeks_str($limit_time_weekly);
 						if (!in_array($current_week, $limit_time_weekly)){
-							unset($activitys[$k1]);
+							//unset($activitys[$k1]);
+							$activitys[$k1]['is_allow_use'] = 0;
 						}
 					}
 					/*每天限制时间段*/
@@ -113,7 +116,8 @@ class checkOrder_module extends api_front implements api_interface {
 							$arr[] = quickpay_activity::is_in_timelimit(array('start' => $val1['start'], 'end' => $val1['end']));
 						}
 						if (!in_array(0, $arr)) {
-							unset($activitys[$k1]);
+							//unset($activitys[$k1]);
+							$activitys[$k1]['is_allow_use'] = 0;
 						}
 					}
 					/*活动限制日期*/
@@ -122,7 +126,8 @@ class checkOrder_module extends api_front implements api_interface {
 						$current_date = RC_Time::local_date(ecjia::config('date_format'), RC_Time::gmtime());
 						$current_date = array($current_date);
 						if (in_array($current_date, $limit_time_exclude) || $current_date == $limit_time_exclude) {
-							unset($activitys[$k1]);
+							//unset($activitys[$k1]);
+							$activitys[$k1]['is_allow_use'] = 0;
 						}
 					}
 				}
@@ -310,6 +315,7 @@ class checkOrder_module extends api_front implements api_interface {
 			$available_activity_list = array();
 			foreach ($activitys as $val) {
 				$available_activity_list[] = array(
+						'is_allow_use'			=> $val['is_allow_use'], 
 						'activity_id' 			=> $val['id'],
 						'activity_type' 		=> $val['activity_type'],
 						'title' 				=> $val['title'],
@@ -335,7 +341,7 @@ class checkOrder_module extends api_front implements api_interface {
 				'goods_amount'				=> $goods_amount,
 				'exclude_amount'			=> $exclude_amount,
 				'user_integral'				=> $user_integral,
-				'available_activity_list'	=> $available_activity_list,
+				'activity_list'				=> $available_activity_list,
 		);
 		
 		return $data;

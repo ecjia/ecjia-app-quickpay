@@ -309,7 +309,7 @@ class quickpay_activity {
 		if (!empty($list)) {
 			foreach ($list as $key => $val) {
 				$list[$key]['total_act_discount'] = self::get_quickpay_discount(array('activity_type' => $val['activity_type'],'goods_amount' => $options['goods_amount'], 'exclude_amount' => $options['exclude_amount'], 'activity_value' => $val['activity_value']));
-				
+				$list[$key]['is_allow_use'] = 1;
 				/*活动是否允许使用积分处理*/
 				if ($val['use_integral'] == 'nolimit') {
 					//无积分限制；最多可用积分按商品价格兑换
