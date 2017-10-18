@@ -36,7 +36,7 @@
 		</div>
 		
 		<select class="w200" name="activity_type">
-			<option value="0">闪惠类型</option>
+			<option value="0">买单优惠类型</option>
 			<!-- {foreach from=$type_list item=list key=key} -->
 			<option value="{$key}" {if $key eq $smarty.get.activity_type}selected="selected"{/if}>{$list}</option>
 			<!-- {/foreach} -->
@@ -61,7 +61,7 @@
 						<th class="w100">订单号</th>
 						<th class="w120">商家名称</th>
 						<th>购买者信息</th>
-						<th class="w150">闪惠类型</th>
+						<th class="w150">买单优惠类型</th>
 						<th class="w150">下单时间</th>
 						<th class="w100">消费金额</th>
 						<th class="w100">实付金额</th>
@@ -79,7 +79,7 @@
 							{$order.merchants_name}
 						</td>
 						<td>{$order.user_name} [TEL：{$order.user_mobile}]</td>
-						<td>{if $order.activity_type eq 'normal'}无优惠{elseif $order.activity_type eq 'discount'}价格折扣{elseif $order.activity_type eq 'everyreduced'}每满多少减多少，最高减多少{else $order.activity_type eq 'reduced'}满多少减多少{/if}</td>
+						<td>{if $order.activity_type eq 'discount'}价格折扣{elseif $order.activity_type eq 'everyreduced'}每满多少减多少，最高减多少{else $order.activity_type eq 'reduced'}满多少减多少{/if}</td>
 						<td>{$order.add_time}</td>
 						<td>{$order.goods_amount}</td>
 						<td>{$order.order_amount}</td>

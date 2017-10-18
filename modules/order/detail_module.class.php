@@ -47,7 +47,7 @@
 defined('IN_ECJIA') or exit('No permission resources.');
 
 /**
- * 闪惠订单详情
+ * 买单订单详情
  * @author zrl
  */
 class detail_module extends api_front implements api_interface {

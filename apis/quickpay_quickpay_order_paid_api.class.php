@@ -49,7 +49,7 @@ defined('IN_ECJIA') or exit('No permission resources.');
 
 
 /**
- * 闪惠订单支付后处理订单的接口
+ * 买单订单支付后处理订单的接口
  * @author zrl
  */
 class quickpay_quickpay_order_paid_api extends Component_Event_Api {

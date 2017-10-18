@@ -54,19 +54,19 @@ class quickpay_merchant_purview_api extends Component_Event_Api {
     
     public function call(&$options) {
         $purviews = array(
-        	array('action_name' => '闪惠规则管理', 'action_code' => 'mh_quickpay_manage', 'relevance'   => ''),
-        	array('action_name' => '闪惠规则更新', 'action_code' => 'mh_quickpay_update', 'relevance'   => ''),
-        	array('action_name' => '闪惠规则删除', 'action_code' => 'mh_quickpay_delete', 'relevance'   => ''),
+        	array('action_name' => '买单规则管理', 'action_code' => 'mh_quickpay_manage', 'relevance'   => ''),
+        	array('action_name' => '买单规则更新', 'action_code' => 'mh_quickpay_update', 'relevance'   => ''),
+        	array('action_name' => '买单规则删除', 'action_code' => 'mh_quickpay_delete', 'relevance'   => ''),
         		
-        	array('action_name' => '闪惠订单管理', 'action_code' => 'mh_quickpay_order_manage', 'relevance'   => ''),
-        	array('action_name' => '闪惠订单核实', 'action_code' => 'mh_quickpay_order_update', 'relevance'   => ''),
-        	array('action_name' => '闪惠订单删除', 'action_code' => 'mh_quickpay_order_delete', 'relevance'   => ''),
+        	array('action_name' => '买单订单管理', 'action_code' => 'mh_quickpay_order_manage', 'relevance'   => ''),
+        	array('action_name' => '买单订单核实', 'action_code' => 'mh_quickpay_order_update', 'relevance'   => ''),
+        	array('action_name' => '买单订单删除', 'action_code' => 'mh_quickpay_order_delete', 'relevance'   => ''),
         		
-        	array('action_name' => '闪惠订单查询', 'action_code' => 'mh_quickpay_order_search', 'relevance'   => ''),
+        	array('action_name' => '买单订单查询', 'action_code' => 'mh_quickpay_order_search', 'relevance'   => ''),
         		
-        	array('action_name' => '闪惠订单统计', 'action_code' => 'mh_quickpay_sale_general_stats', 'relevance'   => ''),
+        	array('action_name' => '买单订单统计', 'action_code' => 'mh_quickpay_sale_general_stats', 'relevance'   => ''),
         		
-        	array('action_name' => '闪惠销售明细', 'action_code' => 'mh_sale_list_stats', 'relevance'   => ''),
+        	array('action_name' => '买单销售明细', 'action_code' => 'mh_sale_list_stats', 'relevance'   => ''),
 	
         );
         return $purviews;

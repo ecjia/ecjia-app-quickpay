@@ -47,7 +47,7 @@
 defined('IN_ECJIA') or exit('No permission resources.');
 
 /**
- * 闪惠管理
+ * 买单管理
  */
 return array(
 	'identifier' 	=> 'ecjia.quickpay',

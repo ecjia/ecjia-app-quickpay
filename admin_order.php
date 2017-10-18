@@ -47,7 +47,7 @@
 defined('IN_ECJIA') or exit('No permission resources.');
 
 /**
- * 闪惠订单管理
+ * 买单订单管理
  */
 class admin_order extends ecjia_admin {
 	public function __construct() {
@@ -69,17 +69,17 @@ class admin_order extends ecjia_admin {
 		RC_Script::enqueue_script('admin_order', RC_App::apps_url('statics/js/admin_order.js', __FILE__), array());
 		RC_Style::enqueue_style('admin_order', RC_App::apps_url('statics/css/admin_order.css', __FILE__), array(), false, false);
 	
-		ecjia_screen::get_current_screen()->add_nav_here(new admin_nav_here('闪惠管理', RC_Uri::url('quickpay/admin_order/init')));
+		ecjia_screen::get_current_screen()->add_nav_here(new admin_nav_here('买单管理', RC_Uri::url('quickpay/admin_order/init')));
 	}
 
 	/**
-	 * 闪惠订单列表页面
+	 * 买单订单列表页面
 	 */
 	public function init() {
 	    $this->admin_priv('quickpay_order_manage');
 	    
-	    ecjia_screen::get_current_screen()->add_nav_here(new admin_nav_here('闪惠订单'));
-	    $this->assign('ur_here', '闪惠订单列表');
+	    ecjia_screen::get_current_screen()->add_nav_here(new admin_nav_here('买单订单'));
+	    $this->assign('ur_here', '买单订单列表');
 	    
 	    $this->assign('action_link', array('text' => '订单查询', 'href' => RC_Uri::url('quickpay/admin_order/search_order')));
 	    	    
@@ -97,15 +97,15 @@ class admin_order extends ecjia_admin {
 	}
 	
 	/**
-	 * 闪惠订单详情页面
+	 * 买单订单详情页面
 	 */
 	public function order_info() {
 		$this->admin_priv('quickpay_order_manage');
 		 
-		ecjia_screen::get_current_screen()->add_nav_here(new admin_nav_here('闪惠订单信息'));
-		$this->assign('ur_here', '闪惠订单信息');
+		ecjia_screen::get_current_screen()->add_nav_here(new admin_nav_here('买单订单信息'));
+		$this->assign('ur_here', '买单订单信息');
 
-		$this->assign('action_link', array('text' => '闪惠订单列表', 'href' => RC_Uri::url('quickpay/admin_order/init')));
+		$this->assign('action_link', array('text' => '买单订单列表', 'href' => RC_Uri::url('quickpay/admin_order/init')));
 		
 		//订单详细信息
 		$order_id = intval($_GET['order_id']);
@@ -114,9 +114,7 @@ class admin_order extends ecjia_admin {
 		$order_info['add_time'] = RC_Time::local_date(ecjia::config('time_format'), $order_info['add_time']);
 		$order_info['verification_time'] = RC_Time::local_date(ecjia::config('time_format'), $order_info['verification_time']);
 		
-		if ($order_info['activity_type'] == 'normal') {
-			$order_info['activity_name'] = '无优惠';
-		} elseif ($order_info['activity_type'] == 'discount') { 
+		if ($order_info['activity_type'] == 'discount') { 
 			$order_info['activity_name'] = '价格折扣';
 		} elseif ($order_info['activity_type'] == 'everyreduced') { 
 			$order_info['activity_name'] = '每满多少减多少,最高减多少';
@@ -153,7 +151,7 @@ class admin_order extends ecjia_admin {
 	}
 	
 	/**
-	 * 批量操作闪惠订单
+	 * 批量操作买单订单
 	 */
 	public function batch() {
 		$this->admin_priv('quickpay_order_update');
@@ -166,15 +164,15 @@ class admin_order extends ecjia_admin {
 	
 	
 	/**
-	 * 闪惠订单查询
+	 * 买单订单查询
 	 */
 	public function search_order() {
 		$this->admin_priv('quickpay_order_search');
 		 
-		ecjia_screen::get_current_screen()->add_nav_here(new admin_nav_here('闪惠订单查询'));
-		$this->assign('ur_here', '闪惠订单查询');
+		ecjia_screen::get_current_screen()->add_nav_here(new admin_nav_here('买单订单查询'));
+		$this->assign('ur_here', '买单订单查询');
 		 
-		$this->assign('action_link', array('text' => '闪惠订单列表', 'href' => RC_Uri::url('quickpay/admin_order/init')));
+		$this->assign('action_link', array('text' => '买单订单列表', 'href' => RC_Uri::url('quickpay/admin_order/init')));
 	
 		$type_list = $this->get_quickpay_type();
 		$this->assign('type_list', $type_list);
@@ -185,7 +183,7 @@ class admin_order extends ecjia_admin {
 	}
 
 	/**
-	 * 获取闪惠规则列表
+	 * 获取买单规则列表
 	 */
 	private function order_list() {
 		$db_quickpay_order = RC_DB::table('quickpay_orders as qo')
@@ -260,11 +258,10 @@ class admin_order extends ecjia_admin {
 	}
 
 	/**
-	 * 获取闪惠类型
+	 * 获取买单优惠类型
 	 */
 	private function get_quickpay_type(){
 		$type_list = array(
-			'normal' 	=> '无优惠',
 			'discount'	=> '价格折扣',
 			'reduced'   => '满多少减多少',
 			'everyreduced' 	 => '每满多少减多少,最高减多少'

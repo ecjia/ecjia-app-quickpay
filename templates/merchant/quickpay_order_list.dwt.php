@@ -42,7 +42,7 @@ ecjia.merchant.order_list.init();
         		
         		<div class="form-group">
         			<select class="w200" name='activity_type'>
-						<option value="0">{t}闪惠类型{/t}</option>
+						<option value="0">{t}买单优惠类型{/t}</option>
 						<!-- {foreach from=$type_list item=list key=key} -->
 						<option value="{$key}" {if $key eq $smarty.get.activity_type}selected="selected"{/if}>{$list}</option>
 						<!-- {/foreach} -->
@@ -101,7 +101,7 @@ ecjia.merchant.order_list.init();
 						        </th>
         						<th class="w150">订单号</th>
         						<th>购买者信息</th>
-        						<th class="w200">闪惠类型</th>
+        						<th class="w200">买单优惠类型</th>
         						<th class="w200">下单时间</th>
         						<th class="w100">消费金额</th>
         						<th class="w100">实付金额</th>
@@ -129,7 +129,7 @@ ecjia.merchant.order_list.init();
     							{$order.user_name} [TEL：{$order.user_mobile}]
     						</td>
     						<td>
-    							{if $order.activity_type eq 'normal'}无优惠{elseif $order.activity_type eq 'discount'}价格折扣{elseif $order.activity_type eq 'everyreduced'}每满多少减多少，最高减多少{else $order.activity_type eq 'reduced'}满多少减多少{/if}
+    							{if $order.activity_type eq 'discount'}价格折扣{elseif $order.activity_type eq 'everyreduced'}每满多少减多少，最高减多少{else $order.activity_type eq 'reduced'}满多少减多少{/if}
     						</td>
     						<td>{$order.add_time}</td>
     						<td>{$order.goods_amount}</td>

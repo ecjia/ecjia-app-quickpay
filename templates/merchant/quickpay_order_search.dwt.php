@@ -46,7 +46,7 @@
 <!-- 						</div> -->
 						
 						<div class="form-group">
-							<label class="control-label col-lg-2">闪惠类型：</label>
+							<label class="control-label col-lg-2">买单优惠类型：</label>
 							<div class="col-lg-6">
 								<select class="form-control" name="activity_type" id="select9" >
 									<option value="0">请选择……</option>

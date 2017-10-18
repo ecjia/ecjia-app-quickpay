@@ -47,7 +47,7 @@
 defined('IN_ECJIA') or exit('No permission resources.');
 
 /**
- * 闪惠购物流检查订单
+ * 买单购物流检查订单
  * @author 
  */
 class checkOrder_module extends api_front implements api_interface {
@@ -73,7 +73,7 @@ class checkOrder_module extends api_front implements api_interface {
 		if (empty($store_id) || empty($goods_amount)) {
 			return new ecjia_error('invalid_parameter', RC_Lang::get('system::system.invalid_parameter'));
 		}
-		/*商家闪惠功能是否开启*/
+		/*商家买单功能是否开启*/
 		$quickpay_enabled = RC_DB::table('merchants_config')->where('store_id', $store_id)->where('code', 'quickpay_enabled')->pluck('value');
 		if (empty($quickpay_enabled)) {
 			return new ecjia_error('quickpay_enabled_error', '此商家未开启优惠买单功能！');
@@ -167,7 +167,7 @@ class checkOrder_module extends api_front implements api_interface {
 		//==== 获取商家所有活动优惠信息end  === 
 		
 // 		if (!empty($activity_id) && ($activity_id > 0)) {
-// 			/*获取闪惠活动信息*/
+// 			/*获取买单活动信息*/
 // 			$quickpay_activity_info = RC_DB::table('quickpay_activity')->where('store_id', $store_id)->where('id', $activity_id)->first();
 			
 // 			if (empty($quickpay_activity_info)) {

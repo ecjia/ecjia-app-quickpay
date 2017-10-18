@@ -84,7 +84,7 @@ class done_module extends api_front implements api_interface {
 			return new ecjia_error( 'invalid_parameter', RC_Lang::get ('system::system.invalid_parameter'));
 		}
     	
-    	/*商家闪惠功能是否开启*/
+    	/*商家买单功能是否开启*/
 		$quickpay_enabled = RC_DB::table('merchants_config')->where('store_id', $store_id)->where('code', 'quickpay_enabled')->pluck('value');
 		if (empty($quickpay_enabled)) {
 			return new ecjia_error('quickpay_enabled_error', '此商家未开启优惠买单功能！');
@@ -103,7 +103,7 @@ class done_module extends api_front implements api_interface {
 		);
 
 		if (!empty($activity_id) && $activity_id > 0) {
-			/*获取闪惠活动信息*/
+			/*获取买单活动信息*/
 			$quickpay_activity_info = RC_DB::table('quickpay_activity')->where('id', $activity_id)->first();
 			if (empty($quickpay_activity_info)) {
 				return new ecjia_error('activity_not_exists', '活动信息不存在');

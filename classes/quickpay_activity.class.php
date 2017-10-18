@@ -47,7 +47,7 @@
 defined('IN_ECJIA') or exit('No permission resources.');
 
 /**
- * 闪惠活动
+ * 买单活动
  */
 class quickpay_activity {
 	/**
@@ -173,7 +173,7 @@ class quickpay_activity {
 	}
 	
 	/**
-	 * 闪惠活动折扣
+	 * 买单活动折扣
 	 */
 	public static function get_quickpay_discount($options){
 		$discount = 0.00;
@@ -251,7 +251,7 @@ class quickpay_activity {
 	
 	
 	/**
-	 * 记录闪惠订单操作记录
+	 * 记录买单订单操作记录
 	 *
 	 */
 	public static function quickpay_order_action($options) {

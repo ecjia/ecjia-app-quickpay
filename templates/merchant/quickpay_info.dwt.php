@@ -39,7 +39,7 @@ table{border-collapse: separate; border-spacing: 0 3px;}
 	                        <div class="col-lg-7" style="padding-left:0px;">
 	                            <fieldset>
 	                                <div class="form-group">
-	                                    <label class="control-label col-lg-2">闪惠名称：</label>
+	                                    <label class="control-label col-lg-2">买单名称：</label>
 	                                    <div class="controls col-lg-9">
 	                                        <input class="form-control" type="text" name="title" id="title" value="{$data.title}" />
 	                                    </div>
@@ -47,14 +47,14 @@ table{border-collapse: separate; border-spacing: 0 3px;}
 	                                </div>
 	                                
 	                               	<div class="form-group">
-										<label class="control-label col-lg-2">闪惠描述：</label>
+										<label class="control-label col-lg-2">买单描述：</label>
 										<div class="controls col-lg-9">
 											<textarea class="form-control" name="description" id="description" >{$data.description}</textarea>
 										</div>
 									</div>
 	                                
 	                                <div class="form-group">
-	                                    <label class="control-label col-lg-2">闪惠类型：</label>
+	                                    <label class="control-label col-lg-2">买单优惠类型：</label>
 	                                    <div class="controls col-lg-9">
 	                                    	<select name='activity_type' id="activity_type" class="form-control">
 												<!-- {foreach from=$type_list item=list key=key} -->

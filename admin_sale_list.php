@@ -47,7 +47,7 @@
 defined('IN_ECJIA') or exit('No permission resources.');
 
 /**
- * 闪惠销售明细列表
+ * 买单销售明细列表
  * songqianqian
 */
 class admin_sale_list extends ecjia_admin {
@@ -66,7 +66,7 @@ class admin_sale_list extends ecjia_admin {
         RC_Script::enqueue_script('admin_sale_list', RC_App::apps_url('statics/js/admin_sale_list.js', __FILE__));
         RC_Style::enqueue_style('admin_order', RC_App::apps_url('statics/css/admin_order.css', __FILE__));
         
-        ecjia_screen::get_current_screen()->add_nav_here(new admin_nav_here('闪惠管理', RC_Uri::url('quickpay/admin_order/init')));
+        ecjia_screen::get_current_screen()->add_nav_here(new admin_nav_here('买单管理', RC_Uri::url('quickpay/admin_order/init')));
 	}
 	
 	/**
@@ -75,9 +75,9 @@ class admin_sale_list extends ecjia_admin {
 	public function init() {
 		$this->admin_priv('mh_sale_list_stats');
 		
-		ecjia_screen::get_current_screen()->add_nav_here(new admin_nav_here('闪惠销售明细'));
+		ecjia_screen::get_current_screen()->add_nav_here(new admin_nav_here('买单销售明细'));
 		
-		$this->assign('ur_here', '闪惠销售明细');
+		$this->assign('ur_here', '买单销售明细');
 		$this->assign('action_link', array('text' => '销售明细报表下载', 'href' => RC_Uri::url('quickpay/admin_sale_list/download')));
 		
 		$sale_list_data = $this->get_sale_list();
@@ -115,11 +115,11 @@ class admin_sale_list extends ecjia_admin {
 		->groupby('period')
 		->get();
 
-		$filename = mb_convert_encoding('平台闪惠销售明细报表' . '_' . $_GET['start_date'] . '至' . $_GET['end_date'], "GBK", "UTF-8");
+		$filename = mb_convert_encoding('平台买单销售明细报表' . '_' . $_GET['start_date'] . '至' . $_GET['end_date'], "GBK", "UTF-8");
 		header("Content-type: application/vnd.ms-excel; charset=utf-8");
 		header("Content-Disposition: attachment; filename={$filename}.xls");
 
-		echo mb_convert_encoding('平台闪惠销售明细','UTF-8', 'UTF-8') . "\t\n";
+		echo mb_convert_encoding('平台买单销售明细','UTF-8', 'UTF-8') . "\t\n";
 		echo mb_convert_encoding('日期','UTF-8', 'UTF-8') . "\t";
 		echo mb_convert_encoding('订单数量（单）','UTF-8', 'UTF-8') . "\t";
 		echo mb_convert_encoding('消费总金额（元）','UTF-8', 'UTF-8') . "\t";

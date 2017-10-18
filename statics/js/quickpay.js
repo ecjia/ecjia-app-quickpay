@@ -78,7 +78,7 @@
                 
             },
             
-            //闪惠类型处理
+            //买单优惠类型处理
             activity_type_change: function () {
         	   $("#activity_type").change(function () {
                    $(this).children().each(function (i) {
@@ -169,7 +169,7 @@
                 }
             },
             
-            //选择可以同时参加闪惠的红包（可多选）
+            //选择可以同时参加买单的红包（可多选）
             bonus_plus: function () {
                 $("#result").on('click', function () {
                     var selRange = document.forms['theForm'].elements['use_bonus_select'];
@@ -254,7 +254,7 @@
     	            },
     	            messages: {
     	                title: {
-    	                	required: "请输入闪惠名称"
+    	                	required: "请输入买单名称"
     	                },
     	                activity_discount_value: {
     	                    required: "请输入折扣价格"

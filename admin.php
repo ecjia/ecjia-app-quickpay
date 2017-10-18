@@ -47,7 +47,7 @@
 defined('IN_ECJIA') or exit('No permission resources.');
 
 /**
- * 闪惠管理
+ * 买单管理
  * @author songqian
  */
 class admin extends ecjia_admin {
@@ -77,7 +77,7 @@ class admin extends ecjia_admin {
 		RC_Style::enqueue_style('admin_quickpay', RC_App::apps_url('statics/css/admin_quickpay.css', __FILE__));
 		
 	
-		ecjia_screen::get_current_screen()->add_nav_here(new admin_nav_here('闪惠管理', RC_Uri::url('quickpay/admin/init')));
+		ecjia_screen::get_current_screen()->add_nav_here(new admin_nav_here('买单管理', RC_Uri::url('quickpay/admin/init')));
 	}
 	
 	/**
@@ -87,8 +87,8 @@ class admin extends ecjia_admin {
 		$this->admin_priv('quickpay_manage');
 		
 		ecjia_screen::get_current_screen()->remove_last_nav_here();
-		ecjia_screen::get_current_screen()->add_nav_here(new admin_nav_here('闪惠规则'));
-		$this->assign('ur_here', '闪惠规则列表');
+		ecjia_screen::get_current_screen()->add_nav_here(new admin_nav_here('买单规则'));
+		$this->assign('ur_here', '买单规则列表');
 		
 		$type = trim($_GET['type']);
 		$this->assign('type', $type);
@@ -104,14 +104,14 @@ class admin extends ecjia_admin {
 	}
 	
 	/**
-	 * 编辑闪惠活动（只允许自营店铺）非自营店铺只允许查看
+	 * 编辑买单活动（只允许自营店铺）非自营店铺只允许查看
 	 */
 	public function edit() {
 		$this->admin_priv('quickpay_update');
 		
-		ecjia_screen::get_current_screen()->add_nav_here(new admin_nav_here('闪惠规则'));
-		$this->assign('action_link', array('text' => '闪惠规则列表', 'href' => RC_Uri::url('quickpay/admin/init')));
-		$this->assign('ur_here', '闪惠规则列表');
+		ecjia_screen::get_current_screen()->add_nav_here(new admin_nav_here('买单规则'));
+		$this->assign('action_link', array('text' => '买单规则列表', 'href' => RC_Uri::url('quickpay/admin/init')));
+		$this->assign('ur_here', '买单规则列表');
 		
 		$type_list = $this->get_quickpay_type();
 		$this->assign('type_list', $type_list);
@@ -124,7 +124,7 @@ class admin extends ecjia_admin {
 		$data['start_time']  = RC_Time::local_date('Y-m-d', $data ['start_time']);
 		$data['end_time']    = RC_Time::local_date('Y-m-d', $data ['end_time']);
 		
-		//闪惠活动参数处理
+		//买单活动参数处理
 		if (strpos($data['activity_value'],',') !== false) {
 			$data['activity_value']  = explode(",",$data['activity_value']);
 		}
@@ -155,7 +155,7 @@ class admin extends ecjia_admin {
 	}
 	
 	/**
-	 * 编辑闪惠活动处理
+	 * 编辑买单活动处理
 	 */
 	public function update() {
 		$this->admin_priv('quickpay_update');
@@ -166,7 +166,7 @@ class admin extends ecjia_admin {
 		$description = trim($_POST['description']);
 	
 		if (RC_DB::table('quickpay_activity')->where('title', $title)->where('store_id', $store_id)->where('id', '!=', $id)->count() > 0) {
-			return $this->showmessage('当前店铺下已存在该闪惠标题', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
+			return $this->showmessage('当前店铺下已存在该买单标题', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
 		}
 	
 		$start_time = RC_Time::local_strtotime($_POST['start_time']);
@@ -176,7 +176,7 @@ class admin extends ecjia_admin {
 			return $this->showmessage('开始时间不能大于或等于结束时间', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
 		}
 	
-		//相对应的闪惠类型活动参数处理
+		//相对应的买单优惠类型活动参数处理
 		$activity_discount_value = $_POST['activity_discount_value'];
 		if (!empty($activity_discount_value)) {
 			$activity_value = $activity_discount_value;
@@ -269,19 +269,19 @@ class admin extends ecjia_admin {
 		);
 	
 		RC_DB::table('quickpay_activity')->where('id', $id)->update($data);
-		return $this->showmessage('编辑闪惠规则成功', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('pjaxurl' => RC_Uri::url('quickpay/admin/edit', array('id' => $id ,'store_id' => $store_id))));
+		return $this->showmessage('编辑买单规则成功', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('pjaxurl' => RC_Uri::url('quickpay/admin/edit', array('id' => $id ,'store_id' => $store_id))));
 	}
 	
 	
 	/**
-	 * 非自营店铺只允许查看闪惠活动
+	 * 非自营店铺只允许查看买单活动
 	 */
 	public function detail() {
 		$this->admin_priv('quickpay_manage');
 
-		ecjia_screen::get_current_screen()->add_nav_here(new admin_nav_here('查看闪惠规则'));
-		$this->assign('action_link', array('text' => '闪惠规则列表', 'href' => RC_Uri::url('quickpay/admin/init')));
-		$this->assign('ur_here', '查看闪惠规则');
+		ecjia_screen::get_current_screen()->add_nav_here(new admin_nav_here('查看买单规则'));
+		$this->assign('action_link', array('text' => '买单规则列表', 'href' => RC_Uri::url('quickpay/admin/init')));
+		$this->assign('ur_here', '查看买单规则');
 		
 		$type_list = $this->get_quickpay_type();
 		$this->assign('type_list', $type_list);
@@ -294,7 +294,7 @@ class admin extends ecjia_admin {
 		$data['start_time']  = RC_Time::local_date('Y-m-d', $data ['start_time']);
 		$data['end_time']    = RC_Time::local_date('Y-m-d', $data ['end_time']);
 		
-		//闪惠活动参数处理
+		//买单活动参数处理
 		if (strpos($data['activity_value'],',') !== false) {
 			$data['activity_value']  = explode(",",$data['activity_value']);
 		}
@@ -320,7 +320,7 @@ class admin extends ecjia_admin {
 	
 
 	/**
-	 * 删除闪惠活动（只允许自营店铺）
+	 * 删除买单活动（只允许自营店铺）
 	 */
 	public function remove() {
 		$this->admin_priv('quickpay_delete');
@@ -328,7 +328,7 @@ class admin extends ecjia_admin {
 		$id = intval($_GET['id']);
 		RC_DB::table('quickpay_activity')->where('id', $id)->delete();
 	
-		return $this->showmessage('成功删除该闪惠规则', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS);
+		return $this->showmessage('成功删除该买单规则', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS);
 	}
 	
 	/**
@@ -417,11 +417,10 @@ class admin extends ecjia_admin {
 	}
 	
 	/**
-	 * 获取闪惠类型
+	 * 获取买单优惠类型
 	 */
 	private function get_quickpay_type(){
 		$type_list = array(
-			'normal' 	=> '无优惠',
 			'discount'	=> '价格折扣',
 			'reduced'   => '满多少减多少',
 			'everyreduced' 	 => '每满多少减多少,最高减多少'

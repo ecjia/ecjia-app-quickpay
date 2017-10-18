@@ -47,7 +47,7 @@
 defined('IN_ECJIA') or exit('No permission resources.');
 
 /**
- * 闪惠订单支付
+ * 买单订单支付
  * @author 
  * 
  */
