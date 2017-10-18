@@ -134,36 +134,44 @@ class checkOrder_module extends api_front implements api_interface {
 					
 			}
 		}
+
+		if (!empty($activitys)) {
+			$final = array();
+			foreach ($activitys as $k2 => $v2) {
+				$final[$v2['id']] = array(
+						'id'	=> $v2['id'],
+						'final_discount' => $v2['total_act_discount'],
+				);
+			}
 			
-// 		if (!empty($activitys)) {
-// 			$final = array();
-// 			foreach ($activitys as $k2 => $v2) {
-// 				$final[$v2['id']] = array(
-// 						'id'	=> $v2['id'],
-// 						'final_discount' => $v2['total_act_discount'] + $v2['act_integral_money'] + max($v2['bonus']),
-// 				);
-// 			}
-				
-// 			$final_discounts = array();
-// 			foreach ($final as $kk => $vv) {
-// 				$final_discounts[$vv['id']] = $vv['final_discount'];
-// 			}
-				
-// 			if (!empty($final_discounts)) {
-// 				/*获取最优惠的活动id*/
-// 				if (count($final_discounts) > 1) {
-// 					$activity_id = array_keys($final_discounts, max($final_discounts));
-// 					$activity_id = $activity_id['0'];
-// 				} else {
-// 					foreach ($final_discounts as $a2 => $b2) {
-// 						$activity_id = $a2;
-// 					}
-// 				}
-					
-// 			}
-// 		}
+			$final_discounts = array();
+			foreach ($final as $kk => $vv) {
+				$final_discounts[$vv['id']] = $vv['final_discount'];
+			}
+			
+			if (!empty($final_discounts)) {
+				/*获取最优惠的活动id*/
+				if (count($final_discounts) > 1) {
+					$favorable_activity_id = array_keys($final_discounts, max($final_discounts));
+					$favorable_activity_id = $favorable_activity_id['0'];
+				} else {
+					foreach ($final_discounts as $a2 => $b2) {
+						$favorable_activity_id = $a2;
+					}
+				}
+			}
+		}
+	
+		if (!empty($activitys) && !empty($favorable_activity_id)) {
+			foreach ($activitys as $k3 => $v3) {
+				if ($favorable_activity_id == $v3['id']) {
+					$activitys[$k3]['is_favorable'] = 1;
+				} else{
+					$activitys[$k3]['is_favorable'] = 0;
+				}
+			}
+		}
 		
-			
 		//==== 获取商家所有活动优惠信息end  === 
 		
 // 		if (!empty($activity_id) && ($activity_id > 0)) {
@@ -316,6 +324,7 @@ class checkOrder_module extends api_front implements api_interface {
 			foreach ($activitys as $val) {
 				$available_activity_list[] = array(
 						'is_allow_use'			=> $val['is_allow_use'], 
+						'is_favorable'			=> $val['is_favorable'],
 						'activity_id' 			=> $val['id'],
 						'activity_type' 		=> $val['activity_type'],
 						'title' 				=> $val['title'],
