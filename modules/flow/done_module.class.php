@@ -74,11 +74,16 @@ class done_module extends api_front implements api_interface {
     	
     	$activity_id	= $this->requestData('activity_id', 0);
     	$goods_amount 	= $this->requestData('goods_amount', '0.00');
+    	$is_exclude_amount  = $this->requestData('is_exclude_amount', 0);
     	$exclude_amount = $this->requestData('exclude_amount', '0.00');
     	$bonus_id		= $this->requestData('bonus_id', 0);
     	$integral		= $this->requestData('integral', 0);
     	//$pay_id			= $this->requestData('pay_id', 0);
     	$store_id		= $this->requestData('store_id', 0);
+    	
+    	if (empty($is_exclude_amount)) {
+    		$exclude_amount = '0.00';
+    	}
     	
 		if (empty($goods_amount) || empty($store_id)) {
 			return new ecjia_error( 'invalid_parameter', RC_Lang::get ('system::system.invalid_parameter'));
