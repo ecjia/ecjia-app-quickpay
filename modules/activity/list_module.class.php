@@ -66,6 +66,7 @@ class list_module extends api_front implements api_interface {
 				'page'			=> $page,
 				'store_id'		=> $store_id,
 		);
+		$store_name = RC_DB::table('store_franchisee')->where('store_id', $store_id)->pluck('merchants_name');
 		
 		$quickpay_activity_data = RC_Api::api('quickpay', 'quickpay_activity_list', $options);
 		if (is_ecjia_error($quickpay_activity_data)) {
@@ -92,7 +93,12 @@ class list_module extends api_front implements api_interface {
 				);
 			}
 		}
-		return array('data' => $arr, 'pager' => $quickpay_activity_data['page']);
+		$result = array(
+			'store_id' 		=> $store_id,
+			'store_name' 	=> empty($store_name) ? '' : $store_name,
+			'activity_list' => 	$arr
+		);
+		return array('data' => $result, 'pager' => $quickpay_activity_data['page']);
 	}
 }
 // end
