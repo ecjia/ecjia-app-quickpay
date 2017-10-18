@@ -56,7 +56,14 @@ class payment_module extends api_front implements api_interface {
     		return new ecjia_error( 'invalid_parameter', RC_Lang::get ('system::system.invalid_parameter'));
     	}
     	$payment_list = RC_Api::api('payment', 'available_payments', array('store_id' => $store_id));
-
+    	if (!empty($payment_list)) {
+    		foreach ($payment_list as $key => $val) {
+    				if ($val['pay_code'] == 'pay_cod') {
+    					unset($payment_list[$key]);
+    				}
+    		}
+    	}
+		
         return array('payment' => $payment_list);
     }
 }
