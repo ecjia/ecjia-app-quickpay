@@ -55,7 +55,7 @@ class quickpay_quickpay_activity_list_api extends Component_Event_Api {
 		
 		if (!empty($list)) {
 			foreach($list as $key => $val) {
-				$list[$key]['total_order_count'] = RC_DB::table('quickpay_orders')->where('activity_id', $val['id'])->count('order_id');
+				//$list[$key]['total_order_count'] = RC_DB::table('quickpay_orders')->where('activity_id', $val['id'])->count('order_id');
 				
 				/*活动类型处理*/
 				if ($val['activity_type'] == 'discount') {

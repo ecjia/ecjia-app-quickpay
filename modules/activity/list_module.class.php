@@ -88,7 +88,7 @@ class list_module extends api_front implements api_interface {
 						'end_time'				=> $rows['end_time'],
 						'formated_start_time'	=> RC_Time::local_date(ecjia::config('date_format'), $rows['start_time']),
 						'formated_end_time'		=> RC_Time::local_date(ecjia::config('date_format'), $rows['end_time']),
-						'total_order_count'		=> $rows['total_order_count']
+						//'total_order_count'		=> $rows['total_order_count']
 				);
 			}
 		}
