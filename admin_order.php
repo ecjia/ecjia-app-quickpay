@@ -183,7 +183,7 @@ class admin_order extends ecjia_admin {
 	}
 
 	/**
-	 * 获取买单规则列表
+	 * 获取优惠买单规则列表
 	 */
 	private function order_list() {
 		$db_quickpay_order = RC_DB::table('quickpay_orders as qo')

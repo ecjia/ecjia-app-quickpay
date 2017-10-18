@@ -87,8 +87,8 @@ class admin extends ecjia_admin {
 		$this->admin_priv('quickpay_manage');
 		
 		ecjia_screen::get_current_screen()->remove_last_nav_here();
-		ecjia_screen::get_current_screen()->add_nav_here(new admin_nav_here('买单规则'));
-		$this->assign('ur_here', '买单规则列表');
+		ecjia_screen::get_current_screen()->add_nav_here(new admin_nav_here('优惠买单规则'));
+		$this->assign('ur_here', '优惠买单规则列表');
 		
 		$type = trim($_GET['type']);
 		$this->assign('type', $type);
@@ -109,9 +109,9 @@ class admin extends ecjia_admin {
 	public function edit() {
 		$this->admin_priv('quickpay_update');
 		
-		ecjia_screen::get_current_screen()->add_nav_here(new admin_nav_here('买单规则'));
-		$this->assign('action_link', array('text' => '买单规则列表', 'href' => RC_Uri::url('quickpay/admin/init')));
-		$this->assign('ur_here', '买单规则列表');
+		ecjia_screen::get_current_screen()->add_nav_here(new admin_nav_here('优惠买单规则'));
+		$this->assign('action_link', array('text' => '优惠买单规则列表', 'href' => RC_Uri::url('quickpay/admin/init')));
+		$this->assign('ur_here', '优惠买单规则列表');
 		
 		$type_list = $this->get_quickpay_type();
 		$this->assign('type_list', $type_list);
@@ -269,7 +269,7 @@ class admin extends ecjia_admin {
 		);
 	
 		RC_DB::table('quickpay_activity')->where('id', $id)->update($data);
-		return $this->showmessage('编辑买单规则成功', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('pjaxurl' => RC_Uri::url('quickpay/admin/edit', array('id' => $id ,'store_id' => $store_id))));
+		return $this->showmessage('编辑优惠买单规则成功', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('pjaxurl' => RC_Uri::url('quickpay/admin/edit', array('id' => $id ,'store_id' => $store_id))));
 	}
 	
 	
@@ -279,9 +279,9 @@ class admin extends ecjia_admin {
 	public function detail() {
 		$this->admin_priv('quickpay_manage');
 
-		ecjia_screen::get_current_screen()->add_nav_here(new admin_nav_here('查看买单规则'));
-		$this->assign('action_link', array('text' => '买单规则列表', 'href' => RC_Uri::url('quickpay/admin/init')));
-		$this->assign('ur_here', '查看买单规则');
+		ecjia_screen::get_current_screen()->add_nav_here(new admin_nav_here('查看优惠买单规则'));
+		$this->assign('action_link', array('text' => '优惠买单规则列表', 'href' => RC_Uri::url('quickpay/admin/init')));
+		$this->assign('ur_here', '查看优惠买单规则');
 		
 		$type_list = $this->get_quickpay_type();
 		$this->assign('type_list', $type_list);
@@ -328,7 +328,7 @@ class admin extends ecjia_admin {
 		$id = intval($_GET['id']);
 		RC_DB::table('quickpay_activity')->where('id', $id)->delete();
 	
-		return $this->showmessage('成功删除该买单规则', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS);
+		return $this->showmessage('成功删除该优惠买单规则', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS);
 	}
 	
 	/**

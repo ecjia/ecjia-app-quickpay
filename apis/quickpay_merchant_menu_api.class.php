@@ -55,7 +55,7 @@ class quickpay_merchant_menu_api extends Component_Event_Api {
     public function call(&$options) {
         $menus = ecjia_merchant::make_admin_menu('quickpay', '买单', '', 4)->add_icon('fa-flash')->add_purview(array('mh_quickpay_manage'))->add_base('quickpay');
         $submenus = array(
-            ecjia_merchant::make_admin_menu('01_quickpay_list', '买单规则', RC_Uri::url('quickpay/merchant/init'), 1)->add_purview('mh_quickpay_manage')->add_icon('fa-cogs'),
+            ecjia_merchant::make_admin_menu('01_quickpay_list', '优惠买单规则', RC_Uri::url('quickpay/merchant/init'), 1)->add_purview('mh_quickpay_manage')->add_icon('fa-cogs'),
         	ecjia_merchant::make_admin_menu('02_quickpay_order', '订单列表', RC_Uri::url('quickpay/mh_order/init'), 2)->add_purview('mh_quickpay_order_manage')->add_icon('fa fa-list-ul'),
         	ecjia_merchant::make_admin_menu('03_quickpay_order_search', '买单订单查询', RC_Uri::url('quickpay/mh_order/search_order'), 3)->add_purview('mh_quickpay_order_search')->add_icon('fa-search'),
         	ecjia_merchant::make_admin_menu('04_quickpay_order_stats', '买单订单统计', RC_Uri::url('quickpay/mh_sale_general/init'), 4)->add_purview('mh_quickpay_sale_general_stats')->add_icon('fa-bar-chart-o'),

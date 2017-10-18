@@ -77,7 +77,7 @@
 		                           {$list.title}
 		                           <div class="edit-list">
 		                               <a class="data-pjax" href='{url path="quickpay/merchant/edit" args="id={$list.id}"}' title="编辑">编辑</a>&nbsp;|&nbsp;
-		                               <a class="ajaxremove ecjiafc-red" data-toggle="ajaxremove" data-msg="你确定要删除该买单规则吗？" href='{url path="quickpay/merchant/remove" args="id={$list.id}"}' title="删除">删除</a>&nbsp;|&nbsp;
+		                               <a class="ajaxremove ecjiafc-red" data-toggle="ajaxremove" data-msg="你确定要删除该优惠买单规则吗？" href='{url path="quickpay/merchant/remove" args="id={$list.id}"}' title="删除">删除</a>&nbsp;|&nbsp;
 		                               <a target="_blank" href='{url path="quickpay/mh_order/init" args="act_id={$list.id}"}' title="买单订单">买单订单</a>
 		                           </div>
 		                        </td>
