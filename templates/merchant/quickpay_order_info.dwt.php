@@ -158,7 +158,7 @@ ecjia.merchant.order_info.init();
 						<tr>
 							<td><div align="right"><strong>当前可执行操作：</strong></div></td>
 							<td colspan="3">
-								{if $order.pay_status and !$order.verification_status}	
+								{if $order_info.pay_status eq 1 and $order_info.verification_status neq 1}
 									<a class="change_status" data-href='{url path="quickpay/mh_order/order_action"}'>
 										<button class="btn operatesubmit btn-info" type="button">确认核销</button>
 									</a>
