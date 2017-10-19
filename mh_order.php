@@ -171,6 +171,8 @@ class mh_order extends ecjia_merchant {
 			'action_user_id'		=> $_SESSION['staff_id'],
 			'action_user_name'		=> $_SESSION['staff_name'],
 			'action_user_type'		=> 'merchant',
+			'order_status'	        => 1,
+			'pay_status'	        => 1,
 			'verification_status'	=> 1,
 			'action_note'			=> $action_note,
 			'add_time'				=> RC_Time::gmtime(),
