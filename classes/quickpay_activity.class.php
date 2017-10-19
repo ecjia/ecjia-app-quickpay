@@ -257,9 +257,10 @@ class quickpay_activity {
 	public static function quickpay_order_action($options) {
 		$order_id 			= empty($options['order_id']) ? 0 : $options['order_id'];
 		$action_user_id 	= $options['action_user_id'];
-		$username 			= $options['username'];
+		$username 			= $options['action_user_name'];
 		$action_user_type 	= $options['action_user_type'];
 		$order_status 		= $options['order_status'];
+		$pay_status 		= $options['pay_status'];
 		$action_note		= $options['action_note'];
 		
 		if (empty($username)) {
@@ -273,6 +274,7 @@ class quickpay_activity {
 				'action_user_name' 	=> $username,
 				'action_user_type' 	=> $action_user_type,
 				'order_status' 		=> $order_status,
+				'pay_status'		=> $pay_status,
 				'action_note' 		=> $action_note,
 				'add_time' 			=> RC_Time::gmtime()
 		);
