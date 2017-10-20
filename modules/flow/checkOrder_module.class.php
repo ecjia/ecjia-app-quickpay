@@ -94,6 +94,7 @@ class checkOrder_module extends api_front implements api_interface {
 				if ($v1['total_act_discount'] == '0') {
 					//unset($activitys[$k1]);
 					$activitys[$k1]['is_allow_use'] = 0;
+					$activitys[$k1]['is_favorable'] = 0;
 				}
 					
 				/*自定义时间的活动，当前时间段不可用的过滤掉*/
