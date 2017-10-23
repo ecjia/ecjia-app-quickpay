@@ -66,9 +66,9 @@ class checkOrder_module extends api_front implements api_interface {
 		$is_exclude_amount  = $this->requestData('is_exclude_amount', 0);
 		$exclude_amount  	= $this->requestData('exclude_amount', '0.00');
 		
-		if (empty($is_exclude_amount)) {
-			$exclude_amount = '0.00';
-		}
+		//if (empty($is_exclude_amount)) {
+		//	$exclude_amount = '0.00';
+		//}
 		
 		if ($goods_amount > 0 && $exclude_amount > 0) {
 			if ($exclude_amount > $goods_amount) {

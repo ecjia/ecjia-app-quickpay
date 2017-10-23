@@ -81,9 +81,9 @@ class done_module extends api_front implements api_interface {
     	//$pay_id			= $this->requestData('pay_id', 0);
     	$store_id		= $this->requestData('store_id', 0);
     	
-    	if (empty($is_exclude_amount)) {
-    		$exclude_amount = '0.00';
-    	}
+    	//if (empty($is_exclude_amount)) {
+    	//	$exclude_amount = '0.00';
+    	//}
     	
     	if ($goods_amount > 0 && $exclude_amount > 0) {
     		if ($exclude_amount > $goods_amount) {
