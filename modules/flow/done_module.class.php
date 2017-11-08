@@ -260,7 +260,7 @@ class done_module extends api_front implements api_interface {
     		$order['pay_time']		= RC_Time::gmtime();
     		$order['order_amount']	= 0;
     	}
-    	
+    	$order['order_amount'] = number_format($order['order_amount'], 2, '.', '');
     	/*插入订单数据*/
     	$db_order_info = RC_DB::table('quickpay_orders');
     	$new_order_id	= $db_order_info->insertGetId($order);
