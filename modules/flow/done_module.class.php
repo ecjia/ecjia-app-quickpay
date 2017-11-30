@@ -299,24 +299,6 @@ class done_module extends api_front implements api_interface {
     		RC_Mail::send_mail(ecjia::config('shop_name'), ecjia::config('service_email'), $tpl['template_subject'], $content, $tpl['is_html']);
     	}
     	
-    	/* 如果需要，发短信 */
-    	$staff_user = RC_DB::table('staff_user')->where('store_id', $order['store_id'])->where('parent_id', 0)->first();
-    	if (!empty($staff_user['mobile'])) {
-    		//发送短信
-    		$options = array(
-    				'mobile' => $staff_user['mobile'],
-    				'event'	 => 'sms_order_placed',
-    				'value'  =>array(
-    						'order_sn'		=> $order['order_sn'],
-    						'consignee' 	=> $order['user_name'],
-    						'telephone'  	=> $order['user_mobile'],
-    						'order_amount'  => $order['order_amount'],
-    						'service_phone' => ecjia::config('service_phone'),
-    				),
-    		);
-    		RC_Api::api('sms', 'send_event_sms', $options);
-    	}
-    	
     	/* 插入支付日志 */
     	//$order['log_id'] = $payment_method->insert_pay_log($new_order_id, $order['order_amount'], PAY_ORDER);
     	
