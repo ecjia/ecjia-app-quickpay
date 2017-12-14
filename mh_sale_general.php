@@ -84,7 +84,7 @@ class mh_sale_general extends ecjia_merchant {
         $data_count = RC_DB::table('quickpay_orders')
         	->select(RC_DB::raw('COUNT(DISTINCT order_sn) AS order_count'),
         		RC_DB::raw('SUM(goods_amount) AS goods_amount'),
-        		RC_DB::raw('SUM(IF(pay_code = "pay_balance", surplus + order_amount)) AS order_amount'),
+        		RC_DB::raw('SUM(IF(pay_code = "pay_balance", surplus , order_amount)) AS order_amount'),
         		RC_DB::raw('SUM(goods_amount - (IF(pay_code = "pay_balance", surplus, order_amount))) AS favorable_amount'))
         		->where('store_id', $_SESSION['store_id'])
         		->where('pay_time','<>','0')
