@@ -99,10 +99,12 @@ class mh_print extends ecjia_merchant
             'purchase_time'       => RC_Time::local_date('Y-m-d H:i:s', $order['add_time']), //下单时间
             'merchant_address'    => $address,
             'favourable_activity' => $order['activity_name'],
+        		
+        	'discount_amount'     => $order['discount'], //优惠金额
             'receivables'         => $order['surplus'], //应收金额
-            'discount_amount'     => $order['discount'], //积分余额
-            'payment'             => $order['pay_name'], //获得积分
-            'order_amount'        => $order['surplus'],
+            'payment'             => $order['pay_name'], //支付方式
+            'order_amount'        => $order['surplus'], //实收金额
+            
             'qrcode'              => $order['order_sn'],
         );
 
