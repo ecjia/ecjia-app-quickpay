@@ -125,6 +125,11 @@ class mh_order extends ecjia_merchant {
 		$order_info['order_amount'] = $order_info['order_amount'] + $order_info['surplus'];
 		$order_info['status'] = RC_Lang::get('quickpay::order.os.'.$order_info['order_status']) . ',' . RC_Lang::get('quickpay::order.ps.'.$order_info['pay_status']) . ',' . RC_Lang::get('quickpay::order.vs.'.$order_info['verification_status']);
 		$this->assign('order_info', $order_info);
+
+		if ($order_info['pay_status'] == 1) {
+			$this->assign('has_payed', 1);
+		}
+		
 		//订单流程状态
 		if ($order_info['order_status']){
 			$step = 1;
