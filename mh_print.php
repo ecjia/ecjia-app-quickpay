@@ -56,126 +56,57 @@ class mh_print extends ecjia_merchant
         $this->admin_priv('mh_quickpay_order_print', ecjia::MSGTYPE_JSON);
 
         $order_id = intval($_GET['order_id']);
-        $order    = RC_Api::api('orders', 'order_info', array('order_id' => $order_id, 'store_id' => $_SESSION['store_id']));
+        $order = RC_DB::table('quickpay_orders')->where('order_id', $order_id)->first();
 
-        $type          = 'print_buy_orders';
-        $shipping_data = ecjia_shipping::getPluginDataById($order['shipping_id']);
-        if ($shipping_data['shipping_code'] == 'ship_o2o_express') {
-            $type = 'print_takeaway_orders';
+        if ($order['activity_type'] == 'discount') {
+            $order['activity_name'] = '价格折扣';
+        } elseif ($order['activity_type'] == 'everyreduced') {
+            $order['activity_name'] = '每满多少减多少,最高减多少';
+        } elseif ($order['activity_type'] == 'reduced') {
+            $order['activity_name'] = '满多少减多少';
+        } elseif ($order['activity_type'] == 'normal') {
+            $order['activity_name'] = '无优惠';
         }
+        $type = 'print_quickpay_orders';
 
         $store_info     = RC_DB::table('store_franchisee')->where('store_id', $_SESSION['store_id'])->first();
         $contact_mobile = RC_DB::table('merchants_config')->where('store_id', $_SESSION['store_id'])->where('code', 'shop_kf_mobile')->pluck('value');
 
-        $goods_list = array();
+        $order_trade_no = RC_DB::table('payment_record')->where('order_sn', 'LIKE', '%' . mysql_like_quote($order['order_sn']) . '%')->where('trade_type', 'quickpay')->pluck('trade_no');
 
-        $data = RC_DB::table('order_goods as o')
-            ->leftJoin('products as p', RC_DB::raw('p.product_id'), '=', RC_DB::raw('o.product_id'))
-            ->leftJoin('goods as g', RC_DB::raw('o.goods_id'), '=', RC_DB::raw('g.goods_id'))
-            ->selectRaw("o.*, IF(o.product_id > 0, p.product_number, g.goods_number) AS storage,
-                    o.goods_attr, g.suppliers_id, p.product_sn, g.goods_img, g.goods_sn as goods_sn")
-            ->where(RC_DB::raw('o.order_id'), $order_id)
-            ->get();
-
-        if (!empty($data)) {
-            foreach ($data as $key => $row) {
-                $row['formated_subtotal']    = price_format($row['goods_price'] * $row['goods_number']);
-                $row['formated_goods_price'] = price_format($row['goods_price']);
-                $goods_list[]                = array(
-                    'goods_name'   => $row['goods_name'],
-                    'goods_number' => $row['goods_number'],
-                    'goods_amount' => $row['goods_price'],
-                );
-            }
+        $address = '';
+        if (!empty($store_info['province'])) {
+            $address .= ecjia_region::getRegionName($store_info['province']);
         }
-
-        $order_trade_no   = RC_DB::table('payment_record')->where('order_sn', 'LIKE', '%' . mysql_like_quote($order['order_sn']) . '%')->pluck('trade_no');
-        $integral_balance = RC_DB::table('users')->where('user_id', $order['user_id'])->pluck('pay_points');
-
-        RC_Loader::load_app_func('admin_order', 'orders');
-        $integral      = integral_to_give($order);
-        $integral_give = !empty($integral['custom_points']) ? $integral['custom_points'] : 0;
-
-        /* 取得用户名 */
-        if ($order['user_id'] > 0) {
-            $user = RC_Api::api('user', 'user_info', array('user_id' => $order['user_id']));
-            if (!empty($user)) {
-                $order['user_name'] = $user['user_name'];
-            }
-        } else {
-            $order['user_name'] = '匿名用户';
+        if (!empty($store_info['city'])) {
+            $address .= ecjia_region::getRegionName($store_info['city']);
         }
-
-        if ($type == 'print_buy_orders') {
-            $data = array(
-                'order_sn'            => $order['order_sn'], //订单编号
-                'order_trade_no'      => $order_trade_no, //流水编号
-                'user_name'           => $order['user_name'], //会员账号
-                'purchase_time'       => RC_Time::local_date('Y-m-d H:i:s', $order['add_time']), //下单时间
-                'integral_money'      => $order['integral_money'],
-                'receivables'         => $order['total_fee'], //应收金额
-
-                'integral_balance'    => $integral_balance, //积分余额
-                'integral_give'       => $integral_give, //获得积分
-
-                'payment'             => $order['pay_name'],
-                'favourable_discount' => $order['discount'], //满减满折
-                'bonus_discount'      => $order['bonus'], //红包折扣
-                'rounding'            => '0.00', //分头舍去
-                'order_amount'        => $order['money_paid'], //实收金额
-                'give_change'         => '0.00', //找零金额
-                'order_remarks'       => $order['postscript'],
-                'goods_lists'         => $goods_list,
-                'goods_subtotal'      => $order['goods_amount'], //商品总计
-                'qrcode'              => $order['order_sn'],
-            );
-        } elseif ($type == 'print_takeaway_orders') {
-            $address = '';
-            if (!empty($order['province'])) {
-                $address .= ecjia_region::getRegionName($order['province']);
-            }
-            if (!empty($order['city'])) {
-                $address .= ecjia_region::getRegionName($order['city']);
-            }
-            if (!empty($order['district'])) {
-                $address .= ecjia_region::getRegionName($order['district']);
-            }
-            if (!empty($order['street'])) {
-                $address .= ecjia_region::getRegionName($order['street']);
-            }
-            if (!empty($address)) {
-                $address .= ' ';
-            }
-            $address .= $order['address'];
-
-            $data = array(
-                'order_sn'             => $order['order_sn'], //订单编号
-                'order_trade_no'       => $order_trade_no, //流水编号
-                'payment'              => $order['pay_name'], //支付方式
-                'pay_status'           => RC_Lang::get('orders::order.ps.' . $order['pay_status']), //支付状态
-                'purchase_time'        => RC_Time::local_date('Y-m-d H:i:s', $order['add_time']), //下单时间
-                'expect_shipping_time' => RC_Time::local_date('Y-m-d H:i:s', $order['expect_shipping_time']), //期望送达时间
-                'integral_money'       => $order['integral_money'], //积分抵扣
-
-                'integral_balance'     => $integral_balance, //积分余额
-                'integral_give'        => $integral_give, //获得积分
-
-                'receivables'          => $order['total_fee'], //应收金额
-                'favourable_discount'  => $order['discount'], //满减满折
-                'bonus_discount'       => $order['bonus'], //红包折扣
-                'rounding'             => '0.00', //分头舍去
-                'order_amount'         => $order['money_paid'], //实收金额
-                'order_remarks'        => $order['postscript'],
-                'consignee_address'    => $address,
-                'consignee_name'       => $order['consignee'],
-                'consignee_mobile'     => $order['mobile'],
-                'goods_lists'          => $goods_list,
-                'goods_subtotal'       => $order['goods_amount'], //商品总计
-                'qrcode'               => $order['order_sn'],
-            );
+        if (!empty($store_info['district'])) {
+            $address .= ecjia_region::getRegionName($store_info['district']);
         }
+        if (!empty($store_info['street'])) {
+            $address .= ecjia_region::getRegionName($store_info['street']);
+        }
+        if (!empty($address)) {
+            $address .= ' ';
+        }
+        $address .= $store_info['address'];
 
-        $data['order_type']      = 'buy';
+        $data = array(
+            'order_sn'            => $order['order_sn'], //订单编号
+            'order_trade_no'      => $order_trade_no, //流水编号
+            'user_account'        => $order['user_name'], //会员账号
+            'purchase_time'       => RC_Time::local_date('Y-m-d H:i:s', $order['add_time']), //下单时间
+            'merchant_address'    => $address,
+            'favourable_activity' => $order['activity_name'],
+            'receivables'         => $order['surplus'], //应收金额
+            'discount_amount'     => $order['discount'], //积分余额
+            'payment'             => $order['pay_name'], //获得积分
+            'order_amount'        => $order['surplus'],
+            'qrcode'              => $order['order_sn'],
+        );
+
+        $data['order_type']      = 'quickpay';
         $data['merchant_name']   = $store_info['merchants_name'];
         $data['merchant_mobile'] = $contact_mobile;
 
@@ -187,7 +118,7 @@ class mh_print extends ecjia_merchant
         if (is_ecjia_error($result)) {
             return $this->showmessage($result->get_error_message(), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
         }
-        return $this->showmessage('打印已发送', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('pjaxurl' => RC_Uri::url('orders/merchant/info', array('order_id' => $order_id))));
+        return $this->showmessage('打印已发送', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('pjaxurl' => RC_Uri::url('quickpay/mh_order/order_info', array('order_id' => $order_id))));
     }
 }
 
