@@ -56,7 +56,7 @@ class OrderPrint
     /**
      * 打印普通订单小票
      */
-    public function printQuickpayOrders($type, $order, $store, $user, $goods_list, $order_trade_no, $auto_print = false)
+    public function printQuickpayOrders($type, $order, $store, $order_trade_no, $auto_print = false)
     {
         if ($order['activity_type'] == 'discount') {
             $order['activity_name'] = '价格折扣';
