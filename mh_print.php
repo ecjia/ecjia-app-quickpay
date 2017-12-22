@@ -56,67 +56,8 @@ class mh_print extends ecjia_merchant
         $this->admin_priv('mh_quickpay_order_print', ecjia::MSGTYPE_JSON);
 
         $order_id = intval($_GET['order_id']);
-        $order = RC_DB::table('quickpay_orders')->where('order_id', $order_id)->first();
+        $result = with(new Ecjia\App\Quickpay\OrderPrint($order_id, $_SESSION['store_id']))->doPrint();
 
-        if ($order['activity_type'] == 'discount') {
-            $order['activity_name'] = '价格折扣';
-        } elseif ($order['activity_type'] == 'everyreduced') {
-            $order['activity_name'] = '每满多少减多少,最高减多少';
-        } elseif ($order['activity_type'] == 'reduced') {
-            $order['activity_name'] = '满多少减多少';
-        } elseif ($order['activity_type'] == 'normal') {
-            $order['activity_name'] = '无优惠';
-        }
-        $type = 'print_quickpay_orders';
-
-        $store_info     = RC_DB::table('store_franchisee')->where('store_id', $_SESSION['store_id'])->first();
-        $contact_mobile = RC_DB::table('merchants_config')->where('store_id', $_SESSION['store_id'])->where('code', 'shop_kf_mobile')->pluck('value');
-
-        $order_trade_no = RC_DB::table('payment_record')->where('order_sn', 'LIKE', '%' . mysql_like_quote($order['order_sn']) . '%')->where('trade_type', 'quickpay')->pluck('trade_no');
-
-        $address = '';
-        if (!empty($store_info['province'])) {
-            $address .= ecjia_region::getRegionName($store_info['province']);
-        }
-        if (!empty($store_info['city'])) {
-            $address .= ecjia_region::getRegionName($store_info['city']);
-        }
-        if (!empty($store_info['district'])) {
-            $address .= ecjia_region::getRegionName($store_info['district']);
-        }
-        if (!empty($store_info['street'])) {
-            $address .= ecjia_region::getRegionName($store_info['street']);
-        }
-        if (!empty($address)) {
-            $address .= ' ';
-        }
-        $address .= $store_info['address'];
-
-        $data = array(
-            'order_sn'            => $order['order_sn'], //订单编号
-            'order_trade_no'      => $order_trade_no, //流水编号
-            'user_account'        => $order['user_name'], //会员账号
-            'purchase_time'       => RC_Time::local_date('Y-m-d H:i:s', $order['add_time']), //下单时间
-            'merchant_address'    => $address,
-            'favourable_activity' => $order['activity_name'],
-        		
-        	'discount_amount'     => $order['discount'], //优惠金额
-            'receivables'         => $order['surplus'], //应收金额
-            'payment'             => $order['pay_name'], //支付方式
-            'order_amount'        => $order['surplus'], //实收金额
-            
-            'qrcode'              => $order['order_sn'],
-        );
-
-        $data['order_type']      = 'quickpay';
-        $data['merchant_name']   = $store_info['merchants_name'];
-        $data['merchant_mobile'] = $contact_mobile;
-
-        $result = RC_Api::api('printer', 'send_event_print', [
-            'store_id' => $_SESSION['store_id'],
-            'event'    => $type,
-            'value'    => $data,
-        ]);
         if (is_ecjia_error($result)) {
             return $this->showmessage($result->get_error_message(), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
         }
