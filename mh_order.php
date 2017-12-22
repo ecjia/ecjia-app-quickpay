@@ -186,6 +186,13 @@ class mh_order extends ecjia_merchant {
 			'add_time'				=> RC_Time::gmtime(),
 		);
 		RC_DB::table('quickpay_order_action')->insertGetId($data_action);
+		
+		// 打印订单
+		$result = with(new Ecjia\App\Quickpay\OrderPrint($order_id, $_SESSION['store_id']))->doPrint(true);
+		if (is_ecjia_error($result)) {
+			RC_Logger::getLogger('error')->error($result->get_error_message());
+		}
+		
 		$order_amount = RC_DB::TABLE('quickpay_orders')->where('order_id', $order_id)->pluck('order_amount');
 		$percent_value = 100-ecjia::config('quickpay_fee');
 		$brokerage_amount = $order_amount * $percent_value / 100;
