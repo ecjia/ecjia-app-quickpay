@@ -154,12 +154,6 @@ class pay_module extends api_front implements api_interface {
             return array($item);
         })->all();
 
-        //打印订单
-        $res = with(new Ecjia\App\Quickpay\OrderPrint($order_id, $order['store_id']))->doPrint();
-        if (is_ecjia_error($res)) {
-        	RC_Logger::getLogger('error')->error($res->get_error_message());
-        }
-        
         return array('payment' => $order['payment'], 'others' => $other);
 	}
 }
