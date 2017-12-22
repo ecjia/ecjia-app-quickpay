@@ -135,7 +135,7 @@ class OrderPrint
      */
     protected function getPayRecord($order)
     {
-        $record   = RC_DB::table('payment_record')->where('order_sn', $order['order_sn'])->where('trade_type', 'buy')->first();
+        $record   = RC_DB::table('payment_record')->where('order_sn', $order['order_sn'])->where('trade_type', 'quickpay')->first();
         return $record['trade_no'] ?: $record['order_trade_no'];
     }
     
