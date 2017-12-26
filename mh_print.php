@@ -47,18 +47,22 @@
 defined('IN_ECJIA') or exit('No permission resources.');
 
 /**
- * 买单管理
+ * 打印订单
  */
-return array(
-	'identifier' 	=> 'ecjia.quickpay',
-	'directory' 	=> 'quickpay',
-	'name'			=> 'quickpay',
-	'description' 	=> 'quickpay_desc',			/* 描述对应的语言项 */
-	'author' 		=> 'ECJIA TEAM',			/* 作者 */
-	'website' 		=> 'http://www.ecjia.com',	/* 网址 */
-	'version' 		=> '1.10.0',					/* 版本号 */
-	'copyright' 	=> 'ECJIA Copyright 2015.',
+class mh_print extends ecjia_merchant
+{
+    public function init()
+    {
+        $this->admin_priv('mh_quickpay_order_print', ecjia::MSGTYPE_JSON);
 
-);
+        $order_id = intval($_GET['order_id']);
+        $result = with(new Ecjia\App\Quickpay\OrderPrint($order_id, $_SESSION['store_id']))->doPrint();
 
-// end
+        if (is_ecjia_error($result)) {
+            return $this->showmessage($result->get_error_message(), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
+        }
+        return $this->showmessage('打印已发送', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('pjaxurl' => RC_Uri::url('quickpay/mh_order/order_info', array('order_id' => $order_id))));
+    }
+}
+
+//end
