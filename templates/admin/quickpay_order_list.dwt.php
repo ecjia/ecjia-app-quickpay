@@ -63,7 +63,6 @@
 						<th>购买者信息</th>
 						<th class="w150">买单优惠类型</th>
 						<th class="w150">下单时间</th>
-						<th class="w100">消费金额</th>
 						<th class="w100">实付金额</th>
 					</tr>
 				</thead>
@@ -81,7 +80,6 @@
 						<td>{$order.user_name} [TEL：{$order.user_mobile}]</td>
 						<td>{if $order.activity_type eq 'discount'}价格折扣{elseif $order.activity_type eq 'everyreduced'}每满多少减多少，最高减多少{elseif $order.activity_type eq 'reduced'}满多少减多少{elseif $order.activity_type eq 'normal'}无优惠{/if}</td>
 						<td>{$order.add_time}</td>
-						<td>¥ {$order.goods_amount}</td>
 						<td>{$order.order_amount}</td>
 					</tr>
 					<!-- {foreachelse}-->
