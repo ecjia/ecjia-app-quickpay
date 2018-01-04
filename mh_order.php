@@ -308,7 +308,7 @@ class mh_order extends ecjia_merchant {
 		if (!empty($data)) {
 			foreach ($data as $row) {
 				$row['add_time'] = RC_Time::local_date(ecjia::config('time_format'), $row['add_time']);
-				$row['order_amount'] = $row['order_amount'] + $row['surplus'];
+				$row['order_amount'] = price_format($row['order_amount'] + $row['surplus']);
 				$res[] = $row;
 			}
 		}

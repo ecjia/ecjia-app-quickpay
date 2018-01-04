@@ -132,7 +132,7 @@ ecjia.merchant.order_list.init();
     							{if $order.activity_type eq 'discount'}价格折扣{elseif $order.activity_type eq 'everyreduced'}每满多少减多少，最高减多少{elseif $order.activity_type eq 'reduced'}满多少减多少{elseif $order.activity_type eq 'normal'}无优惠{/if}
     						</td>
     						<td>{$order.add_time}</td>
-    						<td>{$order.goods_amount}</td>
+    						<td>¥ {$order.goods_amount}</td>
     						<td>{$order.order_amount}</td>
     					</tr>
     					<!-- {foreachelse}-->
