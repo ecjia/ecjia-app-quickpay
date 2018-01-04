@@ -35,13 +35,24 @@
 			</ul>
 		</div>
 		
-		<select class="w200" name="activity_type">
-			<option value="0">买单优惠类型</option>
-			<!-- {foreach from=$type_list item=list key=key} -->
-			<option value="{$key}" {if $key eq $smarty.get.activity_type}selected="selected"{/if}>{$list}</option>
-			<!-- {/foreach} -->
-		</select>
-		<a class="btn m_l5 screen-btn">筛选</a>
+		<div class="f_l m_r5">
+			<select class="w100" name="order_status">
+				<option value="0">订单状态</option>
+				<!-- {foreach from=$status_list item=list key=key} -->
+				<option value="{$key}" {if $key eq $smarty.get.order_status}selected="selected"{/if}>{$list}</option>
+				<!-- {/foreach} -->
+			</select>
+		</div>
+		
+		<div class="f_l m_r5">
+			<select class="w200" name="activity_type">
+				<option value="0">买单优惠类型</option>
+				<!-- {foreach from=$type_list item=list key=key} -->
+				<option value="{$key}" {if $key eq $smarty.get.activity_type}selected="selected"{/if}>{$list}</option>
+				<!-- {/foreach} -->
+			</select>
+		</div>
+		<a class="btn screen-btn">筛选</a>
 		
 		<div class="choose_list f_r" >
 			<input type="text" name="merchant_keywords" value="{$order_list.filter.merchant_keywords}" placeholder="请输入商家名称"/> 

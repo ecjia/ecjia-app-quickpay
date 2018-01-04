@@ -5,11 +5,17 @@
         	//筛选功能
         	$(".screen-btn").on('click', function(e){
 				e.preventDefault();
+				
+				var order_status = $("select[name='order_status']").val();
 				var activity_type = $("select[name='activity_type']").val();
 				var url = $("form[name='searchForm']").attr('action');
+				if (order_status != '') {
+	                   url += '&order_status=' + order_status;
+	            }
 				if (activity_type != '') {
 	                   url += '&activity_type=' + activity_type;
 	            }
+				alert(url);
                 ecjia.pjax(url);
 			});
         	

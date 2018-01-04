@@ -41,6 +41,15 @@ ecjia.merchant.order_list.init();
         		</div>
         		
         		<div class="form-group">
+        			<select class="w100" name='order_status'>
+						<option value="0">{t}订单状态{/t}</option>
+						<!-- {foreach from=$status_list item=list key=key} -->
+						<option value="{$key}" {if $key eq $smarty.get.order_status}selected="selected"{/if}>{$list}</option>
+						<!-- {/foreach} -->
+					</select>
+        		</div>
+        		
+        		<div class="form-group">
         			<select class="w200" name='activity_type'>
 						<option value="0">{t}买单优惠类型{/t}</option>
 						<!-- {foreach from=$type_list item=list key=key} -->

@@ -85,6 +85,8 @@ class admin_order extends ecjia_admin {
 	    	    
 	    $type_list = $this->get_quickpay_type();
 	    $this->assign('type_list', $type_list);
+	    $status_list = $this->get_all_status();
+	    $this->assign('status_list', $status_list);
 
 	    $order_list = $this->order_list();
 	    $this->assign('order_list', $order_list);
@@ -204,6 +206,24 @@ class admin_order extends ecjia_admin {
 		if ($filter['activity_type']) {
 			$db_quickpay_order->where('activity_type', $filter['activity_type']);
 		}
+				
+		if($filter['order_status'] == 1) {
+			$db_quickpay_order->where('order_status', 0);
+		} elseif($filter['order_status'] == 2) {
+			$db_quickpay_order->where('order_status', 1);
+		} elseif($filter['order_status'] == 3) {
+			$db_quickpay_order->where('order_status', 9);
+		} elseif($filter['order_status'] == 4) {
+			$db_quickpay_order->where('order_status', 99);
+		} elseif($filter['order_status'] == 5) {
+			$db_quickpay_order->where('pay_status', 0);
+		} elseif($filter['order_status'] == 6) {
+			$db_quickpay_order->where('pay_status', 1);
+		} elseif($filter['order_status'] == 7) {
+			$db_quickpay_order->where('verification_status', 0);
+		} elseif($filter['order_status'] == 8){
+			$db_quickpay_order->where('verification_status', 1);
+		}
 		
 		if ($filter['start_time']) {
 			$start_time = RC_Time::local_strtotime($filter['start_time']);
@@ -227,7 +247,6 @@ class admin_order extends ecjia_admin {
 			$db_quickpay_order->where('user_mobile', 'like', '%'.mysql_like_quote($filter['user_mobile']).'%');
 		}
 
-		
 		$check_type = trim($_GET['check_type']);
 		$order_count = $db_quickpay_order->select(RC_DB::raw('count(*) as count'),
 				RC_DB::raw('SUM(IF(verification_status = 1, 1, 0)) as verification'),
@@ -266,11 +285,29 @@ class admin_order extends ecjia_admin {
 	 */
 	private function get_quickpay_type(){
 		$type_list = array(
+			'normal'	=> '无优惠',
 			'discount'	=> '价格折扣',
 			'reduced'   => '满多少减多少',
-			'everyreduced' 	 => '每满多少减多少,最高减多少'
+			'everyreduced' => '每满多少减多少,最高减多少'
 		);
 		return $type_list;
+	}
+	
+	/**
+	 * 获取订单状态
+	 */
+	private function get_all_status(){
+		$status_list = array(
+			'1' => '未确认',
+			'2' => '已确认',
+			'3' => '已取消',
+			'4' => '已删除',
+			'5'	=> '未付款',
+			'6' => '已付款',
+			'7'	=> '未核销',
+			'8' => '已核销',
+		);
+		return $status_list;
 	}
 }
 
