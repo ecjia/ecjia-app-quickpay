@@ -244,7 +244,7 @@ class admin_order extends ecjia_admin {
 		$count = $db_quickpay_order->count();
 		$page = new ecjia_page($count,10, 5);
 		$data = $db_quickpay_order
-		->select('order_id', 'order_sn', 'activity_type', 'user_mobile', 'user_name', 'add_time', 'order_amount', 'surplus', RC_DB::raw('sf.merchants_name'),RC_DB::raw('sf.manage_mode'))
+		->select('order_id', 'order_sn', 'activity_type', 'user_mobile', 'user_name', 'add_time', 'order_amount', 'surplus','order_status','pay_status','verification_status', RC_DB::raw('sf.merchants_name'),RC_DB::raw('sf.manage_mode'))
 		->orderby('order_id', 'asc')
 		->take(10)
 		->skip($page->start_id-1)

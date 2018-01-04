@@ -245,6 +245,7 @@ class mh_order extends ecjia_merchant {
 		$db_quickpay_order = RC_DB::table('quickpay_orders');
 		
 		$db_quickpay_order->where('store_id', $store_id);
+		$db_quickpay_order->where('order_status','!=', 99);
 		
 		$filter = $_GET;
 		
@@ -299,7 +300,7 @@ class mh_order extends ecjia_merchant {
 		$count = $db_quickpay_order->count();
 		$page = new ecjia_merchant_page($count,10, 5);
 		$data = $db_quickpay_order
-		->selectRaw('order_id,order_sn,activity_type,user_mobile,user_name,add_time,order_amount,surplus,pay_status,verification_status')
+		->selectRaw('order_id,order_sn,activity_type,user_mobile,user_name,add_time,order_amount,surplus,order_status,pay_status,verification_status')
 		->orderby('order_id', 'desc')
 		->take(10)
 		->skip($page->start_id-1)

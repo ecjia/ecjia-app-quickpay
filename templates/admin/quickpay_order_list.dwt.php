@@ -63,7 +63,8 @@
 						<th>购买者信息</th>
 						<th class="w150">买单优惠类型</th>
 						<th class="w150">下单时间</th>
-						<th class="w100">实付金额</th>
+						<th class="w80">实付金额</th>
+						<th class="w200">订单状态</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -81,6 +82,11 @@
 						<td>{if $order.activity_type eq 'discount'}价格折扣{elseif $order.activity_type eq 'everyreduced'}每满多少减多少，最高减多少{elseif $order.activity_type eq 'reduced'}满多少减多少{elseif $order.activity_type eq 'normal'}无优惠{/if}</td>
 						<td>{$order.add_time}</td>
 						<td>{$order.order_amount}</td>
+						<td>
+							{if $order.order_status eq 1}已确认{elseif $order.order_status eq 9}<font class="ecjiafc-red">已取消</font>{elseif $order.order_status eq 99}<font class="ecjiafc-red">已删除</font>{else}未确认{/if},
+							{if $order.pay_status eq 1}已支付{else}未支付{/if},
+							{if $order.verification_status eq 1}已核销{else}未核销{/if}
+						</td>
 					</tr>
 					<!-- {foreachelse}-->
 					<tr><td class="no-records" colspan="8">{lang key='system::system.no_records'}</td></tr>
