@@ -15,7 +15,6 @@
 				if (activity_type != '') {
 	                   url += '&activity_type=' + activity_type;
 	            }
-				alert(url);
                 ecjia.pjax(url);
 			});
         	
