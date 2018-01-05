@@ -25,16 +25,6 @@
 
 <div class="row-fluid batch" >
 	<form action="{$search_action}{if $filter.type}&type={$filter.type}{/if}" name="searchForm" method="post" >
-		<div class="btn-group f_l m_r5">
-			<a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-				<i class="fontello-icon-cog"></i>批量操作
-				<span class="caret"></span>
-			</a>
-			<ul class="dropdown-menu">
-				<li><a class="button_remove" data-toggle="ecjiabatch" data-idClass=".checkbox:checked" data-url="{url path='quickpay/admin_order/batch'}" data-msg="您确实要删除选中的订单吗？" data-noSelectMsg="请先选中要删除的订单！" data-name="id" href="javascript:;"><i class="fontello-icon-trash"></i>删除</a></li>
-			</ul>
-		</div>
-		
 		<div class="f_l m_r5">
 			<select class="w100" name="order_status">
 				<option value="0">订单状态</option>
@@ -68,7 +58,6 @@
 			<table class="table table-striped table-hide-edit">
 				<thead>
 					<tr>
-						<th class="table_checkbox"><input type="checkbox" data-toggle="selectall" data-children=".checkbox" /></th>
 						<th class="w100">订单号</th>
 						<th class="w120">商家名称</th>
 						<th>购买者信息</th>
@@ -81,7 +70,6 @@
 				<tbody>
 					<!-- {foreach from=$order_list.list item=order key=okey} -->
 					<tr>
-						<td><input type="checkbox" class="checkbox" name="order_id[]"  value="{$order.order_id}" /></td>
 						<td class="hide-edit-area">
 							{$order.order_sn}
 							<div class="edit-list"><a href='{url path="quickpay/admin_order/order_info" args="order_id={$order.order_id}"}' class="data-pjax" title="查看详情">查看详情</a></div>

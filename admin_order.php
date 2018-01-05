@@ -156,19 +156,6 @@ class admin_order extends ecjia_admin {
 	}
 	
 	/**
-	 * 批量操作买单订单
-	 */
-	public function batch() {
-		$this->admin_priv('quickpay_order_update');
-	
-		$ids  = explode(',', $_POST['id']);
-		RC_DB::table('quickpay_orders')->whereIn('order_id', $ids)->delete();
-	
-		return $this->showmessage('批量删除成功', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('pjaxurl' => RC_Uri::url('quickpay/admin_order/init')));
-	}
-	
-	
-	/**
 	 * 买单订单查询
 	 */
 	public function search_order() {
