@@ -83,7 +83,7 @@
 						<td>{$order.order_amount}</td>
 						<td>
 							{if $order.order_status eq 1}已确认{elseif $order.order_status eq 9}<font class="ecjiafc-red">已取消</font>{elseif $order.order_status eq 99}<font class="ecjiafc-red">已删除</font>{else}未确认{/if},
-							{if $order.pay_status eq 1}已支付{else}未支付{/if},
+							{if $order.pay_status eq 1}已付款{else}未付款{/if},
 							{if $order.verification_status eq 1}已核销{else}未核销{/if}
 						</td>
 					</tr>

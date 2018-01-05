@@ -132,6 +132,9 @@ class mh_order extends ecjia_merchant {
 			$this->assign('has_payed', 1);
 		}
 		
+		$cancel_time = RC_DB::table('quickpay_order_action')->where('order_id', $order_id)->where('order_status', 9)->pluck('add_time');
+		$cancel_time = RC_Time::local_date(ecjia::config('time_format'), $cancel_time);
+		$this->assign('cancel_time', $cancel_time);
 		//订单流程状态
 		if ($order_info['order_status']){
 			$step = 1;
@@ -207,6 +210,59 @@ class mh_order extends ecjia_merchant {
 		} else {
 			return $this->showmessage('核销操作成功', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('url' => RC_Uri::url('quickpay/mh_order/init')));
 		}
+	}
+	
+	/**
+	 * 取消操作
+	 */
+	public function order_action_cancel() {
+		$this->admin_priv('mh_quickpay_order_update');
+	
+		$action_note = trim($_POST['action_note']);
+		$order_id    = intval($_POST['order_id']);
+		if (empty($action_note)) {
+			return $this->showmessage('操作备注不能为空', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR,array('url' => RC_Uri::url('quickpay/mh_order/init')));
+		}
+	
+		$data = array(
+			'order_status'	=> 9,
+		);
+		RC_DB::table('quickpay_orders')->where('order_id', $order_id)->update($data);
+	
+		$data_action = array(
+				'order_id'				=> $order_id,
+				'action_user_id'		=> $_SESSION['staff_id'],
+				'action_user_name'		=> $_SESSION['staff_name'],
+				'action_user_type'		=> 'merchant',
+				'order_status'	        => 9,
+				'pay_status'	        => 0,
+				'verification_status'	=> 0,
+				'action_note'			=> $action_note,
+				'add_time'				=> RC_Time::gmtime(),
+		);
+		RC_DB::table('quickpay_order_action')->insertGetId($data_action);
+	
+		if ($_POST['type_info']) {
+			return $this->showmessage('核销操作成功', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('pjaxurl' => RC_Uri::url('quickpay/mh_order/order_info', array('order_id' => $order_id))));
+		} else {
+			return $this->showmessage('核销操作成功', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('url' => RC_Uri::url('quickpay/mh_order/init')));
+		}
+	}
+	
+	/**
+	 * 删除买单订单
+	 */
+	public function remove() {
+		$this->admin_priv('mh_quickpay_order_delete');
+	
+		$order_id = intval($_GET['order_id']);
+		$data = array(
+			'order_status' => 99,
+		);
+		RC_DB::table('quickpay_orders')->where('order_id', $order_id)->update($data);
+		return $this->showmessage('删除订单成功', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('pjaxurl' => RC_Uri::url('quickpay/mh_order/init')));
+	
+		return $this->showmessage('成功删除该优惠买单订单', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS);
 	}
 	
 	/**
