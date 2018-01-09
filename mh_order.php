@@ -270,11 +270,35 @@ class mh_order extends ecjia_merchant {
 	 */
 	public function batch() {
 		$this->admin_priv('mh_quickpay_order_delete');
-	
-		$ids  = explode(',', $_POST['order_id']);
-		RC_DB::table('quickpay_orders')->whereIn('order_id', $ids)->delete();
-	
-		return $this->showmessage('批量删除成功', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('pjaxurl' => RC_Uri::url('quickpay/mh_order/init')));
+		
+		$ids = explode(',', $_POST['checkboxes']);
+		if (isset($_GET['operation'])) {
+			if ($_GET['operation'] == 'remove') {
+				$this->admin_priv('mh_quickpay_order_delete');
+				foreach($ids as $val){
+					$pay_status = RC_DB::TABLE('quickpay_orders')->where('order_id', $val)->pluck('order_status');
+					if($pay_status == 9){
+						$data = array(
+							'order_status' => 99,
+						);
+						RC_DB::table('quickpay_orders')->where('order_id', $val)->update($data);
+					}
+				}
+			return $this->showmessage('批量删除成功', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('pjaxurl' => RC_Uri::url('quickpay/mh_order/init')));
+			} else {
+				$this->admin_priv('mh_quickpay_order_update');
+				foreach($ids as $val){
+					$status = RC_DB::TABLE('quickpay_orders')->where('order_id', $val)->select('order_status', 'pay_status', 'verification_status')->first();
+					if($status['order_status'] == 0 && $status['pay_status'] ==0 && $status['verification_status']==0){
+						$data = array(
+							'order_status' => 9,
+						);
+						RC_DB::table('quickpay_orders')->where('order_id', $val)->update($data);
+					}
+				}
+				return $this->showmessage('批量取消成功', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('pjaxurl' => RC_Uri::url('quickpay/mh_order/init')));
+			}
+		}
 	}
 	
 	/**

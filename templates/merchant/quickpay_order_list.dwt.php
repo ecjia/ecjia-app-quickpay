@@ -35,8 +35,9 @@ ecjia.merchant.order_list.init();
 			<div class='col-lg-12 panel-heading form-inline'>
         		<div class="btn-group form-group">
         			<button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown"><i class="fa fa-cogs"></i> 批量操作 <span class="caret"></span></button>
-        			<ul class="dropdown-menu operate_note">
-        				<li><a class="batch-del-btn" data-toggle="ecjiabatch" data-name="order_id" data-idClass=".checkbox:checked" data-url="{url path='quickpay/mh_order/batch'}" data-msg="删除订单将清除该订单的所有信息。您确定要这么做吗？" data-noSelectMsg="请选择您要操作的订单" href="javascript:;"><i class="fa fa-trash-o"></i> 删除</a></li>
+        			<ul class="dropdown-menu">
+        				<li><a  data-toggle="ecjiabatch" data-idClass=".checkbox:checked" data-url="{url path='quickpay/mh_order/batch'}&operation=remove" data-msg="删除订单将清除该订单的所有信息。您确定要这么做吗？" data-noSelectMsg="请选择您要操作的订单" href="javascript:;"><i class="fa fa-trash-o"></i> 删除</a></li>
+        				<li><a  data-toggle="ecjiabatch" data-idClass=".checkbox:checked" data-url="{url path='quickpay/mh_order/batch'}&operation=cancel" data-msg="你确定要取消这些订单吗？" data-noSelectMsg="请选择您要操作的订单" href="javascript:;"><i class="fa fa-times"></i> 取消</a></li>
                    	</ul>
         		</div>
         		
