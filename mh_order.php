@@ -284,7 +284,6 @@ class mh_order extends ecjia_merchant {
 						RC_DB::table('quickpay_orders')->where('order_id', $val)->update($data);
 					}
 				}
-			return $this->showmessage('批量删除成功', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('pjaxurl' => RC_Uri::url('quickpay/mh_order/init')));
 			} else {
 				$this->admin_priv('mh_quickpay_order_update');
 				foreach($ids as $val){
@@ -296,8 +295,9 @@ class mh_order extends ecjia_merchant {
 						RC_DB::table('quickpay_orders')->where('order_id', $val)->update($data);
 					}
 				}
-				return $this->showmessage('批量取消成功', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('pjaxurl' => RC_Uri::url('quickpay/mh_order/init')));
+				
 			}
+			return $this->showmessage('批量操作成功', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('pjaxurl' => RC_Uri::url('quickpay/mh_order/init')));
 		}
 	}
 	
