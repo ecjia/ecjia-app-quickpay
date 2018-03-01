@@ -83,6 +83,7 @@ class mh_qrcode extends ecjia_merchant {
 
         $this->assign('refresh_url', RC_Uri::url('quickpay/mh_qrcode/refresh'));
         $this->assign('download_url', RC_Uri::url('quickpay/mh_qrcode/download'));
+        $this->assign('print_url', RC_Uri::url('quickpay/mh_qrcode/print_qrcode'));
         
         $disk = RC_Filesystem::disk();
         $collectmoney_qrcode = 'data/qrcodes/collectmoney/merchant_'.$_SESSION['store_id'].'.png';
@@ -93,7 +94,7 @@ class mh_qrcode extends ecjia_merchant {
         }
         $this->assign('merchant_info', $merchant_info);
         
-		$this->display('merchant_qrcode.dwt');
+		$this->display('quickpay_qrcode.dwt');
 	}
 	
 	/**
@@ -123,6 +124,10 @@ class mh_qrcode extends ecjia_merchant {
 	 */
 	public function download() {
 		$this->admin_priv('quickpay_collectmoney_qrcode', ecjia::MSGTYPE_JSON);
+		
+	}
+	
+	public function print_qrcode() {
 		
 	}
 	

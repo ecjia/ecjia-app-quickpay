@@ -14,7 +14,16 @@
         		$.post(url, function(data) {
         			ecjia.merchant.showmessage(data);
         		});
+        	});
+        	
+        	$('.print_qrcode').off('click').on('click', function(e) {
+        		e.preventDefault();
+        		var $this = $(this),
+        			url = $this.attr('href');
         		
+        		$.post(url, function(data) {
+        			ecjia.merchant.showmessage(data);
+        		});
         	});
         },
         
