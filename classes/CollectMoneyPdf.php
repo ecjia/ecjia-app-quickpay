@@ -14,7 +14,7 @@ class CollectMoneyPdf
      */
     public function make($merchants_name, $store_logo, $collectmoney_qrcode)
     {
-        $html = $this->formatHtml($merchants_name, $store_logo, $collectmoney_qrcode);
+        $html = $this->formatTableHtml($merchants_name, $store_logo, $collectmoney_qrcode);
         $this->createPDF($html);
     }
     
@@ -48,10 +48,45 @@ class CollectMoneyPdf
         
         //第一页
         $pdf->AddPage();
-        $pdf->writeHTML($html);
+        $pdf->writeHTML($html, true, false, true, false, '');
         
         //输出PDF
         $pdf->Output('ecjia_collect_money.pdf', 'I');
+    }
+    
+    /**
+     * 生成收款码HTML页面
+     *
+     * @param string $merchants_name
+     * @param string $store_logo    url
+     * @param string $collectmoney_qrcode   url
+     * @return string
+     */
+    public function formatTableHtml($merchants_name, $store_logo, $collectmoney_qrcode)
+    {
+        $collectHtml = $this->formatHtml($merchants_name, $store_logo, $collectmoney_qrcode);
+        
+        $tablehtml = <<<EOL
+        <table>
+            <tr>
+                <td>
+                    {$collectHtml}
+                </td>
+                <td>
+                    {$collectHtml}
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    {$collectHtml}
+                </td>
+                <td>
+                    {$collectHtml}
+                </td>
+            </tr>
+        </table>
+EOL;
+        return $tablehtml;
     }
     
     /**
@@ -65,15 +100,11 @@ class CollectMoneyPdf
     public function formatHtml($merchants_name, $store_logo, $collectmoney_qrcode)
     {
         $html = <<<EOL
-        <div class="left-side" style="width: 300px;height: 430px;border: 1px solid #eee;float: left;background-color: #379ED8;border-radius: 8px;text-align: center;">
-            <div class="store-logo">
-                <img src="'+ $store_logo +'" style="width: 60px;height: 60px;border-radius: 50%;margin: 20px 0 10px 0;">
-            </div>
-            <div class="store-name" style="font-size: 18px;color: #fff;margin: 10px 0;">'+ $merchants_name +'</div>
-            <div class="qrcode" style="margin-top: 20px;">
-                <img src="'+ $collectmoney_qrcode +'" style="width: 220px;height: 220px;">
-            </div>
-            <div class="info" style="color: #fff;font-size: 15px;margin-top: 20px;">微信扫描二维码进行买单</div>
+        <div style="border: 2px solid #eee; float: left; background-color: #379ED8; text-align: center;">
+            <div><img src="{$store_logo}" style="width: 200px;height: 200px;"></div>
+            <div style="font-size: 18pt;color: #fff; width: 500px;">{$merchants_name}</div>
+            <div style="margin-top: 20px;"><img src="{$collectmoney_qrcode}" style="width: 530px;height: 530px;"></div>
+            <div style="color: #fff;font-size: 12pt; margin-top: 20px;">微信扫描二维码进行买单</div>
         </div>
 EOL;
         return $html;
