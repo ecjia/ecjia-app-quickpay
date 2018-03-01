@@ -112,7 +112,7 @@ class mh_qrcode extends ecjia_merchant {
 	 * 下载素材
 	 */
 	public function download() {
-		$this->admin_priv('quickpay_collectmoney_qrcode', ecjia::MSGTYPE_JSON);
+		$this->admin_priv('quickpay_collectmoney_qrcode', ecjia::MSGTYPE_HTML);
 		
 		$merchant_info = RC_Api::api('store', 'store_info', ['store_id' => $_SESSION['store_id']]);
 		$merchant_name = $_SESSION['store_name'];
@@ -127,7 +127,7 @@ class mh_qrcode extends ecjia_merchant {
 	 * 打印素材
 	 */
 	public function print_qrcode() {
-	    $this->admin_priv('quickpay_collectmoney_qrcode', ecjia::MSGTYPE_JSON);
+	    $this->admin_priv('quickpay_collectmoney_qrcode', ecjia::MSGTYPE_HTML);
 	    
 	    $merchant_info = RC_Api::api('store', 'store_info', ['store_id' => $_SESSION['store_id']]);
 	    $merchant_name = $_SESSION['store_name'];
