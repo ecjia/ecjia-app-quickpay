@@ -2,9 +2,6 @@
 <!-- {extends file="ecjia-merchant.dwt.php"} -->
 
 <!-- {block name="footer"} -->
-<script type="text/javascript">
-	ecjia.merchant.merchant_qrcode.init();
-</script>
 <!-- {/block} -->
 
 <!-- {block name="home-content"} -->
@@ -43,8 +40,8 @@
         			</div>
         			<div class="right-handle">
         				<a class="btn btn-primary" href="{$refresh_url}" data-toggle="ajaxremove" data-msg="您确定要刷新该收款二维码吗？">刷新二维码</a>
-        				<a class="btn btn-info m_l10 download_qrcode" href="{$download_url}">下载素材</a>
-        				<a class="btn btn-info m_l10 print_qrcode" href="{$print_url}">打印二维码</a>
+        				<a class="btn btn-info m_l10 nopjax" target="__blank" href="{$download_url}">下载素材</a>
+        				<a class="btn btn-info m_l10 nopjax" target="__blank" href="{$print_url}">打印二维码</a>
         			</div>
         		</div>
         	</div>
