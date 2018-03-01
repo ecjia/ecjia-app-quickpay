@@ -86,6 +86,8 @@ class mh_qrcode extends ecjia_merchant {
         $this->assign('print_url', RC_Uri::url('quickpay/mh_qrcode/print_qrcode'));
         
         $merchant_info['collectmoney_qrcode'] = with(new Ecjia\App\Mobile\Qrcode\GenerateCollectMoney($_SESSION['store_id'],  $merchant_info['shop_logo']))->getQrcodeUrl();
+        $merchant_info['shop_logo'] = RC_Upload::upload_url($merchant_info['shop_logo']);
+        
         $this->assign('merchant_info', $merchant_info);
         
 		$this->display('quickpay_qrcode.dwt');
