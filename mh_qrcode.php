@@ -117,12 +117,23 @@ class mh_qrcode extends ecjia_merchant {
 		$merchant_info['shop_logo'] = 'https://cityo2o.ecjia.com/content/uploads/merchant/60/data/shop_logo/1477948615542668810.png';
 		
 		$merchant_info['collectmoney_qrcode'] = with(new Ecjia\App\Mobile\Qrcode\GenerateCollectMoney($_SESSION['store_id'],  $merchant_info['shop_logo']))->getQrcodeUrl();
-// 		dd($merchant_info);
-		with(new Ecjia\App\Quickpay\CollectMoneyPdf)->make($merchant_name, $merchant_info['shop_logo'], $merchant_info['collectmoney_qrcode']);
+
+		with(new Ecjia\App\Quickpay\CollectMoneyPdf($merchant_name, $merchant_info['shop_logo'], $merchant_info['collectmoney_qrcode']))->make('D');
 	}
 	
+	/**
+	 * 打印素材
+	 */
 	public function print_qrcode() {
-		
+	    $this->admin_priv('quickpay_collectmoney_qrcode', ecjia::MSGTYPE_JSON);
+	    
+	    $merchant_info = RC_Api::api('store', 'store_info', ['store_id' => $_SESSION['store_id']]);
+	    $merchant_name = $_SESSION['store_name'];
+	    $merchant_info['shop_logo'] = 'https://cityo2o.ecjia.com/content/uploads/merchant/60/data/shop_logo/1477948615542668810.png';
+	    
+	    $merchant_info['collectmoney_qrcode'] = with(new Ecjia\App\Mobile\Qrcode\GenerateCollectMoney($_SESSION['store_id'],  $merchant_info['shop_logo']))->getQrcodeUrl();
+	    
+	    with(new Ecjia\App\Quickpay\CollectMoneyPdf($merchant_name, $merchant_info['shop_logo'], $merchant_info['collectmoney_qrcode']))->make('I');
 	}
 	
 }
