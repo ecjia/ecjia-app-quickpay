@@ -126,7 +126,7 @@ class quickpay_quickpay_order_paid_api extends Component_Event_Api {
 	    	$shipping_info = RC_DB::table('shipping')->where('shipping_id', $order['shipping_id'])->first();
 	    	if ($shipping_info['shipping_code'] == 'ship_cac') {
 	    		/*短信给用户发送收货验证码*/
-	    		if (ecjia::config('sms_shop_mobile') != '') {
+// 	    		if (ecjia::config('sms_shop_mobile') != '') {
 	    			$db_term_meta = RC_DB::table('term_meta');
 	    			$max_code = $db_term_meta->where('object_type', 'ecjia.order')->where('object_group', 'order')->where('meta_key', 'receipt_verification')->max('meta_value');
 	    			 
@@ -153,7 +153,7 @@ class quickpay_quickpay_order_paid_api extends Component_Event_Api {
 	    					'meta_value'	=> $code,
 	    			);
 	    			$db_term_meta->insert($meta_data);
-	    		}
+// 	    		}
 	    	}
 	    }
 	    
