@@ -192,18 +192,21 @@ class mh_order extends ecjia_merchant {
 		);
 		RC_DB::table('quickpay_order_action')->insertGetId($data_action);
 		
-		$order_amount = RC_DB::TABLE('quickpay_orders')->where('order_id', $order_id)->pluck('order_amount');
-		$percent_value = 100-ecjia::config('quickpay_fee');
-		$brokerage_amount = $order_amount * $percent_value / 100;
-		$data_bill = array(
-			'store_id'			=> $_SESSION['store_id'],
-			'order_type'		=> 11,
-			'order_id'			=> $order_id,
-			'percent_value'		=> $percent_value,//佣金比例
-			'brokerage_amount'	=> $brokerage_amount,//佣金金额
-			'add_time'			=> RC_Time::gmtime(),
-		);
-		RC_DB::table('store_bill_detail')->insertGetId($data_bill);
+// 		$order_amount = RC_DB::TABLE('quickpay_orders')->where('order_id', $order_id)->pluck('order_amount');
+// 		$percent_value = 100-ecjia::config('quickpay_fee');
+// 		$brokerage_amount = $order_amount * $percent_value / 100;
+// 		$data_bill = array(
+// 			'store_id'			=> $_SESSION['store_id'],
+// 			'order_type'		=> 11,
+// 			'order_id'			=> $order_id,
+// 			'percent_value'		=> $percent_value,//佣金比例
+// 			'brokerage_amount'	=> $brokerage_amount,//佣金金额
+// 			'add_time'			=> RC_Time::gmtime(),
+// 		);
+// 		RC_DB::table('store_bill_detail')->insertGetId($data_bill);
+		//结算
+		RC_Api::api('commission', 'add_bill_detail', array('store_id' => $_SESSION['store_id'], 'order_type' => 'quickpay', 'order_id' => $order_id,));
+		
 	
 		if ($_POST['type_info']) {
 			return $this->showmessage('核销操作成功', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('pjaxurl' => RC_Uri::url('quickpay/mh_order/order_info', array('order_id' => $order_id))));
