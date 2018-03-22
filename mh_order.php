@@ -205,8 +205,8 @@ class mh_order extends ecjia_merchant {
 // 		);
 // 		RC_DB::table('store_bill_detail')->insertGetId($data_bill);
 		//结算
-		RC_Api::api('commission', 'add_bill_detail', array('store_id' => $_SESSION['store_id'], 'order_type' => 'quickpay', 'order_id' => $order_id,));
-		
+// 		RC_Api::api('commission', 'add_bill_detail', array('store_id' => $_SESSION['store_id'], 'order_type' => 'quickpay', 'order_id' => $order_id,));
+		RC_Api::api('commission', 'add_bill_queue', array('order_type' => 'quickpay', 'order_id' => $order_id));
 	
 		if ($_POST['type_info']) {
 			return $this->showmessage('核销操作成功', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('pjaxurl' => RC_Uri::url('quickpay/mh_order/order_info', array('order_id' => $order_id))));
