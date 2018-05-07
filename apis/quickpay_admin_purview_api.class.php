@@ -69,7 +69,9 @@ class quickpay_admin_purview_api extends Component_Event_Api {
         	array('action_name' => '买单订单统计', 'action_code' => 'quickpay_sale_general_stats', 'relevance'   => ''),
         		
         	array('action_name' => '买单销售明细', 'action_code' => 'quickpay_sale_list', 'relevance'   => ''),
-		
+        		
+        		
+        	array('action_name' => '收款二维码', 'action_code' => 'quickpay_collectmoney_qrcode', 'relevance'   => ''),
         );
         return $purviews;
     }

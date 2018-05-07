@@ -119,7 +119,7 @@ class quickpay_activity {
 	 * @param   float   $goods_amount   订单商品金额
 	 * @return  array   红包数组
 	 */
-	public static function user_bonus($user_id, $goods_amount = 0, $store_id=0) {
+	public static function user_bonus($user_id, $goods_amount = 0, $store_id = 0) {
 		$today = RC_Time::gmtime();
 		$dbview = RC_DB::table('user_bonus as ub')
 		->leftJoin('bonus_type as bt', RC_DB::raw('bt.type_id'), '=', RC_DB::raw('ub.bonus_type_id'));
@@ -241,7 +241,7 @@ class quickpay_activity {
 		
 		$time = RC_Time::local_strtotime($time);
 		
-		if($curr_time >= $timeBegin1 && $curr_time <= $timeEnd1)
+		if ($time >= $timeBegin1 && $time <= $timeEnd1)
 		{
 			return 0;
 		}
@@ -297,6 +297,9 @@ class quickpay_activity {
 		} elseif (($order_status == Ecjia\App\Quickpay\Status::CONFIRMED) && ($pay_status == Ecjia\App\Quickpay\Status::PAID) && ($verification_status == Ecjia\App\Quickpay\Status::VERIFICATION)) {
 			$order_status_str = 'succeed';
 			$label_order_status = '买单成功';
+		} elseif (($order_status == Ecjia\App\Quickpay\Status::CANCELED) && ($pay_status == Ecjia\App\Quickpay\Status::UNPAID) && ($verification_status == Ecjia\App\Quickpay\Status::UNVERIFICATION)){
+			$order_status_str = 'canceled';
+			$label_order_status = '已取消';
 		}
 		return array('order_status_str' => $order_status_str, 'label_order_status' => $label_order_status);
 	}
@@ -370,53 +373,17 @@ class quickpay_activity {
 				}
 				$list[$key]['allow_use_bonus'] = $allow_use_bonus;
 				$list[$key]['act_bonus_list'] = $bonus_list;
-				
-				/*自定义时间的活动，当前时间段不可用的过滤掉*/
-// 				if ($val['limit_time_type'] == 'customize') {
-// 					/*每周限制时间*/
-// 					if (!empty($val['limit_time_weekly'])){
-// 						$w = date('w');
-// 						$current_week = quickpay_activity::current_week($w);
-// 						$limit_time_weekly = Ecjia\App\Quickpay\Weekly::weeks($val['limit_time_weekly']);
-// 						$weeks_str = self::get_weeks_str($limit_time_weekly);
-				
-// 						if (!in_array($current_week, $limit_time_weekly)){
-// 							unset($list[$key]);
-// 						}
-// 					}
-// 					/*每天限制时间段*/
-// 					if (!empty($val['limit_time_daily'])) {
-// 						$limit_time_daily = unserialize($val['limit_time_daily']);
-// 						foreach ($limit_time_daily as $val1) {
-// 							$arr[] = self::is_in_timelimit(array('start' => $val1['start'], 'end' => $val1['end']));
-// 						}
-// 						if (!in_array(0, $arr)) {
-// 							unset($list[$key]);
-// 						}
-// 					}
-// 					/*活动限制日期*/
-// 					if (!empty($val['limit_time_exclude'])) {
-// 						$limit_time_exclude = explode(',', $val['limit_time_exclude']);
-// 						$current_date = RC_Time::local_date(ecjia::config('date_format'), RC_Time::gmtime());
-// 						$current_date = array($current_date);
-// 						if (in_array($current_date, $limit_time_exclude)) {
-// 							unset($list[$key]);
-// 						}
-// 					}
-// 				}
 			}
 		}
-
-// 		if (!empty($list)) {
-// 			foreach ($list as $a => $b) {
-// 				if (!empty($b['act_bonus_list'])) {
-// 					foreach ($b['act_bonus_list'] as $b2) {
-// 						$list[$a]['bonus'][] = $b2['type_money'];
-// 					}
-// 				}
-// 			}
-// 		}
 		return $list;
+	}
+	
+	/**
+	 * 获取某个店铺是否有开启优惠活动
+	 */
+	public static function is_open_quickpay ($store_id) {
+		$allow_use_quickpay = RC_DB::table('merchants_config')->where('store_id', $store_id)->where('code', 'quickpay_enabled')->pluck('value');
+		return $allow_use_quickpay;
 	}
 }	
 

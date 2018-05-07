@@ -47,18 +47,66 @@
 defined('IN_ECJIA') or exit('No permission resources.');
 
 /**
- * 买单管理
+ * 买单订单取消
+ * @author zrl
+ *
  */
-return array(
-	'identifier' 	=> 'ecjia.quickpay',
-	'directory' 	=> 'quickpay',
-	'name'			=> 'quickpay',
-	'description' 	=> 'quickpay_desc',			/* 描述对应的语言项 */
-	'author' 		=> 'ECJIA TEAM',			/* 作者 */
-	'website' 		=> 'http://www.ecjia.com',	/* 网址 */
-	'version' 		=> '1.16.0',					/* 版本号 */
-	'copyright' 	=> 'ECJIA Copyright 2015.',
-
-);
+class cancel_module extends api_front implements api_interface {
+    public function handleRequest(\Royalcms\Component\HttpKernel\Request $request) {
+    	//如果用户登录获取其session
+    	$this->authSession();
+		$user_id = $_SESSION['user_id'];
+		if ($user_id < 1) {
+			return new ecjia_error(100, 'Invalid session');
+		}
+		
+		$user_id 		= $_SESSION['user_id'];
+		$order_id		= $this->requestData('order_id', 0);
+		
+		if ( $order_id <= 0) {
+			return new ecjia_error('invalid_parameter', '参数错误！');
+		}
+	
+		$options = array('order_id' => $order_id);
+		$order_info = RC_Api::api('quickpay', 'quickpay_order_info', $options);
+		
+		if (is_ecjia_error($order_info)) {
+			return $order_info;
+		}
+		
+		if (empty($order_info)) {
+			return new ecjia_error('not_exist_info', '订单信息不存在！');
+		}
+		
+		$pay_status = Ecjia\App\Quickpay\Status::UNPAID;
+		$order_status = Ecjia\App\Quickpay\Status::UNCONFIRMED;
+		$verification_status = Ecjia\App\Quickpay\Status::UNVERIFICATION;
+		
+		if (($order_info['order_status'] != $pay_status) && ($order_info['pay_status'] != $pay_status) && $order_info['verification_status'] != $verification_status) {
+			return new ecjia_error('not_support_cancel', '当前订单不支持取消！');
+		}
+		
+		$arr = array(
+				'order_status' 			=> Ecjia\App\Quickpay\Status::CANCELED,
+		);
+		
+		RC_DB::table('quickpay_orders')->where('order_id', $order_id)->update($arr);
+		
+		/* 记录log */
+		RC_Loader::load_app_class('quickpay_activity', 'quickpay', false);
+		$data = array(
+				'order_id' 			=> $order_id,
+				'action_user_id'	=> $order_info['user_id'],
+				'action_user_name' 	=> $order_info['user_name'],
+				'action_user_type'	=> 'user',
+				'order_status' 		=> Ecjia\App\Quickpay\Status::CANCELED,
+				'pay_status' 		=> $pay_status,
+				'action_note' 		=> ''
+		);
+		quickpay_activity::quickpay_order_action($data);
+	
+		return array();
+	}
+}
 
 // end

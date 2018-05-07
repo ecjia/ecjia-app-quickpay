@@ -44,21 +44,29 @@
 //
 //  ---------------------------------------------------------------------------------
 //
-defined('IN_ECJIA') or exit('No permission resources.');
+namespace Ecjia\App\Quickpay;
 
-/**
- * 买单管理
- */
-return array(
-	'identifier' 	=> 'ecjia.quickpay',
-	'directory' 	=> 'quickpay',
-	'name'			=> 'quickpay',
-	'description' 	=> 'quickpay_desc',			/* 描述对应的语言项 */
-	'author' 		=> 'ECJIA TEAM',			/* 作者 */
-	'website' 		=> 'http://www.ecjia.com',	/* 网址 */
-	'version' 		=> '1.16.0',					/* 版本号 */
-	'copyright' 	=> 'ECJIA Copyright 2015.',
+use ecjia_admin_log;
 
-);
+class Helper
+{
+    /**
+     * 添加管理员记录日志操作对象
+     */
+    public static function assign_adminlog_content()
+    {
+        ecjia_admin_log::instance()->add_object('collectmoney_qrcode', '收款二维码');
+        ecjia_admin_log::instance()->add_object('quickpay', '买单');
+        ecjia_admin_log::instance()->add_object('quickpay_order', '买单订单');
+        
+        ecjia_admin_log::instance()->add_action('open', '开启');
+        ecjia_admin_log::instance()->add_action('close', '关闭');
+        ecjia_admin_log::instance()->add_action('check', '核销');
+        ecjia_admin_log::instance()->add_action('cancel', '取消');
+        ecjia_admin_log::instance()->add_action('batch_trash', '批量删除');
+        ecjia_admin_log::instance()->add_action('batch_cancel', '批量取消');
+    }
+
+}
 
 // end

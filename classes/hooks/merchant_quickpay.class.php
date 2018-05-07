@@ -46,19 +46,16 @@
 //
 defined('IN_ECJIA') or exit('No permission resources.');
 
-/**
- * 买单管理
- */
-return array(
-	'identifier' 	=> 'ecjia.quickpay',
-	'directory' 	=> 'quickpay',
-	'name'			=> 'quickpay',
-	'description' 	=> 'quickpay_desc',			/* 描述对应的语言项 */
-	'author' 		=> 'ECJIA TEAM',			/* 作者 */
-	'website' 		=> 'http://www.ecjia.com',	/* 网址 */
-	'version' 		=> '1.16.0',					/* 版本号 */
-	'copyright' 	=> 'ECJIA Copyright 2015.',
+class quickpay_merchant_hook {
+	
+	public static function quickpay_merchant_menu_api($menus) {
+	    $menu = ecjia_merchant::make_admin_menu('04_merchant_qrcode', __('收款二维码'), RC_Uri::url('quickpay/mh_qrcode/init'), 4)->add_purview('quickpay_collectmoney_qrcode')->add_icon('fa-qrcode');
+	    
+	    $menus->add_submenu($menu);
+	    return $menus;
+	}
+}
 
-);
+RC_Hook::add_filter( 'merchant_merchant_menu_api', array('quickpay_merchant_hook', 'quickpay_merchant_menu_api') );
 
 // end
