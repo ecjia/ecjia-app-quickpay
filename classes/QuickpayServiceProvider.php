@@ -2,9 +2,9 @@
 
 namespace Ecjia\App\Quickpay;
 
-use Royalcms\Component\App\AppServiceProvider;
+use Royalcms\Component\App\AppParentServiceProvider;
 
-class QuickpayServiceProvider extends  AppServiceProvider
+class QuickpayServiceProvider extends  AppParentServiceProvider
 {
     
     public function boot()
