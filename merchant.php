@@ -457,7 +457,7 @@ class merchant extends ecjia_merchant {
     	$this->admin_priv('mh_quickpay_delete');
     	 
     	$id = intval($_GET['id']);
-    	$title = RC_DB::TABLE('quickpay_activity')->where('id', $id)->pluck('title');
+    	$title = RC_DB::table('quickpay_activity')->where('id', $id)->pluck('title');
     	
     	RC_DB::table('quickpay_activity')->where('id', $id)->delete();
     	
