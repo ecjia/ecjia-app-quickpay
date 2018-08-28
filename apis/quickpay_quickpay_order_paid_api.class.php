@@ -80,7 +80,7 @@ class quickpay_quickpay_order_paid_api extends Component_Event_Api {
 	private function order_paid($order_sn, $pay_status = PS_PAYED) {
 		RC_Loader::load_app_class('quickpay_activity', 'quickpay', false);
 	    /* 取得订单信息 */
-	    $order = RC_DB::table('quickpay_orders')->selectRaw('order_id, store_id, user_id, order_sn, user_name, user_mobile, goods_amount, order_amount, add_time')
+		$order = RC_DB::table('quickpay_orders')->select(RC_DB::raw('order_id, store_id, user_id, order_sn, user_name, user_mobile, goods_amount, order_amount, add_time'))
 	    										->where('order_sn', $order_sn)->first();
 	    $order_id = $order['order_id'];
 	    $order_sn = $order['order_sn'];

@@ -129,7 +129,7 @@ class quickpay_activity {
 		->where(RC_DB::raw('bt.store_id'), $store_id)
 		->where(RC_DB::raw('ub.user_id'), $user_id)
 		->where(RC_DB::raw('ub.order_id'), 0);
-		$row = $dbview->selectRaw('bt.type_id, bt.type_name, bt.type_money, ub.bonus_id, bt.usebonus_type')->get();
+		$row = $dbview->select(RC_DB::raw('bt.type_id, bt.type_name, bt.type_money, ub.bonus_id, bt.usebonus_type'))->get();
 		return $row;
 	}
 	
@@ -154,7 +154,7 @@ class quickpay_activity {
 			->where(RC_DB::raw('ub.user_id'), $user_id)
 			->where(RC_DB::raw('ub.order_id'), 0);
 	
-			$row = $dbview->selectRaw('bt.type_id, bt.type_name, bt.type_money, ub.bonus_id, bt.usebonus_type')->get();
+			$row = $dbview->select(RC_DB::raw('bt.type_id, bt.type_name, bt.type_money, ub.bonus_id, bt.usebonus_type'))->get();
 		}
 		return $row;
 	}
