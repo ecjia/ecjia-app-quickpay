@@ -204,6 +204,8 @@ class quickpay_quickpay_order_paid_api extends Component_Event_Api {
         if (is_ecjia_error($res)) {
         	RC_Logger::getLogger('error')->error($res->get_error_message());
         }
+
+        return true;
     }
 }
 
