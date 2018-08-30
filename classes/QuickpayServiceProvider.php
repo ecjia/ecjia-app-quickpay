@@ -9,7 +9,7 @@ class QuickpayServiceProvider extends  AppParentServiceProvider
     
     public function boot()
     {
-        $this->package('ecjia/app-quickpay', null, dirname(__DIR__));
+        $this->package('ecjia/app-quickpay');
     }
     
     public function register()
