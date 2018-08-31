@@ -183,6 +183,12 @@ class quickpay_quickpay_user_account_paid_api extends Component_Event_Api {
 			$order_info['consignee'] = $order_info['user_name'];
 			Ecjia\App\Orders\SendPickupCode::send_pickup_code($order_info);
 		}
+
+        //打印订单
+        $res = with(new Ecjia\App\Quickpay\OrderPrint($order_id, $order['store_id']))->doPrint(true);
+        if (is_ecjia_error($res)) {
+            RC_Logger::getLogger('error')->error($res->get_error_message());
+        }
 		
 	    /* 客户付款短信提醒 */
         $staff_user = RC_DB::table('staff_user')->where('store_id', $order_info['store_id'])->where('parent_id', 0)->first();
