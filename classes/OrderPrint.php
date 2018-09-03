@@ -86,9 +86,8 @@ class OrderPrint
         }
         $address .= $store['address'];
 
-        $discount_amount = $order['discount'] + $order['integral_money'] + $order['bonus'];
-        $discount_amount = '-'.price_format($discount_amount);
-        $order_amount = price_format($order['order_amount'] + $order['surplus']);
+        $discount_amount = number_format(($order['discount'] + $order['integral_money'] + $order['bonus']), 2);
+        $order_amount = number_format(($order['order_amount'] + $order['surplus']), 2);
 
         $data = array(
             'order_sn'            => $order['order_sn'], //订单编号
