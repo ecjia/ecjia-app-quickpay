@@ -94,10 +94,10 @@ class OrderPrint
             'merchant_address'    => $address,
             'favourable_activity' => $order['activity_name'],
         		
-        	'discount_amount'     => $order['discount'], //优惠金额
-            'receivables'         => $order['surplus'], //应收金额
+        	'discount_amount'     => $order['discount'] + $order['integral_money'] + $order['bonus'], //优惠金额
+            'receivables'         => $order['order_amount'] + $order['surplus'], //应收金额
             'payment'             => $order['pay_name'], //支付方式
-            'order_amount'        => $order['surplus'], //实收金额
+            'order_amount'        => $order['order_amount'] + $order['surplus'], //实收金额
             
             'qrcode'              => $order['order_sn'],
         );
