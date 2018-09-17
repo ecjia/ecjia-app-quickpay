@@ -64,6 +64,10 @@ class quickpay_order_pay_module extends api_front implements api_interface {
 		$wxpay_open_id = $this->requestData('wxpay_open_id', 0);
 		$pay_code = $this->requestData('pay_code', '');
 		
+		RC_Logger::getLogger('error')->info('test111');
+		RC_Logger::getLogger('error')->info($pay_code);
+		RC_Logger::getLogger('error')->info('test222');
+		
 		if (empty($pay_code)) {
 			return new ecjia_error( 'payment_error', '请选择支付方式');
 		}
