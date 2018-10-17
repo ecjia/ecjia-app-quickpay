@@ -70,6 +70,7 @@ class list_module extends api_admin implements api_interface {
 				'size'			=> $size,
 				'page'			=> $page,
 				'store_id'		=> $store_id,
+				'is_page'		=> 'no',
 		);
 		$store_name = RC_DB::table('store_franchisee')->where('store_id', $store_id)->pluck('merchants_name');
 		
@@ -102,7 +103,7 @@ class list_module extends api_admin implements api_interface {
 			'store_name' 	=> empty($store_name) ? '' : $store_name,
 			'activity_list' => 	$arr
 		);
-		return array('data' => $result, 'pager' => $quickpay_activity_data['page']);
+		return array('data' => $result);
 	}
 }
 // end

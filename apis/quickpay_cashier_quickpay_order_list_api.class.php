@@ -51,6 +51,14 @@ class quickpay_cashier_quickpay_order_list_api extends Component_Event_Api {
 		$dbview->where(RC_DB::raw('qo.order_status'), '<>', $canceled_status);
 		$dbview->where(RC_DB::raw('cr.action'), 'receipt');
 		
+		
+		if (!empty($options['start_date']) && !empty($options['end_date'])) {
+			$start_date = RC_Time::local_strtotime($start_date);
+			$end_date = RC_Time::local_strtotime($end_date) + 86399;
+			$dbview->where(RC_DB::raw('cr.create_at'), '>=', $start_date);
+			$dbview->where(RC_DB::raw('cr.create_at'), '<=', $end_date);
+		}
+		
 		if (!empty($options['mobile_device_id'])) {
 			$dbview->where(RC_DB::raw('cr.mobile_device_id'), $options['mobile_device_id']);
 		}
