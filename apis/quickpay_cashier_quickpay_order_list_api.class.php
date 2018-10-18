@@ -51,10 +51,9 @@ class quickpay_cashier_quickpay_order_list_api extends Component_Event_Api {
 		$dbview->where(RC_DB::raw('qo.order_status'), '<>', $canceled_status);
 		$dbview->where(RC_DB::raw('cr.action'), 'receipt');
 		
-		
 		if (!empty($options['start_date']) && !empty($options['end_date'])) {
-			$start_date = RC_Time::local_strtotime($start_date);
-			$end_date = RC_Time::local_strtotime($end_date) + 86399;
+			$start_date = RC_Time::local_strtotime($options['start_date']);
+			$end_date = $start_date + 86399;
 			$dbview->where(RC_DB::raw('cr.create_at'), '>=', $start_date);
 			$dbview->where(RC_DB::raw('cr.create_at'), '<=', $end_date);
 		}
@@ -63,10 +62,9 @@ class quickpay_cashier_quickpay_order_list_api extends Component_Event_Api {
 			$dbview->where(RC_DB::raw('cr.mobile_device_id'), $options['mobile_device_id']);
 		}
 		$count = $dbview->count(RC_DB::raw('DISTINCT cr.order_id'));
-		
 		$page_row = new ecjia_page($count, $size, 6, '', $page);
 		
-		$list = $dbview->take($size)->skip($page_row->start_id - 1)->select(RC_DB::raw('qo.*'))->orderBy(RC_DB::raw('cr.create_at'), 'desc')->get();
+		$list = $dbview->take($size)->skip($page_row->start_id - 1)->select(RC_DB::raw('qo.*, cr.action, cr.create_at, cr.mobile_device_id, cr.order_type'))->orderBy(RC_DB::raw('cr.create_at'), 'desc')->get();
 		
 		$pager = array(
 			'total' => $page_row->total_records,
