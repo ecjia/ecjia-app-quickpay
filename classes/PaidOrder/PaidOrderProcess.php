@@ -66,7 +66,7 @@ class PaidOrderProcess implements PaidOrderProcessInterface
             'money_paid'				=> $order_info['order_amount'] + $order_info['surplus'],
             'formatted_money_paid'		=> ecjia_price_format(($order_info['order_amount'] + $order_info['surplus']), false),
             'order_amount'				=> 0.00,
-            'formatted_order_amount'	=> price_format(0, false),
+            'formatted_order_amount'	=> ecjia_price_format(0, false),
             'pay_code'					=> $this->record_model->pay_code,
             'pay_name'					=> $this->record_model->pay_name,
             'pay_status'				=> 'success',
