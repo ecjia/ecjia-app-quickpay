@@ -43,7 +43,7 @@ table{border-collapse: separate; border-spacing: 0 3px;}
 	                                    <div class="controls col-lg-9">
 	                                        <input class="form-control" type="text" name="title" id="title" value="{$data.title}" />
 	                                    </div>
-	                                    <span class="input-must">{lang key='system::system.require_field'}</span>
+	                                    <span class="input-must">*</span>
 	                                </div>
 	                                
 	                               	<div class="form-group">
@@ -71,7 +71,7 @@ table{border-collapse: separate; border-spacing: 0 3px;}
 		                                        <input class="form-control" type="text" name="activity_discount_value" value="{$data.activity_value}" {if $data.activity_type neq 'discount'}disabled="disabled"{/if}/>
 		                                        <span class="help-block">如：打9折，请输入90</span>
 		                                    </div>
-		                                    <span class="input-must">{lang key='system::system.require_field'}</span>
+		                                    <span class="input-must">*</span>
 		                                </div>
 									</div>
 									
@@ -90,7 +90,7 @@ table{border-collapse: separate; border-spacing: 0 3px;}
 		                                                <input name="activity_value[]" class="form-control  w200" type="text" placeholder="优惠金额" value="{$data.activity_value.1}" {if $data.activity_type neq 'reduced'}disabled="disabled"{/if}  />
 		                                            </div>
 	                                        	</div>
-	                                        	 &nbsp;<span class="input-must">{lang key='system::system.require_field'}</span>
+	                                        	 &nbsp;<span class="input-must">*</span>
 		                                    </div>
 		                                </div>
 									</div>
@@ -108,13 +108,13 @@ table{border-collapse: separate; border-spacing: 0 3px;}
 		                                            
 		                                            <div class="ecjiaf-fl wright_wleft">
 		                                                <input name="activity_value[]" class="form-control  w200" type="text" placeholder="优惠金额" value="{$data.activity_value.1}" {if $data.activity_type neq 'everyreduced'}disabled="disabled"{/if} />
-		                                            </div> &nbsp;<span class="input-must">{lang key='system::system.require_field'}</span><br><br>
+		                                            </div> &nbsp;<span class="input-must">*</span><br><br>
 		                                            
 		                                            <div class="ecjiaf-fl p_t5">最高减：</div>
 		                                            
 		                                            <div class="ecjiaf-fl wright_wleft">
 		                                                <input name="activity_value[]" class="form-control" style="width: 380px;" type="text" placeholder="优惠金额" value="{$data.activity_value.2}" {if !$data.activity_value.2}disabled="disabled"{/if} />
-		                                            </div> &nbsp;<span class="input-must">{lang key='system::system.require_field'}</span>
+		                                            </div> &nbsp;<span class="input-must">*</span>
 	                                        	</div>
 		                                    </div>
 		                                  </div>
@@ -206,7 +206,7 @@ table{border-collapse: separate; border-spacing: 0 3px;}
 	                                            <div class="ecjiaf-fl wright_wleft">
 	                                                <input name="end_time" class="form-control date w200" type="text" placeholder="请输入结束时间" value="{$data.end_time}"/>
 	                                            </div>
-	                                            &nbsp;<span class="input-must">{lang key='system::system.require_field'}</span>
+	                                            &nbsp;<span class="input-must">*</span>
 	                                        </div>
 	                                    </div>
 	                                </div>
@@ -267,7 +267,7 @@ table{border-collapse: separate; border-spacing: 0 3px;}
 											        <div class="col-lg-8">
 											            <input name="keyword" class="form-control" type="text" id="keyword" placeholder="请输入关键词进行搜索" {if $data.use_bonus eq 'close'}disabled="disabled"{/if} />
 											        </div>
-											        <button class="btn btn-primary" type="button" id="search" data-url='{url path="quickpay/merchant/search"}' {if $data.use_bonus eq 'close'}disabled="disabled"{/if}><i class='fa fa-search'></i> {lang key='system::system.button_search'}</button>
+											        <button class="btn btn-primary" type="button" id="search" data-url='{url path="quickpay/merchant/search"}' {if $data.use_bonus eq 'close'}disabled="disabled"{/if}><i class='fa fa-search'></i> {t domain="quickpay"}搜索{/t}</button>
 											    </div>
 											    
 											    <span class="help-block">

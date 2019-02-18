@@ -73,8 +73,8 @@ return array(
 
 	//平台和商家后台 买单订单统计相关页面	
 	'sale_general_page' => array(
-		'yuan'                  => __('元1', 'quickpay'),
-		'dan'                   => __('单2', 'quickpay'),
+		'yuan'                  => __('元', 'quickpay'),
+		'dan'                   => __('单', 'quickpay'),
 		'start_year_required'	=> __('查询的开始年份不能为空！', 'quickpay'),
 		'end_year_required'		=> __('查询的结束年份不能为空！', 'quickpay'),
 		'time_exceed'			=> __('查询的开始时间不能超于结束时间！', 'quickpay'),

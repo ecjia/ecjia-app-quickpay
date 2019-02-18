@@ -171,7 +171,7 @@ ecjia.merchant.order_info.init();
             	<table class="table table-oddtd m_b0">
 					<tbody class="first-td-no-leftbd">
 						<tr>
-							<td width="15%"><div align="right"><span class="input-must">*</span> <strong>{lang key='orders::order.label_action_note'}</strong></div></td>
+							<td width="15%"><div align="right"><span class="input-must">*</span> <strong>{t domain="quickpay"}操作备注：{/t}</strong></div></td>
 							<td colspan="3"><textarea name="action_note" class="span12 action_note form-control" cols="60" rows="3"></textarea></td>
 						</tr>
 						<tr>
@@ -204,7 +204,7 @@ ecjia.merchant.order_info.init();
             	<table class="table table-oddtd m_b0">
 					<tbody class="first-td-no-leftbd">
 						<tr>
-							<td width="15%"><div align="right"><span class="input-must">*</span> <strong>{lang key='orders::order.label_action_note'}</strong></div></td>
+							<td width="15%"><div align="right"><span class="input-must">*</span> <strong>{t domain="quickpay"}操作备注：{/t}</strong></div></td>
 							<td colspan="3"><textarea name="action_note" class="span12 action_note form-control" cols="60" rows="3"></textarea></td>
 						</tr>
 						<tr>

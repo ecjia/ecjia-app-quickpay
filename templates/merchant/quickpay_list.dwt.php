@@ -87,7 +87,7 @@
 								<td>{if $now lt $list.start_time}未开始{elseif $now gt $list.end_time}已结束{else}进行中{/if}</td>
 							</tr>
 							<!-- {foreachelse} -->
-							   <tr><td class="no-records" colspan="5">{lang key='system::system.no_records'}</td></tr>
+							   <tr><td class="no-records" colspan="5">{t domain="quickpay"}没有找到任何记录{/t}</td></tr>
 							<!-- {/foreach} -->
 						</tbody>
 					</table>
