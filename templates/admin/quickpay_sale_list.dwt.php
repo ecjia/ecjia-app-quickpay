@@ -53,8 +53,8 @@
 </div>
 
 <div class="sale_desc">
-	{t domain="quickpay"}订单共计：<span>{if $order_count}{$order_count}{else}0{/if}</span>&nbsp;{t domain="quickpay"}单{/t}&nbsp;&nbsp;&nbsp;
-	{t domain="quickpay"}实际总金额共计：<span>¥{if $order_amount}{$order_amount}{else}0{/if}</span>&nbsp;{t domain="quickpay"}元{/t}
+	{t domain="quickpay"}订单共计：{/t}<span>{if $order_count}{$order_count}{else}0{/if}</span>&nbsp;{t domain="quickpay"}单{/t}&nbsp;&nbsp;&nbsp;
+	{t domain="quickpay"}实际总金额共计：{/t}<span>¥{if $order_amount}{$order_amount}{else}0{/if}</span>&nbsp;{t domain="quickpay"}元{/t}
 </div>
 	
 <div class="row-fluid">
