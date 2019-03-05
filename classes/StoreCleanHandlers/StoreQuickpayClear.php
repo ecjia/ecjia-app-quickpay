@@ -33,7 +33,7 @@ class StoreQuickpayClear extends StoreCleanAbstract
      * 排序
      * @var int
      */
-    protected $sort = 87;
+    protected $sort = 17;
 
     /**
      * 数据描述及输出显示内容
