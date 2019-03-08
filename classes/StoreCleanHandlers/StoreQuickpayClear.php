@@ -78,6 +78,12 @@ HTML;
             return true;
         }
 
+        $order_list = RC_DB::table('quickpay_order')->where('store_id', $this->store_id)->lists('order_id');
+
+        RC_DB::table('quickpay_order')->where('store_id', $this->store_id)->delete();
+
+        RC_DB::table('quickpay_order_action')->whereIn('order_id', $order_list)->delete();
+
         $result = RC_DB::table('quickpay_activity')->where('store_id', $this->store_id)->delete();
 
         if ($result) {
