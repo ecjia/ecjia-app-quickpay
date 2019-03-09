@@ -44,7 +44,7 @@
 //
 //  ---------------------------------------------------------------------------------
 //
-namespace Ecjia\App\Quickpay;
+namespace Ecjia\App\Quickpay\Enums;
 
 use Royalcms\Component\Enum\Enum;
 
