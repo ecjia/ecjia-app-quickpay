@@ -77,16 +77,16 @@ class quickpay_order_operate_delete_module extends api_front implements api_inte
 			return new ecjia_error('not_exist_info', '订单信息不存在！');
 		}
 		
-		$pay_status = \Ecjia\App\Quickpay\Enums\QuickpayEnum::UNPAID;
-		$order_status = \Ecjia\App\Quickpay\Enums\QuickpayEnum::CANCELED;
-		$verification_status = \Ecjia\App\Quickpay\Enums\QuickpayEnum::UNVERIFICATION;
+		$pay_status = \Ecjia\App\Quickpay\Enums\QuickpayPayEnum::UNPAID;
+		$order_status = \Ecjia\App\Quickpay\Enums\QuickpayOrderEnum::CANCELED;
+		$verification_status = \Ecjia\App\Quickpay\Enums\QuickpayVerifyEnum::UNVERIFICATION;
 		
 		if (($order_info['order_status'] != $pay_status) && ($order_info['pay_status'] != $pay_status) && $order_info['verification_status'] != $verification_status) {
 			return new ecjia_error('not_support_cancel', '当前订单不支持删除！');
 		}
 		
 		$arr = array(
-				'order_status' 			=> \Ecjia\App\Quickpay\Enums\QuickpayEnum::DELETED,
+				'order_status' 			=> \Ecjia\App\Quickpay\Enums\QuickpayOrderEnum::DELETED,
 		);
 		
 		RC_DB::table('quickpay_orders')->where('order_id', $order_id)->update($arr);
@@ -98,7 +98,7 @@ class quickpay_order_operate_delete_module extends api_front implements api_inte
 				'action_user_id'	=> $order_info['user_id'],
 				'action_user_name' 	=> $order_info['user_name'],
 				'action_user_type'	=> 'user',
-				'order_status' 		=> \Ecjia\App\Quickpay\Enums\QuickpayEnum::DELETED,
+				'order_status' 		=> \Ecjia\App\Quickpay\Enums\QuickpayOrderEnum::DELETED,
 				'pay_status' 		=> $pay_status,
 				'action_note' 		=> ''
 		);

@@ -277,16 +277,16 @@ class quickpay_activity {
 		$order_status_str = '';
 		$label_order_status = '';
 		
-		if (($order_status == \Ecjia\App\Quickpay\Enums\QuickpayEnum::UNCONFIRMED) && ($pay_status == \Ecjia\App\Quickpay\Enums\QuickpayEnum::UNPAID) && ($verification_status == \Ecjia\App\Quickpay\Enums\QuickpayEnum::UNVERIFICATION)) {
+		if (($order_status == \Ecjia\App\Quickpay\Enums\QuickpayOrderEnum::UNCONFIRMED) && ($pay_status == \Ecjia\App\Quickpay\Enums\QuickpayPayEnum::UNPAID) && ($verification_status == \Ecjia\App\Quickpay\Enums\QuickpayVerifyEnum::UNVERIFICATION)) {
 			$order_status_str = 'unpaid';
 			$label_order_status = '待付款';
-		} elseif (($order_status == \Ecjia\App\Quickpay\Enums\QuickpayEnum::CONFIRMED) && ($pay_status == \Ecjia\App\Quickpay\Enums\QuickpayEnum::PAID)) {
+		} elseif (($order_status == \Ecjia\App\Quickpay\Enums\QuickpayOrderEnum::CONFIRMED) && ($pay_status == \Ecjia\App\Quickpay\Enums\QuickpayPayEnum::PAID)) {
 			$order_status_str = 'paid';
 			$label_order_status = '已付款';
-		} elseif (($order_status == \Ecjia\App\Quickpay\Enums\QuickpayEnum::CONFIRMED) && ($pay_status == \Ecjia\App\Quickpay\Enums\QuickpayEnum::PAID) && ($verification_status == \Ecjia\App\Quickpay\Enums\QuickpayEnum::VERIFICATION)) {
+		} elseif (($order_status == \Ecjia\App\Quickpay\Enums\QuickpayOrderEnum::CONFIRMED) && ($pay_status == \Ecjia\App\Quickpay\Enums\QuickpayPayEnum::PAID) && ($verification_status == \Ecjia\App\Quickpay\Enums\QuickpayVerifyEnum::VERIFICATION)) {
 			$order_status_str = 'succeed';
 			$label_order_status = '买单成功';
-		} elseif (($order_status == \Ecjia\App\Quickpay\Enums\QuickpayEnum::CANCELED) && ($pay_status == \Ecjia\App\Quickpay\Enums\QuickpayEnum::UNPAID) && ($verification_status == \Ecjia\App\Quickpay\Enums\QuickpayEnum::UNVERIFICATION)){
+		} elseif (($order_status == \Ecjia\App\Quickpay\Enums\QuickpayOrderEnum::CANCELED) && ($pay_status == \Ecjia\App\Quickpay\Enums\QuickpayPayEnum::UNPAID) && ($verification_status == \Ecjia\App\Quickpay\Enums\QuickpayVerifyEnum::UNVERIFICATION)){
 			$order_status_str = 'canceled';
 			$label_order_status = '已取消';
 		}
