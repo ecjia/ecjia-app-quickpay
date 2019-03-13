@@ -57,7 +57,7 @@ class admin_cashier_quickpay_summary_records_module extends api_admin implements
 
         $this->authadminSession();
         if ($_SESSION['staff_id'] <= 0) {
-            return new ecjia_error(100, __('Invalid session', 'orders'));
+            return new ecjia_error(100, __('Invalid session', 'quickpay'));
         }
 
         $device        = $this->device;
@@ -69,8 +69,8 @@ class admin_cashier_quickpay_summary_records_module extends api_admin implements
             return new ecjia_error('caskdesk_error', __('非收银台请求！', 'quickpay'));
         }
 
-        $size = $this->requestData('pagination.count', 15);
-        $page = $this->requestData('pagination.page', 1);
+        $size = $this->requestData('pagination.count', '15');
+        $page = $this->requestData('pagination.page', '1');
 
         $start_date = $this->requestData('start_date');
         $end_date   = $this->requestData('end_date');
