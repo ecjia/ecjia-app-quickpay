@@ -111,7 +111,7 @@ class admin_cashier_quickpay_summary_records_module extends api_admin implements
         $field        = 'qo.order_id, qo.surplus, qo.goods_amount, qo.order_amount, qo.store_id, qo.integral, qo.integral_money, qo.bonus, qo.order_sn, qo.pay_name, ' . $total_fee . ', qo.discount, qo.add_time';
 
         $order_list = [];
-        $data = $dbview->take($size)->skip($page_row->start_id - 1)->select(RC_DB::raw($field))->orderBy(RC_DB::raw('cr.create_at'), 'desc')->groupBy(RC_DB::raw('qo.order_id'))->get();
+        $data = $dbview->take($size)->skip($page_row->start_id - 1)->select(RC_DB::raw($field))->orderBy(RC_DB::raw('qo.add_time'), 'desc')->groupBy(RC_DB::raw('qo.order_id'))->get();
 
         $data       = $this->formated_order_list($data);
         $order_list = $data;
