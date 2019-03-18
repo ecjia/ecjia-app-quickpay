@@ -44,27 +44,51 @@
 //
 //  ---------------------------------------------------------------------------------
 //
-defined('IN_ECJIA') or exit('No permission resources.');
+namespace Ecjia\App\Quickpay\Maintains;
 
-class quickpay_admin_hooks {
-	
-   public static function append_admin_setting_group($menus) {
-       $setting = ecjia_admin_setting::singleton();
-       
-       $menus[] = ecjia_admin::make_admin_menu('nav-header', __('买单', 'quickpay'), '', 60)->add_purview(array('push_config_manage'));
-       $menus[] = ecjia_admin::make_admin_menu('quickpay', __('买单设置', 'quickpay'), RC_Uri::url('quickpay/admin_config/init'), 61)->add_purview('quickpay_config_manage');
-       
-       return $menus;
-   }
+use Ecjia\App\Maintain\AbstractCommand;
+use RC_DB;
+
+class UpdateQuickpayOrderType extends AbstractCommand
+{
     
-   public static function add_maintain_command($factories)
-   {
-   	$factories['update_quickpay_order_type'] = 'Ecjia\App\Quickpay\Maintains\UpdateQuickpayOrderType';
-   	return $factories;
-   }
-}
+    
+    /**
+     * 代号标识
+     * @var string
+     */
+    protected $code = 'update_quickpay_order_type';
+    
+    /**
+     * 图标
+     * @var string
+     */
+    protected $icon = '/statics/images/setting_shop.png';
+	
+    /**
+     * 名称
+     * @var string
+     * 描述
+     * @var string
+     */
+    public function __construct()
+    {
+    	$this->name = __('更新收银台收款订单的订单类型', 'quickpay');
+    	$this->description = __('更新收银台收款订单的订单类型cashdesk-receipt为quickpay', 'quickpay');
+    }
 
-RC_Hook::add_action('append_admin_setting_group', array('quickpay_admin_hooks', 'append_admin_setting_group'));
-RC_Hook::add_action('ecjia_maintain_command_filter', array('quickpay_admin_hooks', 'add_maintain_command'));
+    /**
+     * 一键更新收银台收款订单订单类型cashdesk-receipt为quickpay
+     *
+     * @return bool
+     */
+    public function run() {
+        
+        RC_DB::table('quickpay_orders')->where('order_type', 'cashdesk-receipt')->update([ 'order_type' => 'quickpay' ]);
+        
+        return true;
+    }
+    
+}
 
 // end
