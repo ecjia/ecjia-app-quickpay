@@ -54,21 +54,17 @@ class quickpay_flow_checkOrder_module extends api_front implements api_interface
     public function handleRequest(\Royalcms\Component\HttpKernel\Request $request) {
 
     	$this->authSession();
-    	if ($_SESSION['user_id'] <= 0) {
+    	$user_id = $_SESSION['user_id'];
+    	if ($user_id <= 0) {
     		return new ecjia_error(100, 'Invalid session');
     	}
     	
     	RC_Loader::load_app_class('quickpay_activity', 'quickpay', false);
     	
     	$store_id	 		= $this->requestData('store_id', 0);
-		//$activity_id		= $this->requestData('activity_id', 0);
 		$goods_amount 		= $this->requestData('goods_amount', '0.00');
 		$is_exclude_amount  = $this->requestData('is_exclude_amount', 0);
 		$exclude_amount  	= $this->requestData('exclude_amount', '0.00');
-		
-		//if (empty($is_exclude_amount)) {
-		//	$exclude_amount = '0.00';
-		//}
 		
 		if ($goods_amount > 0 && $exclude_amount > 0) {
 			if ($exclude_amount > $goods_amount) {
@@ -95,99 +91,27 @@ class quickpay_flow_checkOrder_module extends api_front implements api_interface
 		}
 		
 		/*会员可用积分数*/
-		$user_integral = RC_DB::table('users')->where('user_id', $_SESSION['user_id'])->pluck('pay_points');
+		$user_info = Ecjia\App\User\UserInfoFunction::user_info($user_id);
+		if (is_ecjia_error($user_info)) {
+			$user_integral = 0;
+		} else {
+			$user_integral = $user_info['pay_points'];
+		}
 		
 		/*获取商家所有满足条件的可用优惠活动，数组*/
 		$activitys = quickpay_activity::max_discount_activitys(array('goods_amount' => $goods_amount, 'store_id' => $store_id, 'exclude_amount' => $exclude_amount, 'user_id' => $_SESSION['user_id']));
-		if (!empty($activitys)) {	
-			foreach ($activitys as $k1 => $v1) {
-				/*无优惠过滤*/
-				if ($v1['activity_type'] == 'normal') {
-					$activitys[$k1]['is_allow_use'] = 0;
-				}
-				if ($v1['total_act_discount'] == '0') {
-					$activitys[$k1]['is_allow_use'] = 0;
-				}
-					
-				/*自定义时间的活动，当前时间段不可用的过滤掉*/
-				if ($v1['limit_time_type'] == 'customize') {
-					/*每周限制时间*/
-					if (!empty($v1['limit_time_weekly'])){
-						$w = date('w');
-						$current_week = quickpay_activity::current_week($w);
-						$limit_time_weekly = Ecjia\App\Quickpay\Weekly::weeks($v1['limit_time_weekly']);
-						$weeks_str = quickpay_activity::get_weeks_str($limit_time_weekly);
-						if (!in_array($current_week, $limit_time_weekly)){
-							$activitys[$k1]['is_allow_use'] = 0;
-						}
-					}
-					/*每天限制时间段*/
-					if (!empty($v1['limit_time_daily'])) {
-						$limit_time_daily = unserialize($v1['limit_time_daily']);
-						foreach ($limit_time_daily as $val1) {
-							$arr[] = quickpay_activity::is_in_timelimit(array('start' => $val1['start'], 'end' => $val1['end']));
-						}
-						if (!in_array(0, $arr)) {
-							$activitys[$k1]['is_allow_use'] = 0;
-						}
-					}
-					/*活动限制日期*/
-					if (!empty($v1['limit_time_exclude'])) {
-						$limit_time_exclude = explode(',', $v1['limit_time_exclude']);
-						$current_date = RC_Time::local_date(ecjia::config('date_format'), RC_Time::gmtime());
-						$current_date = array($current_date);
-						if (in_array($current_date, $limit_time_exclude) || $current_date == $limit_time_exclude) {
-							$activitys[$k1]['is_allow_use'] = 0;
-						}
-					}
-				}
-					
-			}
-		}
-
-		if (!empty($activitys)) {
-			$final = array();
-			foreach ($activitys as $k2 => $v2) {
-				$final[$v2['id']] = array(
-						'id'	=> $v2['id'],
-						'final_discount' => $v2['total_act_discount'],
-				);
-			}
-			
-			$final_discounts = array();
-			foreach ($final as $kk => $vv) {
-				$final_discounts[$vv['id']] = $vv['final_discount'];
-			}
-			
-			if (!empty($final_discounts)) {
-				/*获取最优惠的活动id*/
-				if (count($final_discounts) > 1) {
-					$favorable_activity_id = array_keys($final_discounts, max($final_discounts));
-					$favorable_activity_id = $favorable_activity_id['0'];
-				} else {
-					foreach ($final_discounts as $a2 => $b2) {
-						$favorable_activity_id = $a2;
-					}
-				}
-			}
-		}
-	
-		if (!empty($activitys) && !empty($favorable_activity_id)) {
-			foreach ($activitys as $k3 => $v3) {
-				if ($favorable_activity_id == $v3['id']) {
-					$activitys[$k3]['is_favorable'] = 1;
-					if ($v3['total_act_discount'] == '0') {
-						$activitys[$k3]['is_favorable'] = 0;
-					}
-				} else{
-					$activitys[$k3]['is_favorable'] = 0;
-				}
-			}
-		}
 		
+		/*活动有无优惠区分，活动给is_allow_use字段标识*/
+		$activitys_list = quickpay_activity::mark_activitys($activitys);
+		
+		/*获取最优惠活动id*/
+		$favorable_activity_id = quickpay_activity::get_favorable_activity_id($activitys_list);
+		
+		/*活动标识是否是最优惠的is_favorable*/
+		$activitys = quickpay_activity::mark_is_favorable($activitys_list, $favorable_activity_id);
+	
 		//==== 获取商家所有活动优惠信息end  === 
 		
-
 		if (!empty($activitys)) {
 			$available_activity_list = array();
 			foreach ($activitys as $val) {

@@ -522,10 +522,10 @@ class quickpay_activity {
 		
 		/*活动限制日期*/
 		if (!empty($quickpay_activity_info['limit_time_exclude'])) {
+			$time = RC_Time::gmtime();
 			$limit_time_exclude = explode(',', $quickpay_activity_info['limit_time_exclude']);
-			$current_date = RC_Time::local_date(ecjia::config('date_format'), time);
-			$current_date = array($current_date);
-			if (in_array($current_date, $limit_time_exclude) || $current_date == $limit_time_exclude) {
+			$current_date = RC_Time::local_date('Y-m-d', $time);
+			if (in_array($current_date, $limit_time_exclude) || $current_date == $quickpay_activity_info['limit_time_exclude']) {
 				return false;
 			}
 		}
