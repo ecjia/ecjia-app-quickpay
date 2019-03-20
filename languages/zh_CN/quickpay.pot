@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ecjia App quickpay 1.27.4\n"
 "Report-Msgid-Bugs-To: https://make.ecjia.com/polyglots/\n"
-"POT-Creation-Date: 2019-03-15 01:49:09+00:00\n"
+"POT-Creation-Date: 2019-03-20 07:33:54+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -333,8 +333,8 @@ msgstr ""
 #: apis/quickpay_quickpay_user_account_paid_api.class.php:66
 #: modules/admin/merchant/quickpay/activity/list_module.class.php:63
 #: modules/quickpay/activity/list_module.class.php:58
-#: modules/quickpay/flow/checkOrder_module.class.php:80
-#: modules/quickpay/flow/done_module.class.php:95
+#: modules/quickpay/flow/checkOrder_module.class.php:76
+#: modules/quickpay/flow/done_module.class.php:89
 #: modules/quickpay/merchant/shop/payment_module.class.php:56
 #: modules/quickpay/order/detail_module.class.php:64
 #: modules/quickpay/order/pay_module.class.php:72
@@ -379,19 +379,31 @@ msgstr ""
 msgid "已支付"
 msgstr ""
 
-#: classes/StoreCleanHandlers/StoreQuickpayClear.php:47
-msgid "店铺买单活动总共<span class=\"ecjiafc-red ecjiaf-fs3\">%s</span>个"
+#: classes/Maintains/UpdateQuickpayOrderType.php:76
+msgid "更新收银台收款订单的订单类型"
+msgstr ""
+
+#: classes/Maintains/UpdateQuickpayOrderType.php:77
+msgid "更新收银台收款订单的订单类型cashdesk-receipt为quickpay"
+msgstr ""
+
+#: classes/StoreCleanHandlers/StoreQuickpayClear.php:34
+msgid "买单活动"
 msgstr ""
 
 #: classes/StoreCleanHandlers/StoreQuickpayClear.php:48
+msgid "店铺买单活动总共<span class=\"ecjiafc-red ecjiaf-fs3\">%s</span>个"
+msgstr ""
+
+#: classes/StoreCleanHandlers/StoreQuickpayClear.php:49
 msgid "查看全部>>>"
 msgstr ""
 
-#: classes/StoreCleanHandlers/StoreQuickpayClear.php:107
+#: classes/StoreCleanHandlers/StoreQuickpayClear.php:108
 msgid "店铺名是%s"
 msgstr ""
 
-#: classes/StoreCleanHandlers/StoreQuickpayClear.php:107
+#: classes/StoreCleanHandlers/StoreQuickpayClear.php:108
 msgid "店铺ID是%s"
 msgstr ""
 
@@ -559,24 +571,12 @@ msgstr ""
 msgid "非收银台请求！"
 msgstr ""
 
-#: modules/quickpay/flow/done_module.class.php:281
+#: modules/quickpay/flow/done_module.class.php:228
+msgid "支付订单 %s"
+msgstr ""
+
+#: modules/quickpay/flow/done_module.class.php:234
 msgid "积分使用失败！"
-msgstr ""
-
-#: modules/quickpay/flow/done_module.class.php:331
-msgid "下单成功，订单号：%s"
-msgstr ""
-
-#: modules/quickpay/flow/done_module.class.php:333
-msgid "订单提交成功"
-msgstr ""
-
-#: modules/quickpay/flow/done_module.class.php:341
-msgid "待付款"
-msgstr ""
-
-#: modules/quickpay/flow/done_module.class.php:343
-msgid "请尽快支付该订单，超时将会自动取消订单"
 msgstr ""
 
 #: modules/quickpay/order/pay_module.class.php:68
