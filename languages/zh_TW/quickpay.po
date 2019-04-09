@@ -5,14 +5,14 @@ msgstr ""
 "Project-Id-Version: Ecjia App quickpay 1.27.4\n"
 "Report-Msgid-Bugs-To: https://make.ecjia.com/polyglots/\n"
 "POT-Creation-Date: 2019-04-04 10:00+0800\n"
-"PO-Revision-Date: 2019-04-04 10:01+0800\n"
+"PO-Revision-Date: 2019-04-09 10:03+0800\n"
 "Last-Translator: \n"
 "Language-Team: LANGUAGE <ecjia@ecjia.com>\n"
 "Language: zh_TW\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.8.7\n"
+"X-Generator: Poedit 2.2\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #: admin.php:86 admin_order.php:73 admin_sale_general.php:85
@@ -30,7 +30,7 @@ msgstr "優惠買單規則"
 #: admin.php:97 admin.php:119 admin.php:120 admin.php:291 merchant.php:88
 #: merchant.php:145
 msgid "优惠买单规则列表"
-msgstr "優惠買單規則"
+msgstr "優惠買單規則列表"
 
 #: admin.php:175 merchant.php:179 merchant.php:347
 msgid "当前店铺下已存在该买单标题"
@@ -286,7 +286,7 @@ msgstr "買單訂單核實"
 #: apis/quickpay_admin_purview_api.class.php:65
 #: apis/quickpay_merchant_purview_api.class.php:63
 msgid "买单订单删除"
-msgstr "買單訂單核實"
+msgstr "買單訂單刪除"
 
 #: apis/quickpay_admin_purview_api.class.php:74
 #: classes/hooks/merchant_quickpay.class.php:52 mh_qrcode.php:76
@@ -464,7 +464,7 @@ msgstr "查詢的開始年份不能為空！"
 
 #: configs/jslang.php:79
 msgid "查询的结束年份不能为空！"
-msgstr "查詢的開始年份不能為空！"
+msgstr "查詢的結束年份不能為空！"
 
 #: configs/jslang.php:80
 msgid "查询的开始时间不能超于结束时间！"
@@ -588,7 +588,7 @@ msgstr "請選擇支付方式"
 
 #: content/apps/quickpay/templates/admin/quickpay_list.dwt.php:20
 msgid "全部 "
-msgstr "全部"
+msgstr "全部 "
 
 #: content/apps/quickpay/templates/admin/quickpay_list.dwt.php:21
 msgid "正在进行中"
@@ -1039,7 +1039,7 @@ msgstr "請輸入開始時間"
 #: content/apps/quickpay/templates/admin/quickpay_detail.dwt.php:153
 #: content/apps/quickpay/templates/merchant/quickpay_info.dwt.php:207
 msgid "请输入结束时间"
-msgstr "請輸入開始時間"
+msgstr "請輸入結束時間"
 
 #: content/apps/quickpay/templates/admin/quickpay_edit.dwt.php:187
 #: content/apps/quickpay/templates/admin/quickpay_detail.dwt.php:160
@@ -1087,7 +1087,7 @@ msgid ""
 "为“不指定红包”则不需要设置。 "
 msgstr ""
 "當紅包優惠設為“指定紅包”時，需要輸入關鍵詞搜索並且設置指定紅包， 如果優惠設"
-"為“不指定紅包”則不需要設置。"
+"為“不指定紅包”則不需要設置。 "
 
 #: content/apps/quickpay/templates/admin/quickpay_edit.dwt.php:255
 #: content/apps/quickpay/templates/admin/quickpay_detail.dwt.php:218
@@ -1105,7 +1105,7 @@ msgstr "是否允許同時使用積分抵現："
 #: content/apps/quickpay/templates/admin/quickpay_detail.dwt.php:230
 #: content/apps/quickpay/templates/merchant/quickpay_info.dwt.php:322
 msgid "不限制积分"
-msgstr "不限制積分："
+msgstr "不限制積分"
 
 #: content/apps/quickpay/templates/admin/quickpay_edit.dwt.php:268
 #: content/apps/quickpay/templates/admin/quickpay_detail.dwt.php:231
@@ -1295,7 +1295,7 @@ msgstr "刪除訂單將清除該訂單的所有信息。您確定要這麼做嗎
 #: content/apps/quickpay/templates/merchant/quickpay_order_list.dwt.php:39
 #: content/apps/quickpay/templates/merchant/quickpay_order_list.dwt.php:40
 msgid "请选择您要操作的订单"
-msgstr "\v請選擇您要操作的訂單"
+msgstr "請選擇您要操作的訂單"
 
 #: content/apps/quickpay/templates/merchant/quickpay_order_list.dwt.php:40
 msgid "你确定要取消这些订单吗？"
@@ -1388,7 +1388,7 @@ msgstr "訂單操作"
 #: content/apps/quickpay/templates/merchant/quickpay_order_info.dwt.php:174
 #: content/apps/quickpay/templates/merchant/quickpay_order_info.dwt.php:207
 msgid "操作备注："
-msgstr "訂單操作"
+msgstr "訂單操作："
 
 #: content/apps/quickpay/templates/merchant/quickpay_order_info.dwt.php:178
 #: content/apps/quickpay/templates/merchant/quickpay_order_info.dwt.php:211
