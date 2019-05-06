@@ -55,7 +55,7 @@ class quickpay_admin_menu_api extends Component_Event_Api
 
     public function call(&$options)
     {
-        $menus = ecjia_admin::make_admin_menu('15_content', __('买单管理', 'quickpay'), '', 3);
+        $menus = ecjia_admin::make_admin_menu('15_content', __('买单管理', 'quickpay'), '', 4);
         
         $submenus = array(
         	ecjia_admin::make_admin_menu('01_quickpay', __('优惠买单规则', 'quickpay'), RC_Uri::url('quickpay/admin/init'), 1)->add_purview('quickpay_manage'),
