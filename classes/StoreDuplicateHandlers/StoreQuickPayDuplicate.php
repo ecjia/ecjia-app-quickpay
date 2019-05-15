@@ -14,6 +14,12 @@ use RC_DB;
 use RC_Api;
 use ecjia_admin;
 
+/**
+ * 复制店铺中的买单规则
+ *
+ * Class StoreQuickPayDuplicate
+ * @package Ecjia\App\Quickpay\StoreDuplicateHandlers
+ */
 class StoreQuickPayDuplicate extends StoreDuplicateAbstract
 {
 
