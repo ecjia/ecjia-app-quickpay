@@ -40,9 +40,11 @@ class StoreQuickPayDuplicate extends StoreDuplicateAbstract
     {
         $this->name = __('优惠买单规则', 'quickpay');
 
+        $this->dependents = ['store_bonus_duplicate'];
+
         parent::__construct($store_id, $source_store_id);
 
-        $this->source_store_data_handler = RC_DB::table('quickpay_activity')->where('store_id', $this->source_store_id);
+        $this->source_store_data_handler = RC_DB::table('quickpay_activity')->where('store_id', $this->source_store_id)->where('enabled', 1);
     }
 
     /**
@@ -50,8 +52,8 @@ class StoreQuickPayDuplicate extends StoreDuplicateAbstract
      */
     public function handlePrintData()
     {
-        $count     = $this->handleCount();
-        $text      = sprintf(__('店铺买单活动总共<span class="ecjiafc-red ecjiaf-fs3">%s</span>个', 'quickpay'), $count);
+        $count = $this->handleCount();
+        $text = sprintf(__('店铺买单活动总共<span class="ecjiafc-red ecjiaf-fs3">%s</span>个', 'quickpay'), $count);
 
         return <<<HTML
 <span class="controls-info w300">{$text}</span>
@@ -112,9 +114,12 @@ HTML;
     /**
      * 店铺复制操作的具体过程
      */
-    protected function startDuplicateProcedure(){
+    protected function startDuplicateProcedure()
+    {
+        $replacement_bonus_type = (new \Ecjia\App\Store\StoreDuplicate\ProgressDataStorage($this->store_id))->getDuplicateProgressData()->getReplacementDataByCode('store_bonus_duplicate.bonus_type');
 
-        $this->source_store_data_handler->chunk(50, function ($items) {
+        $this->source_store_data_handler->chunk(50, function ($items) use ($replacement_bonus_type) {
+
             //构造可用于复制的数据
             foreach ($items as &$item) {
                 unset($item['id']);
@@ -122,12 +127,20 @@ HTML;
                 //将源店铺ID设为新店铺的ID
                 $item['store_id'] = $this->store_id;
 
+                if (isset($replacement_bonus_type[$item['use_bonus']])){
+                    $item['use_bonus'] = $replacement_bonus_type[$item['use_bonus']];
+                }
+
             }
 
-            dd($items);
+            //dd($items);
             //插入数据到新店铺
             RC_DB::table('quickpay_activity')->insert($items);
+
+
         });
+
+
     }
 
     /**
