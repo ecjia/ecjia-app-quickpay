@@ -116,7 +116,7 @@ HTML;
      */
     protected function startDuplicateProcedure()
     {
-        $replacement_bonus_type = (new \Ecjia\App\Store\StoreDuplicate\ProgressDataStorage($this->store_id))->getDuplicateProgressData()->getReplacementDataByCode('store_bonus_duplicate.bonus_type');
+        $replacement_bonus_type = (new \Ecjia\App\Store\StoreDuplicate\ProgressDataStorage($this->store_id))->getDuplicateProgressData()->getReplacementDataByCode('store_bonus_duplicate');
 
         $this->source_store_data_handler->chunk(50, function ($items) use ($replacement_bonus_type) {
 
