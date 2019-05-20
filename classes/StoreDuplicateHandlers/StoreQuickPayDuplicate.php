@@ -23,7 +23,6 @@ use ecjia_admin;
  */
 class StoreQuickPayDuplicate extends StoreDuplicateAbstract
 {
-
     /**
      * 代号标识
      * @var string
@@ -36,15 +35,22 @@ class StoreQuickPayDuplicate extends StoreDuplicateAbstract
      */
     protected $sort = 41;
 
+    protected $dependents = [
+        'store_bonus_duplicate',
+    ];
+
     public function __construct($store_id, $source_store_id)
     {
         $this->name = __('优惠买单规则', 'quickpay');
-
-        $this->dependents = ['store_bonus_duplicate'];
-
         parent::__construct($store_id, $source_store_id);
+    }
 
-        $this->source_store_data_handler = RC_DB::table('quickpay_activity')->where('store_id', $this->source_store_id)->where('enabled', 1);
+    /**
+     * 获取源店铺数据操作对象
+     */
+    public function getSourceStoreDataHandler()
+    {
+        return RC_DB::table('quickpay_activity')->where('store_id', $this->source_store_id)->where('enabled', 1);
     }
 
     /**
@@ -71,10 +77,9 @@ HTML;
         if ($this->count) {
             return $this->count;
         }
+
         // 统计数据条数
-        if (!empty($this->source_store_data_handler)) {
-            $this->count = $this->source_store_data_handler->count();
-        }
+        $this->count = $this->getSourceStoreDataHandler()->count();
         return $this->count;
     }
 
@@ -100,7 +105,10 @@ HTML;
         }
 
         //执行具体任务
-        $this->startDuplicateProcedure();
+        $result = $this->startDuplicateProcedure();
+        if (is_ecjia_error($result)) {
+            return $result;
+        }
 
         //标记处理完成
         $this->markDuplicateFinished();
@@ -116,29 +124,59 @@ HTML;
      */
     protected function startDuplicateProcedure()
     {
-        $replacement_bonus_type = (new \Ecjia\App\Store\StoreDuplicate\ProgressDataStorage($this->store_id))->getDuplicateProgressData()->getReplacementDataByCode('store_bonus_duplicate');
+        try {
+            $replacement_bonus_type = (new \Ecjia\App\Store\StoreDuplicate\ProgressDataStorage($this->store_id))->getDuplicateProgressData()->getReplacementDataByCode('store_bonus_duplicate');
 
-        $this->source_store_data_handler->chunk(50, function ($items) use ($replacement_bonus_type) {
+            $replacement_use_bonus = [];
+            $this->getSourceStoreDataHandler()->chunk(50, function ($items) use ($replacement_bonus_type, &$replacement_use_bonus) {
 
-            //构造可用于复制的数据
-            foreach ($items as &$item) {
-                unset($item['id']);
+                //构造可用于复制的数据
+                foreach ($items as &$item) {
+                    unset($item['id']);
 
-                //将源店铺ID设为新店铺的ID
-                $item['store_id'] = $this->store_id;
+                    //将源店铺ID设为新店铺的ID
+                    $item['store_id'] = $this->store_id;
 
-                if (isset($replacement_bonus_type[$item['use_bonus']])){
-                    $item['use_bonus'] = $replacement_bonus_type[$item['use_bonus']];
+                    //开辟红包ID数组，用于存储替换后的红包ID
+                    $bonus_type_id = [];
+                    foreach (explode(',', $item['use_bonus']) as $use_type) {
+                        //如果当前使用红包类型不属于close或nolimit则不作替换处理
+                        if ($use_type == 'close' OR $use_type == 'nolimit1') {
+                            continue;
+                        }
+
+                        //若不为以上两项，则该值是红包ID，将其加入数组
+                        //稳定起见，在加入之前做个判断
+                        if (isset($replacement_bonus_type[$use_type])) {
+                            $bonus_type_id[] = $replacement_bonus_type[$use_type];
+                        }
+                    }
+
+                    //红包ID组装完毕后，如果它不为空
+                    if (!empty($bonus_type_id)) {
+                        //拼接新的use_bonus字符串
+                        $new_use_bonus = implode(',', $bonus_type_id);
+
+                        //建立关联关系
+                        $replacement_use_bonus[$item['use_bonus']] = $new_use_bonus;
+
+                        //用新的use_bonus字符串替换
+                        $item['use_bonus'] = $new_use_bonus;
+                    }
+
                 }
 
-            }
+                //插入数据到新店铺
+                RC_DB::table('quickpay_activity')->insert($items);
 
-            //dd($items);
-            //插入数据到新店铺
-            RC_DB::table('quickpay_activity')->insert($items);
+            });
 
+            $this->setReplacementData($this->getCode(), $replacement_use_bonus);
 
-        });
+            return true;
+        } catch (\Royalcms\Component\Repository\Exceptions\RepositoryException $e) {
+            return new ecjia_error('duplicate_data_error', $e->getMessage());
+        }
 
 
     }
@@ -157,7 +195,7 @@ HTML;
 
         $merchants_name = !empty($store_info) ? sprintf(__('店铺名是%s', 'quickpay'), $store_info['merchants_name']) : sprintf(__('店铺ID是%s', 'quickpay'), $this->store_id);
 
-        ecjia_admin::admin_log($merchants_name, 'clean', 'store_quickpay_activity');
+        ecjia_admin::admin_log($merchants_name, 'duplicate', 'store_quickpay_activity');
     }
 
 
