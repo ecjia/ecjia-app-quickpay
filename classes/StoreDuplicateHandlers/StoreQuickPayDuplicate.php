@@ -143,12 +143,8 @@ HTML;
                         if ($use_type == 'close' OR $use_type == 'nolimit1') {
                             continue;
                         }
-
-                        //为了程序更健壮，加个判断
-                        if (isset($replacement_bonus_type[$use_type])) {
-                            //将红包ID加入数组，用于拼接
-                            $bonus_type_id[] = $replacement_bonus_type[$use_type];
-                        }
+                        //将红包ID加入数组，用于拼接
+                        isset($replacement_bonus_type[$use_type]) && $bonus_type_id[] = $replacement_bonus_type[$use_type];
                     }
 
                     //如果红包使用类型存在id类型的值
@@ -156,18 +152,16 @@ HTML;
                         //拼接新的use_bonus字符串
                         $new_use_bonus = implode(',', $bonus_type_id);
 
-                        //建立关联关系
+                        //建立替换数据的关联关系
                         $replacement_use_bonus[$item['use_bonus']] = $new_use_bonus;
 
                         //用新的use_bonus字符串替换
                         $item['use_bonus'] = $new_use_bonus;
                     }
-
                 }
-
+                
                 //插入数据到新店铺
                 RC_DB::table('quickpay_activity')->insert($items);
-
             });
 
             $this->setReplacementData($this->getCode(), $replacement_use_bonus);
