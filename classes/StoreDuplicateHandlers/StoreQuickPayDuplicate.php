@@ -126,8 +126,8 @@ HTML;
     {
         try {
             $replacement_bonus_type = (new \Ecjia\App\Store\StoreDuplicate\ProgressDataStorage($this->store_id))->getDuplicateProgressData()->getReplacementDataByCode('store_bonus_duplicate');
-            $replacement_use_bonus = [];
-            $this->getSourceStoreDataHandler()->chunk(50, function ($items) use ($replacement_bonus_type, &$replacement_use_bonus) {
+
+            $this->getSourceStoreDataHandler()->chunk(50, function ($items) use ($replacement_bonus_type) {
 
                 //构造可用于复制的数据
                 foreach ($items as &$item) {
@@ -149,22 +149,14 @@ HTML;
 
                     //如果红包使用类型存在id类型的值
                     if (!empty($bonus_type_id)) {
-                        //拼接新的use_bonus字符串
-                        $new_use_bonus = implode(',', $bonus_type_id);
-
-                        //建立替换数据的关联关系
-                        $replacement_use_bonus[$item['use_bonus']] = $new_use_bonus;
-
-                        //用新的use_bonus字符串替换
-                        $item['use_bonus'] = $new_use_bonus;
+                        //设置新的use_bonus
+                        $item['use_bonus'] = implode(',', $bonus_type_id);
                     }
                 }
-                
+
                 //插入数据到新店铺
                 RC_DB::table('quickpay_activity')->insert($items);
             });
-
-            $this->setReplacementData($this->getCode(), $replacement_use_bonus);
 
             return true;
         } catch (\Royalcms\Component\Repository\Exceptions\RepositoryException $e) {
