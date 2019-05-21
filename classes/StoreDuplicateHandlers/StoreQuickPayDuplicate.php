@@ -126,7 +126,6 @@ HTML;
     {
         try {
             $replacement_bonus_type = (new \Ecjia\App\Store\StoreDuplicate\ProgressDataStorage($this->store_id))->getDuplicateProgressData()->getReplacementDataByCode('store_bonus_duplicate');
-
             $replacement_use_bonus = [];
             $this->getSourceStoreDataHandler()->chunk(50, function ($items) use ($replacement_bonus_type, &$replacement_use_bonus) {
 
@@ -145,14 +144,14 @@ HTML;
                             continue;
                         }
 
-                        //若不为以上两项，则该值是红包ID，将其加入数组
-                        //稳定起见，在加入之前做个判断
+                        //为了程序更健壮，加个判断
                         if (isset($replacement_bonus_type[$use_type])) {
+                            //将红包ID加入数组，用于拼接
                             $bonus_type_id[] = $replacement_bonus_type[$use_type];
                         }
                     }
 
-                    //红包ID组装完毕后，如果它不为空
+                    //如果红包使用类型存在id类型的值
                     if (!empty($bonus_type_id)) {
                         //拼接新的use_bonus字符串
                         $new_use_bonus = implode(',', $bonus_type_id);
