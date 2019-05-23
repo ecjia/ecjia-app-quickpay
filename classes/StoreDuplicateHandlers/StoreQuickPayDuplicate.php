@@ -11,8 +11,7 @@ namespace Ecjia\App\Quickpay\StoreDuplicateHandlers;
 use Ecjia\App\Store\StoreDuplicate\StoreDuplicateAbstract;
 use ecjia_error;
 use RC_DB;
-use RC_Api;
-use ecjia_admin;
+use Royalcms\Component\Database\QueryException;
 
 /**
  * 复制店铺中的优惠买单规则
@@ -71,7 +70,11 @@ HTML;
         }
 
         // 统计数据条数
-        $this->count = $this->getSourceStoreDataHandler()->count();
+        try {
+            $this->count = $this->getSourceStoreDataHandler()->count();
+        } catch (QueryException $e) {
+            ecjia_log_warning($e->getMessage());
+        }
         return $this->count;
     }
 
@@ -116,11 +119,9 @@ HTML;
      */
     protected function startDuplicateProcedure()
     {
+        $replacement_bonus_type = $this->getProgressData()->getReplacementDataByCode('store_bonus_duplicate');
         try {
-            $replacement_bonus_type = (new \Ecjia\App\Store\StoreDuplicate\ProgressDataStorage($this->store_id))->getDuplicateProgressData()->getReplacementDataByCode('store_bonus_duplicate');
-
             $this->getSourceStoreDataHandler()->chunk(50, function ($items) use ($replacement_bonus_type) {
-
                 //构造可用于复制的数据
                 foreach ($items as &$item) {
                     unset($item['id']);
@@ -151,7 +152,8 @@ HTML;
             });
 
             return true;
-        } catch (\Royalcms\Component\Repository\Exceptions\RepositoryException $e) {
+        } catch (QueryException $e) {
+            ecjia_log_error($e->getMessage());
             return new ecjia_error('duplicate_data_error', $e->getMessage());
         }
     }
