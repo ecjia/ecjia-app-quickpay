@@ -33,10 +33,12 @@ class StoreQuickPayDuplicate extends StoreDuplicateAbstract
         'store_bonus_duplicate',
     ];
 
-    public function __construct($store_id, $source_store_id, $sort = 41)
+    protected $sort = 41;
+
+    public function __construct($store_id, $source_store_id)
     {
         $this->name = __('优惠买单规则', 'quickpay');
-        parent::__construct($store_id, $source_store_id, $sort);
+        parent::__construct($store_id, $source_store_id);
     }
 
     /**
@@ -53,7 +55,6 @@ class StoreQuickPayDuplicate extends StoreDuplicateAbstract
     public function handlePrintData()
     {
         $text = sprintf(__('店铺买单活动总共<span class="ecjiafc-red ecjiaf-fs3">%s</span>个', 'quickpay'), $this->handleCount());
-
         return <<<HTML
 <span class="controls-info w300">{$text}</span>
 HTML;
@@ -165,8 +166,6 @@ HTML;
      */
     public function handleAdminLog()
     {
-        \Ecjia\App\Store\Helper::assign_adminlog_content();
-
         static $store_merchant_name, $source_store_merchant_name;
 
         if (empty($store_merchant_name)) {
@@ -179,7 +178,8 @@ HTML;
             $source_store_merchant_name = array_get(empty($source_store_info) ? [] : $source_store_info, 'merchants_name');
         }
 
-        $content = sprintf(__('录入：将【%s】店铺所有%s复制到【%s】店铺中', 'goods'), $source_store_merchant_name, $this->name, $store_merchant_name);
+        \Ecjia\App\Store\Helper::assign_adminlog_content();
+        $content = sprintf(__('录入：将【%s】店铺所有优惠买单规则复制到【%s】店铺中', 'goods'), $source_store_merchant_name, $store_merchant_name);
         ecjia_admin::admin_log($content, 'duplicate', 'store_goods');
     }
 }
