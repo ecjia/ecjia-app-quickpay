@@ -204,7 +204,8 @@ class quickpay_flow_done_module extends api_front implements api_interface {
 		if ($order['order_amount'] >= $order['discount']) {
 			$order['order_amount'] -= $order['discount'];
 		} else {
-			$order['discount'] = 0.00;
+			$order['discount'] = $order['order_amount'];
+			$order['order_amount'] -= $order['discount'];
 		}
 		
 		$formated_discount = ecjia_price_format($order['discount'], false);
