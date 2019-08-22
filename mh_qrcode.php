@@ -47,7 +47,7 @@
 defined('IN_ECJIA') or exit('No permission resources.');
 
 /**
- * 店铺二维码
+ * 收款二维码
  */
 class mh_qrcode extends ecjia_merchant {
 	public function __construct() {
@@ -71,13 +71,12 @@ class mh_qrcode extends ecjia_merchant {
 	 * 收款二维码
 	 */
 	public function init() {
-
 		$this->admin_priv('quickpay_collectmoney_qrcode');
 
-		ecjia_screen::get_current_screen()->add_nav_here(new admin_nav_here(__('店铺二维码', 'quickpay')));
+		ecjia_screen::get_current_screen()->add_nav_here(new admin_nav_here(__('收款二维码', 'quickpay')));
 		$this->assign('app_url', RC_App::apps_url('statics', __FILE__));
 
-		$this->assign('ur_here', __('店铺二维码', 'quickpay'));
+		$this->assign('ur_here', __('收款二维码', 'quickpay'));
 
 		$merchant_info = RC_Api::api('store', 'store_info', ['store_id' => $_SESSION['store_id']]);
         $merchant_info['merchants_name'] = $_SESSION['store_name'];
@@ -88,8 +87,7 @@ class mh_qrcode extends ecjia_merchant {
         
         $merchant_info['shop_logo'] = RC_Upload::upload_url($merchant_info['shop_logo']);
         $merchant_info['collectmoney_qrcode'] = with(new Ecjia\App\Mobile\Qrcode\GenerateCollectMoney($_SESSION['store_id'],  $merchant_info['shop_logo']))->getQrcodeUrl();
-        $merchant_info['affiliate_qrcode'] = with(new Ecjia\App\Mobile\Qrcode\GenerateAffiliate($_SESSION['store_id'],  $merchant_info['shop_logo']))->getQrcodeUrl();
-
+        
         $this->assign('merchant_info', $merchant_info);
 
         return $this->display('quickpay_qrcode.dwt');
@@ -102,15 +100,9 @@ class mh_qrcode extends ecjia_merchant {
 		$this->admin_priv('quickpay_collectmoney_qrcode', ecjia::MSGTYPE_JSON);
 		
 		$store_id = $_SESSION['store_id'];
-        $type = remove_xss($_GET['type']);
-		if($type == 'affiliate') {
-            //删除生成的收款二维码
-            with(new Ecjia\App\Mobile\Qrcode\GenerateAffiliate($_SESSION['store_id']))->removeQrcode();
-        } else {
-            //删除生成的收款二维码
-            with(new Ecjia\App\Mobile\Qrcode\GenerateCollectMoney($_SESSION['store_id']))->removeQrcode();
-        }
-
+		//删除生成的收款二维码
+		with(new Ecjia\App\Mobile\Qrcode\GenerateCollectMoney($_SESSION['store_id']))->removeQrcode();
+		
 		ecjia_merchant::admin_log(__('刷新收款二维码', 'quickpay'), 'edit', 'collectmoney_qrcode');
 		
 		return $this->showmessage(__('刷新成功', 'quickpay'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('pjaxurl' => RC_Uri::url('quickpay/mh_qrcode/init')));
@@ -125,18 +117,10 @@ class mh_qrcode extends ecjia_merchant {
 		$merchant_info = RC_Api::api('store', 'store_info', ['store_id' => $_SESSION['store_id']]);
 		$merchant_name = $_SESSION['store_name'];
 		$merchant_info['shop_logo'] = RC_Upload::upload_url($merchant_info['shop_logo']);
+		
+		$merchant_info['collectmoney_qrcode'] = with(new Ecjia\App\Mobile\Qrcode\GenerateCollectMoney($_SESSION['store_id'],  $merchant_info['shop_logo']))->getQrcodeUrl();
 
-        $type = remove_xss($_GET['type']);
-        if($type == 'affiliate') {
-            $merchant_info['affiliate_qrcode'] = with(new Ecjia\App\Mobile\Qrcode\GenerateAffiliate($_SESSION['store_id'],  $merchant_info['shop_logo']))->getQrcodeUrl();
-
-            with(new Ecjia\App\Quickpay\AffiliatePdf($merchant_name, $merchant_info['shop_logo'], $merchant_info['affiliate_qrcode']))->make('D');
-        } else {
-            $merchant_info['collectmoney_qrcode'] = with(new Ecjia\App\Mobile\Qrcode\GenerateCollectMoney($_SESSION['store_id'],  $merchant_info['shop_logo']))->getQrcodeUrl();
-
-            with(new Ecjia\App\Quickpay\CollectMoneyPdf($merchant_name, $merchant_info['shop_logo'], $merchant_info['collectmoney_qrcode']))->make('D');
-        }
-
+		with(new Ecjia\App\Quickpay\CollectMoneyPdf($merchant_name, $merchant_info['shop_logo'], $merchant_info['collectmoney_qrcode']))->make('D');
 	}
 	
 	/**
@@ -148,18 +132,10 @@ class mh_qrcode extends ecjia_merchant {
 	    $merchant_info = RC_Api::api('store', 'store_info', ['store_id' => $_SESSION['store_id']]);
 	    $merchant_name = $_SESSION['store_name'];
 	    $merchant_info['shop_logo'] = RC_Upload::upload_url($merchant_info['shop_logo']);
-
-        $type = remove_xss($_GET['type']);
-        if($type == 'affiliate') {
-            $merchant_info['affiliate_qrcode'] = with(new Ecjia\App\Mobile\Qrcode\GenerateAffiliate($_SESSION['store_id'],  $merchant_info['shop_logo']))->getQrcodeUrl();
-
-            with(new Ecjia\App\Quickpay\AffiliatePdf($merchant_name, $merchant_info['shop_logo'], $merchant_info['affiliate_qrcode']))->make('I');
-        } else {
-            $merchant_info['collectmoney_qrcode'] = with(new Ecjia\App\Mobile\Qrcode\GenerateCollectMoney($_SESSION['store_id'],  $merchant_info['shop_logo']))->getQrcodeUrl();
-
-            with(new Ecjia\App\Quickpay\CollectMoneyPdf($merchant_name, $merchant_info['shop_logo'], $merchant_info['collectmoney_qrcode']))->make('I');
-        }
-
+	    
+	    $merchant_info['collectmoney_qrcode'] = with(new Ecjia\App\Mobile\Qrcode\GenerateCollectMoney($_SESSION['store_id'],  $merchant_info['shop_logo']))->getQrcodeUrl();
+	    
+	    with(new Ecjia\App\Quickpay\CollectMoneyPdf($merchant_name, $merchant_info['shop_logo'], $merchant_info['collectmoney_qrcode']))->make('I');
 	}
 	
 }
