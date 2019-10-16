@@ -66,7 +66,7 @@
                         <p>{t domain="quickpay"}使用说明：先将二维码下载，用A4纸打印后裁切出来，可张贴在店铺内桌子、服务台等处，方便用户扫码。{/t}</p>
                     </div>
                     <div class="right-handle">
-                        <a class="btn btn-primary" href="{$refresh_url}&type=affiliate" data-toggle="ajaxremove" data-msg='{t domain="quickpay"}您确定要刷新该收款二维码吗？{/t}'>{t domain="quickpay"}刷新二维码{/t}</a>
+                        <a class="btn btn-primary" href="{$refresh_url}&type=affiliate" data-toggle="ajaxremove" data-msg='{t domain="quickpay"}您确定要刷新该推广二维码吗？{/t}'>{t domain="quickpay"}刷新二维码{/t}</a>
                         <a class="btn btn-info m_l10 nopjax" target="_blank" href="{$download_url}&type=affiliate">{t domain="quickpay"}下载素材{/t}</a>
                         <a class="btn btn-info m_l10 nopjax" target="_blank" href="{$print_url}&type=affiliate">{t domain="quickpay"}打印二维码{/t}</a>
                     </div>
