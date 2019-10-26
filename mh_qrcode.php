@@ -71,7 +71,6 @@ class mh_qrcode extends ecjia_merchant {
      * 收款二维码
      */
     public function init() {
-
         $this->admin_priv('quickpay_collectmoney_qrcode');
 
         ecjia_screen::get_current_screen()->add_nav_here(new admin_nav_here(__('店铺二维码', 'quickpay')));
@@ -86,19 +85,12 @@ class mh_qrcode extends ecjia_merchant {
         $this->assign('download_url', RC_Uri::url('quickpay/mh_qrcode/download'));
         $this->assign('print_url', RC_Uri::url('quickpay/mh_qrcode/print_qrcode'));
 
+        //收款二维码
         $merchant_info['shop_logo'] = RC_Upload::upload_url($merchant_info['shop_logo']);
         $merchant_info['collectmoney_qrcode'] = with(new Ecjia\App\Mobile\Qrcode\GenerateCollectMoney($_SESSION['store_id'],  $merchant_info['shop_logo']))->getQrcodeUrl();
-        //$merchant_info['affiliate_qrcode'] = with(new Ecjia\App\Mobile\Qrcode\GenerateAffiliate($_SESSION['store_id'],  $merchant_info['shop_logo']))->getQrcodeUrl();
-        //店铺推广二维码
-        $uuid = RC_DB::table('platform_account')->where('platform', 'wechat')->where('type', 2)->where('shop_id', 0)->pluck('uuid');
-        $qrcode = new \Ecjia\App\Wechat\WechatQrcode($uuid);
-        $store_id = $_SESSION['store_id'];
-        $openid = 'storeid='.$store_id;
-        $url    = $qrcode->getStoreQrcodeUrl($store_id, $openid, 'subscribe');
-        //if (is_ecjia_error($url)) {
-        //	return $this->displayContent($url->get_error_code());
-        //}
-        $merchant_info['affiliate_qrcode'] = $url;
+
+        //推广二维码
+        $merchant_info['member_qrcode'] = with(new Ecjia\App\Mobile\Qrcode\GenerateAffiliate($_SESSION['store_id'],  $merchant_info['shop_logo']))->getQrcodeUrl();
 
         $this->assign('merchant_info', $merchant_info);
 
